@@ -2,43 +2,6 @@ using System;
 
 namespace FluentResults
 {
-    public interface ILogger
-    {
-        void Log(string context, ResultBase result);
-    }
-
-    public class DefaultLogger : ILogger
-    {
-        public void Log(string context, ResultBase result)
-        {
-            
-        }
-    }
-
-    public class ResultSettings
-    {
-        public ILogger Logger { get; set; }
-    }
-
-    public class ResultSettingsBuilder
-    {
-        public ILogger Logger { get; set; }
-
-        public ResultSettingsBuilder()
-        {
-            // set defaults
-            Logger = new DefaultLogger();
-        }
-
-        public ResultSettings Build()
-        {
-            return new ResultSettings
-            {
-                Logger = Logger
-            };
-        }
-    }
-
     public static class Results
     {
         internal static ResultSettings Settings { get; set; }
@@ -136,32 +99,6 @@ namespace FluentResults
         public static TResult Merge(params ResultBase[] results)
         {
             return ResultHelper.Merge<TResult>(results);
-        }
-    }
-
-    internal static class ResultHelper
-    {
-        public static TResult Merge<TResult>(params ResultBase[] results)
-            where TResult : ResultBase<TResult>, new()
-        {
-            var finalResult = new TResult();
-
-            foreach (var result in results)
-            {
-                foreach (var reason in result.Reasons)
-                {
-                    if (reason.GetType() == typeof(Error))
-                    {
-                        finalResult.WithError(reason as Error);
-                    }
-                    else if (reason.GetType() == typeof(Success))
-                    {
-                        finalResult.WithSuccess(reason as Success);
-                    }
-                }
-            }
-
-            return finalResult;
         }
     }
 }

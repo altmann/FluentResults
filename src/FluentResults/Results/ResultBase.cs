@@ -23,40 +23,40 @@ namespace FluentResults
     {
         public TResult WithError(string errorMessage)
         {
-            Reasons.Add(new Error(errorMessage));
+            return WithError(new Error(errorMessage));
+        }
+
+        internal TResult WithReason(Reason reason)
+        {
+            Reasons.Add(reason);
             return (TResult)this;
         }
 
         public TResult WithError(Error error)
         {
-            Reasons.Add(error);
-            return (TResult)this;
+            return WithReason(error);
         }
 
         public TResult WithError<TError>()
             where TError : Error, new()
         {
-            Reasons.Add(new TError());
-            return (TResult) this;
+            return WithError(new TError());
         }
 
         public TResult WithSuccess(string successMessage)
         {
-            Reasons.Add(new Success(successMessage));
-            return (TResult)this;
+            return WithSuccess(new Success(successMessage));
         }
 
         public TResult WithSuccess(Success success)
         {
-            Reasons.Add(success);
-            return (TResult)this;
+            return WithReason(success);
         }
 
         public TResult WithSuccess<TSuccess>()
             where TSuccess : Success, new()
         {
-            Reasons.Add(new TSuccess());
-            return (TResult)this;
+            return WithSuccess(new TSuccess());
         }
 
         public Result<TNewValue> ConvertToResultWithValueType<TNewValue>()
@@ -81,35 +81,12 @@ namespace FluentResults
 
             logger.Log(context, this);
 
-            return (TResult) this;
+            return (TResult)this;
         }
 
         public override string ToString()
         {
             return $"Result: IsSuccess: {IsSuccess}, " + ReasonFormat.ReasonsToString(Reasons);
-        }
-    }
-    
-    public abstract class ValueResultBase<TResult, TValue> : ResultBase<TResult>
-        where TResult : ValueResultBase<TResult, TValue>
-    {
-        public TValue Value { get; protected set; }
-
-        public TResult WithValue(TValue value)
-        {
-            Value = value;
-            return (TResult)this;
-        }
-
-        public Result ConvertTo()
-        {
-            return ResultHelper.Merge<Result>(this);
-        }
-
-        public override string ToString()
-        {
-            //todo reasons + value
-            return "";
         }
     }
 }
