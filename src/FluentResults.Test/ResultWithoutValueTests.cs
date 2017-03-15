@@ -1,12 +1,19 @@
-﻿using FluentAssertions;
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FluentAssertions;
 using System.Linq;
-using Xunit;
 
 namespace FluentResults.Test
 {
+    [TestClass]
     public class ResultWithoutValueTests
     {
-        [Fact]
+        [TestMethod]
+        public void TestMethod1()
+        {
+        }
+
+        [TestMethod]
         public void CreateOkResult_SuccessResult()
         {
             // Act
@@ -21,7 +28,7 @@ namespace FluentResults.Test
             okResult.Successes.Should().BeEmpty();
         }
 
-        [Fact]
+        [TestMethod]
         public void CreateOkResultWithSuccess_SuccessResultWithSuccess()
         {
             // Act
@@ -34,7 +41,7 @@ namespace FluentResults.Test
             okResult.Reasons.First().Message.Should().Be("First success message");
         }
 
-        [Fact]
+        [TestMethod]
         public void CreateOkResultWith2Successes_SuccessResultWith2Successes()
         {
             // Act
@@ -50,7 +57,7 @@ namespace FluentResults.Test
             okResult.Reasons[1].Message.Should().Be("Second success message");
         }
 
-        [Fact]
+        [TestMethod]
         public void CreateFailedResult_FailedResult()
         {
             // Act
@@ -62,7 +69,7 @@ namespace FluentResults.Test
             result.Reasons[0].Message.Should().Be("First error message");
         }
 
-        [Fact]
+        [TestMethod]
         public void CreateFailedResultWith2Errors_FailedResultWith2Errors()
         {
             // Act
