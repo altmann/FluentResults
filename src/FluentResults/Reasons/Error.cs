@@ -12,6 +12,7 @@ namespace FluentResults
         public Error()
         {
             Reasons = new List<Error>();
+            ErrorCode = string.Empty;
         }
 
         public Error(string message)
@@ -38,9 +39,39 @@ namespace FluentResults
             return this;
         }
 
+        public Error WithMessage(string message)
+        {
+            Message = message;
+            return this;
+        }
+
+        public Error WithTag(string tag)
+        {
+            Tags.Add(tag);
+            return this;
+        }
+
+        public Error WithTags(params string[] tags)
+        {
+            Tags.AddRange(tags);
+            return this;
+        }
+
         public Error CausedBy(string message, Exception exception)
         {
             Reasons.Add(new ExceptionalError(message, exception));
+            return this;
+        }
+
+        public Error CausedBy(string message)
+        {
+            Reasons.Add(new Error(message));
+            return this;
+        }
+
+        public Error WithErrorCode(string errorCode)
+        {
+            ErrorCode = errorCode;
             return this;
         }
 
@@ -48,7 +79,6 @@ namespace FluentResults
         {
             return base.GetReasonStringBuilder()
                 .WithInfo(nameof(ErrorCode), ErrorCode)
-                .WithInfo(nameof(Message), Message)
                 .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));
         }
     }
@@ -57,44 +87,12 @@ namespace FluentResults
     {
         public static string ErrorReasonsToString(List<Error> errorReasons)
         {
-            return string.Join(", ", errorReasons);
+            return string.Join("; ", errorReasons);
         }
 
         public static string ReasonsToString(List<Reason> errorReasons)
         {
-            return string.Join(", ", errorReasons);
-        }
-    }
-
-    public class ReasonStringBuilder
-    {
-        private string reasonType = string.Empty;
-        private readonly List<string> infos = new List<string>();
-         
-        public ReasonStringBuilder WithReasonType(Type type)
-        {
-            reasonType = type.Name;
-            return this;
-        }
-
-        public ReasonStringBuilder WithInfo(string label, string value)
-        {
-            infos.Add(value.ToLabelValueStringOrEmpty(label));
-            return this;
-        }
-
-        public string Build()
-        {
-            var reasonInfoText = infos.Any()
-                ? " with " + ReasonInfosToString(infos)
-                : " " + ReasonInfosToString(infos);
-
-            return $"{reasonType} {reasonInfoText}";
-        }
-
-        private static string ReasonInfosToString(List<string> reasonInfos)
-        {
-            return string.Join(", ", reasonInfos);
+            return string.Join("; ", errorReasons);
         }
     }
 }

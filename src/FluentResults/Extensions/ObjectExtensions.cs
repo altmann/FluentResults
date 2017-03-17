@@ -29,7 +29,7 @@
                 return string.Empty;
             }
 
-            return $"{label}: {valueText}";
+            return $"{label}='{valueText}'";
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using System.Linq;
@@ -8,11 +7,6 @@ namespace FluentResults.Test
     [TestClass]
     public class ResultWithoutValueTests
     {
-        [TestMethod]
-        public void TestMethod1()
-        {
-        }
-
         [TestMethod]
         public void CreateOkResult_SuccessResult()
         {
