@@ -7,7 +7,7 @@ namespace FluentResults.Test
     public class ResultStringifyTests
     {
         [TestMethod]
-        public void OkResultToString_OkResult()
+        public void OkResultWithoutValueToString_OkResult()
         {
             // Act
             var result = Results.Ok();
@@ -17,10 +17,30 @@ namespace FluentResults.Test
         }
 
         [TestMethod]
-        public void FailedResultToString_FailedResult()
+        public void FailedResultWithoutValueToString_FailedResult()
         {
             // Act
             var result = Results.Fail("My error");
+
+            // Assert
+            result.ToString().Should().Be("Result: IsSuccess='False', Reasons='Error with Message='My error''");
+        }
+
+        [TestMethod]
+        public void OkResultWithValueToString_OkResult()
+        {
+            // Act
+            var result = Results.Ok<int>();
+
+            // Assert
+            result.ToString().Should().Be("Result: IsSuccess='True'");
+        }
+
+        [TestMethod]
+        public void FailedResultWithValueToString_FailedResult()
+        {
+            // Act
+            var result = Results.Fail<int>("My error");
 
             // Assert
             result.ToString().Should().Be("Result: IsSuccess='False', Reasons='Error with Message='My error''");
