@@ -86,7 +86,11 @@ namespace FluentResults
 
         public override string ToString()
         {
-            return $"Result: IsSuccess='{IsSuccess}', Reasons='{ReasonFormat.ReasonsToString(Reasons)}'";
+            var reasonsString = Reasons.Any()
+                ? $", Reasons='{ReasonFormat.ReasonsToString(Reasons)}'"
+                : string.Empty;
+
+            return $"Result: IsSuccess='{IsSuccess}'{reasonsString}";
         }
     }
 }
