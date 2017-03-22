@@ -17,6 +17,7 @@ namespace FluentResults.Test
             // Assert
             error.ErrorCode.Should().BeEmpty();
             error.Reasons.Should().BeEmpty();
+            error.Tags.Should().BeEmpty();
         }
 
         [TestMethod]
@@ -86,6 +87,49 @@ namespace FluentResults.Test
             error.Reasons.Should().HaveCount(1);
             error.Reasons.First().Should().BeOfType<ExceptionalError>();
             error.Reasons.First().Message.Should().Be("First error");
+        }
+
+        [TestMethod]
+        public void CreateErrorWithTag_ErrorWithTag()
+        {
+            // Act
+            var error = new Error()
+                .WithTag("MyTag");
+
+            // Assert
+            error.ErrorCode.Should().BeEmpty();
+            error.Tags.Should().HaveCount(1);
+            error.Tags[0].Should().Be("MyTag");
+        }
+
+        [TestMethod]
+        public void CreateErrorWithMultipleTags_ErrorWithMultipleTags()
+        {
+            // Act
+            var error = new Error()
+                .WithTag("MyTag1")
+                .WithTag("MyTag2");
+
+            // Assert
+            error.ErrorCode.Should().BeEmpty();
+            error.Tags.Should().HaveCount(2);
+            error.Tags[0].Should().Be("MyTag1");
+            error.Tags[1].Should().Be("MyTag2");
+        }
+
+        [TestMethod]
+        public void CreateErrorWith3Tags_ErrorWith3Tags()
+        {
+            // Act
+            var error = new Error()
+                .WithTags("MyTag1", "MyTag2", "MyTag3");
+
+            // Assert
+            error.ErrorCode.Should().BeEmpty();
+            error.Tags.Should().HaveCount(3);
+            error.Tags[0].Should().Be("MyTag1");
+            error.Tags[1].Should().Be("MyTag2");
+            error.Tags[2].Should().Be("MyTag3");
         }
     }
 }
