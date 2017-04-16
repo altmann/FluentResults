@@ -28,7 +28,8 @@ namespace FluentResults
             valueResult = Results.Ok(3);
 
             valueResult = Results.Ok<int>()
-                .WithValue(3);
+                .WithValue(3)
+                .With(r => r.Value = 4);
 
             valueResult = Results.Fail<int>("First error");
 
@@ -41,6 +42,9 @@ namespace FluentResults
             var result = Results<MyValueResult>.Ok()
                 .WithSuccess("success message")
                 .WithValue(5);
+
+            result = Results<MyValueResult>.Ok()
+                .With(r => r.MyNumber = 3);
             
             result = Results<MyValueResult>.Fail(new Error("first error"))
                 .WithError("second error")

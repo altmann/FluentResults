@@ -33,7 +33,7 @@ namespace FluentResults.Test
             var result = Results.Ok<int>();
 
             // Assert
-            result.ToString().Should().Be("Result: IsSuccess='True'");
+            result.ToString().Should().Be("Result: IsSuccess='True', Value='0'");
         }
 
         [TestMethod]
@@ -43,7 +43,7 @@ namespace FluentResults.Test
             var result = Results.Fail<int>("My error");
 
             // Assert
-            result.ToString().Should().Be("Result: IsSuccess='False', Reasons='Error with Message='My error''");
+            result.ToString().Should().Be("Result: IsSuccess='False', Reasons='Error with Message='My error'', Value='0'");
         }
     }
 }

@@ -21,15 +21,15 @@ namespace FluentResults
     public abstract class ResultBase<TResult> : ResultBase
         where TResult : ResultBase<TResult>
     {
-        public TResult WithError(string errorMessage)
-        {
-            return WithError(new Error(errorMessage));
-        }
-
-        internal TResult WithReason(Reason reason)
+        public TResult WithReason(Reason reason)
         {
             Reasons.Add(reason);
             return (TResult)this;
+        }
+
+        public TResult WithError(string errorMessage)
+        {
+            return WithError(new Error(errorMessage));
         }
 
         public TResult WithError(Error error)
