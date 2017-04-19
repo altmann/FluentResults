@@ -42,7 +42,7 @@ For methods with return value the generic class `Result<T>` should be used which
      Result<int> errorResult = Results.Fail<int>("Operation failed"); //create an error result
 
 ## Processing a ValueResult
-Processing a ValueResult object is as easy as processing a Result object. In contrast to the Result object you can access the Value property in the success case.
+Processing a ValueResult object is as easy as processing a Result object. In contrast to the Result object you can access the property `Value` in the success case.
 
      Result<int> result = DoSomething();
 
