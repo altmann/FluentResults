@@ -6,13 +6,11 @@ FluentResults is a lightweight .NET library built to solve a common problem - re
 
 To be honest, returning a Result object indicates success or failure is not a new idea. Martin Fowler write already in 2004 about this pattern.
 
-If you want to know what Martin Fowler think about Results read that:
-<todo>
+If you want to know what Martin Fowler think about Results read that: [Notification by Martin Fowler](https://martinfowler.com/eaaDev/Notification.html)
 
-If you want a second opinion read that:
-<todo>
+If you want a second opinion read that: [Error handling: Exception or Result? by Vladimir Khorikov](http://enterprisecraftsmanship.com/2017/03/13/error-handling-exception-or-result/)
 
-If you want a short summary read that:
+If you want a short summary read that: 
 
 ## Creating a Result
 There are two types of Results, a success result and an error result. Both of them can be created easily:
