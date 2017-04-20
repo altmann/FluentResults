@@ -2,6 +2,8 @@
 
 FluentResults is a lightweight .NET library built to solve a common problem - returning an object indicates success or failure of an operation instead of using exceptions. 
 
+NuGet package will follow
+
 ## Why Results instead of exceptions
 
 To be honest, returning a Result object indicates success or failure is not a new idea. Martin Fowler already wrote about this pattern  in 2004.
