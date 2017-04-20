@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FluentResults
@@ -57,6 +58,12 @@ namespace FluentResults
             where TSuccess : Success, new()
         {
             return WithSuccess(new TSuccess());
+        }
+        
+        public TResult With(Action<TResult> setProperty)
+        {
+            setProperty((TResult)this);
+            return (TResult)this;
         }
 
         public Result<TNewValue> ConvertToResultWithValueType<TNewValue>()

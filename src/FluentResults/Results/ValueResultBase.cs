@@ -12,13 +12,7 @@ namespace FluentResults
             Value = value;
             return (TResult)this;
         }
-
-        public TResult With(Action<TResult> setProperty)
-        {
-            setProperty((TResult)this);
-            return (TResult)this;
-        }
-
+        
         public Result ConvertTo()
         {
             return ResultHelper.Merge<Result>(this);
