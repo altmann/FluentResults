@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFramework>netstandard1.1</TargetFramework>
      <PackageId>FluentResults</PackageId>
      <PackageVersion>0.5.0</PackageVersion>
      <Authors>Michael Altmann</Authors>
