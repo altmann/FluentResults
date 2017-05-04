@@ -10,6 +10,7 @@
      <PackageReleaseNotes>First release</PackageReleaseNotes>
      <Copyright>Copyright 2017 (c) Michael Altmann. All rights reserved.</Copyright>
      <PackageTags>Results exception error handling</PackageTags>
+     <ProjectUrl>https://github.com/altmann/FluentResults</ProjectUrl>
   </PropertyGroup>
 
 </Project>
