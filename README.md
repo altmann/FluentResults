@@ -6,8 +6,6 @@ You should install [FluentResults with NuGet](https://www.nuget.org/packages/Flu
 
     Install-Package FluentResults
 
-This command from Package Manager Console will download and install FluentResults.
-
 ## Why Results instead of exceptions
 
 To be honest, returning a Result object indicates success or failure is not a new idea. Martin Fowler already wrote about this pattern  in 2004.
