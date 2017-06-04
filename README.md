@@ -2,7 +2,11 @@
 
 FluentResults is a lightweight .NET library built to solve a common problem - returning an object indicates success or failure of an operation instead of using exceptions. 
 
-NuGet package will follow
+You should install [FluentResults with NuGet](https://github.com/altmann/FluentResults):
+
+    Install-Package FluentResults
+
+This command from Package Manager Console will download and install FluentResults.
 
 ## Why Results instead of exceptions
 
