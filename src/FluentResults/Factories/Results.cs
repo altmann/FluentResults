@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 
 namespace FluentResults
 {
@@ -37,7 +38,21 @@ namespace FluentResults
             result.WithError(new Error(errorMessage));
             return result;
         }
+        
+        public static Result Fail(string errorCode, string errorMessage)
+        {
+            var result = new Result();
+            result.WithError(new Error(errorCode, errorMessage));
+            return result;
+        }
 
+        public static Result Fail(string errorCode, string errorMessage, HttpStatusCode httpStatusCode)
+        {
+            var result = new Result();
+            result.WithError(new Error(errorCode, errorMessage, httpStatusCode));
+            return result;
+        }
+        
         public static Result<TValue> Ok<TValue>()
         {
             return new Result<TValue>();
@@ -63,7 +78,21 @@ namespace FluentResults
             result.WithError(new Error(errorMessage));
             return result;
         }
-
+        
+        public static Result<TValue> Fail<TValue>(string errorCode, string errorMessage)
+        {
+            var result = new Result<TValue>();
+            result.WithError(new Error(errorCode, errorMessage));
+            return result;
+        }
+        
+        public static Result<TValue> Fail<TValue>(string errorCode, string errorMessage, HttpStatusCode httpStatusCode)
+        {
+            var result = new Result<TValue>();
+            result.WithError(new Error(errorCode, errorMessage, httpStatusCode));
+            return result;
+        }
+        
         public static Result Merge(params ResultBase[] results)
         {
             return ResultHelper.Merge<Result>(results);

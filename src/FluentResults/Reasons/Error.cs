@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace FluentResults
 {
@@ -8,6 +9,7 @@ namespace FluentResults
     {
         public string ErrorCode { get; protected set; }
         public List<Error> Reasons { get; }
+        public HttpStatusCode HttpStatusCode { get; protected set; }
 
         public Error()
         {
@@ -21,6 +23,21 @@ namespace FluentResults
             Message = message;
         }
 
+        public Error(string errorCode, string message)
+            : this()
+        {
+            Message = message;
+            ErrorCode = errorCode;
+        }
+        
+        public Error(string errorCode, string message, HttpStatusCode httpStatusCode)
+            : this()
+        {
+            ErrorCode = errorCode;
+            Message = message;
+            HttpStatusCode = httpStatusCode;
+        }
+        
         public Error(string message, Error causedBy)
             : this(message)
         {
@@ -54,6 +71,12 @@ namespace FluentResults
         public Error WithTags(params string[] tags)
         {
             Tags.AddRange(tags);
+            return this;
+        }
+
+        public Error WithHttpStatusCode(HttpStatusCode httpStatusCode)
+        {
+            HttpStatusCode = httpStatusCode;
             return this;
         }
 
