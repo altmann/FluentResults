@@ -8,8 +8,8 @@ namespace FluentResults
     public class Error : Reason
     {
         public string ErrorCode { get; protected set; }
+        public string FieldName { get; protected set; }
         public List<Error> Reasons { get; }
-        public HttpStatusCode HttpStatusCode { get; protected set; }
 
         public Error()
         {
@@ -28,14 +28,6 @@ namespace FluentResults
         {
             Message = message;
             ErrorCode = errorCode;
-        }
-        
-        public Error(string errorCode, string message, HttpStatusCode httpStatusCode)
-            : this()
-        {
-            ErrorCode = errorCode;
-            Message = message;
-            HttpStatusCode = httpStatusCode;
         }
         
         public Error(string message, Error causedBy)
@@ -62,6 +54,12 @@ namespace FluentResults
             return this;
         }
 
+        public Error WithFieldName(string fieldName)
+        {
+            FieldName = fieldName;
+            return this;
+        }
+        
         public Error WithTag(string tag)
         {
             Tags.Add(tag);
@@ -71,12 +69,6 @@ namespace FluentResults
         public Error WithTags(params string[] tags)
         {
             Tags.AddRange(tags);
-            return this;
-        }
-
-        public Error WithHttpStatusCode(HttpStatusCode httpStatusCode)
-        {
-            HttpStatusCode = httpStatusCode;
             return this;
         }
 
@@ -102,6 +94,7 @@ namespace FluentResults
         {
             return base.GetReasonStringBuilder()
                 .WithInfo(nameof(ErrorCode), ErrorCode)
+                .WithInfo(nameof(FieldName), FieldName)
                 .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));
         }
     }
