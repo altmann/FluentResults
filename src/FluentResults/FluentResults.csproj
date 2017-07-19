@@ -1,14 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;net45</TargetFrameworks>
-     <PackageId>FluentResults</PackageId>
-     <PackageVersion>0.7.1</PackageVersion>
-     <Authors>Michael Altmann</Authors>
-     <Description>A lightweight Result object implementation for .NET</Description>
-     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-     <PackageReleaseNotes>First release</PackageReleaseNotes>
-     <Copyright>Copyright 2017 (c) Michael Altmann. All rights reserved.</Copyright>
-     <PackageTags>Results exception error handling</PackageTags>
-     <ProjectUrl>https://github.com/altmann/FluentResults</ProjectUrl>
+    <PackageId>FluentResults</PackageId>
+    <PackageVersion>0.7.1</PackageVersion>
+    <Authors>Michael Altmann</Authors>
+    <Description>A lightweight Result object implementation for .NET</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <Copyright>Copyright 2017 (c) Michael Altmann. All rights reserved.</Copyright>
+    <PackageTags>Results exception error handling</PackageTags>
+    <ProjectUrl>https://github.com/altmann/FluentResults</ProjectUrl>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Playground.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="MyValueResult.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Custom\MyError.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Custom\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Custom\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Custom\**" />
+  </ItemGroup>
 </Project>
