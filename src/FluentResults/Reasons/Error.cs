@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace FluentResults
 {
     public class Error : Reason
     {
         public string ErrorCode { get; protected set; }
+        public string FieldName { get; protected set; }
         public List<Error> Reasons { get; }
 
         public Error()
@@ -21,6 +23,13 @@ namespace FluentResults
             Message = message;
         }
 
+        public Error(string errorCode, string message)
+            : this()
+        {
+            Message = message;
+            ErrorCode = errorCode;
+        }
+        
         public Error(string message, Error causedBy)
             : this(message)
         {
@@ -45,6 +54,12 @@ namespace FluentResults
             return this;
         }
 
+        public Error WithFieldName(string fieldName)
+        {
+            FieldName = fieldName;
+            return this;
+        }
+        
         public Error WithTag(string tag)
         {
             Tags.Add(tag);
@@ -79,6 +94,7 @@ namespace FluentResults
         {
             return base.GetReasonStringBuilder()
                 .WithInfo(nameof(ErrorCode), ErrorCode)
+                .WithInfo(nameof(FieldName), FieldName)
                 .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));
         }
     }
