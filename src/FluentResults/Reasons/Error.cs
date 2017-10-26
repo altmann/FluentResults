@@ -5,13 +5,11 @@ namespace FluentResults
 {
     public class Error : Reason
     {
-        public string ErrorCode { get; protected set; }
         public List<Error> Reasons { get; }
 
         public Error()
         {
             Reasons = new List<Error>();
-            ErrorCode = string.Empty;
         }
 
         public Error(string message)
@@ -72,16 +70,9 @@ namespace FluentResults
             return this;
         }
 
-        public Error WithErrorCode(string errorCode)
-        {
-            ErrorCode = errorCode;
-            return this;
-        }
-
         protected override ReasonStringBuilder GetReasonStringBuilder()
         {
             return base.GetReasonStringBuilder()
-                .WithInfo(nameof(ErrorCode), ErrorCode)
                 .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));
         }
     }

@@ -15,18 +15,7 @@ namespace FluentResults.Test
             // Assert
             error.ToString().Should().Be("Error");
         }
-
-        [TestMethod]
-        public void ErrorWithErrorCodeToString_TypeWithErrorCode()
-        {
-            // Act
-            var error = new Error()
-                .WithErrorCode("1");
-
-            // Assert
-            error.ToString().Should().Be("Error with ErrorCode='1'");
-        }
-
+        
         [TestMethod]
         public void ErrorWithMessageToString_TypeWithMessage()
         {
@@ -38,18 +27,6 @@ namespace FluentResults.Test
             error.ToString().Should().Be("Error with Message='Error message'");
         }
         
-        [TestMethod]
-        public void ErrorWithMessageAndErrorCodeToString_TypeWithMessageAndErrorCode()
-        {
-            // Act
-            var error = new Error()
-                .WithErrorCode("1")
-                .WithMessage("Error message");
-
-            // Assert
-            error.ToString().Should().Be("Error with Message='Error message', ErrorCode='1'");
-        }
-
         [TestMethod]
         public void ErrorWithReasonsToString_TypeWithReasons()
         {

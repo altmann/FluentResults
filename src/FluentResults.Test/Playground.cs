@@ -7,7 +7,6 @@ namespace FluentResults
         public CustomError()
         {
             Message = "Custom message";
-            ErrorCode = "1.1";
         }
     }
 

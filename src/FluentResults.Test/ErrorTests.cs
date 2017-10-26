@@ -15,7 +15,6 @@ namespace FluentResults.Test
             var error = new Error();
 
             // Assert
-            error.ErrorCode.Should().BeEmpty();
             error.Reasons.Should().BeEmpty();
             error.Metadata.Keys.Should().BeEmpty();
         }
@@ -28,7 +27,6 @@ namespace FluentResults.Test
                 .CausedBy(new Error("First error message"));
 
             // Assert
-            error.ErrorCode.Should().BeEmpty();
             error.Reasons.Should().HaveCount(1);
             error.Reasons.First().Message.Should().Be("First error message");
         }
@@ -42,7 +40,6 @@ namespace FluentResults.Test
                 .CausedBy(new Error("Second error message"));
 
             // Assert
-            error.ErrorCode.Should().BeEmpty();
             error.Reasons.Should().HaveCount(2);
             error.Reasons[0].Message.Should().Be("First error message");
             error.Reasons[1].Message.Should().Be("Second error message");
@@ -56,7 +53,6 @@ namespace FluentResults.Test
                 .CausedBy("First error message");
 
             // Assert
-            error.ErrorCode.Should().BeEmpty();
             error.Reasons.Should().HaveCount(1);
             error.Reasons.First().Message.Should().Be("First error message");
         }
@@ -69,7 +65,6 @@ namespace FluentResults.Test
                 .CausedBy(new InvalidOperationException("Invalid Operation Exception"));
 
             // Assert
-            error.ErrorCode.Should().BeEmpty();
             error.Reasons.Should().HaveCount(1);
             error.Reasons.First().Should().BeOfType<ExceptionalError>();
             error.Reasons.First().Message.Should().Be("Invalid Operation Exception");
@@ -83,7 +78,6 @@ namespace FluentResults.Test
                 .CausedBy("First error", new InvalidOperationException("Invalid Operation Exception"));
 
             // Assert
-            error.ErrorCode.Should().BeEmpty();
             error.Reasons.Should().HaveCount(1);
             error.Reasons.First().Should().BeOfType<ExceptionalError>();
             error.Reasons.First().Message.Should().Be("First error");
@@ -97,7 +91,6 @@ namespace FluentResults.Test
                 .WithMetadata("Field", "CustomerName");
 
             // Assert
-            error.ErrorCode.Should().BeEmpty();
             error.Metadata.Should().HaveCount(1);
             error.Metadata.Keys.First().Should().Be("Field");
             error.Metadata.Values.First().Should().Be("CustomerName");
@@ -112,7 +105,6 @@ namespace FluentResults.Test
                 .WithMetadata("ErrorCode", "1.1");
 
             // Assert
-            error.ErrorCode.Should().BeEmpty();
             error.Metadata.Should().HaveCount(2);
             error.Metadata.Keys.First().Should().Be("Field");
             error.Metadata.Keys.Skip(1).Take(1).First().Should().Be("ErrorCode");
