@@ -60,33 +60,6 @@ Processing a ValueResult object is as easy as processing a Result object. In con
      //handle success case
      var value = result.Value;
 
-## Custom Results
-The above two classes `Result` and `Result<T>` is the default way to handle methods with return value and without return value. In the most cases this implementation is good enough but if you need a more customizable way then read the following chapter.
-
-During the use of this library one big disadvantage is recognized: The name of the property `Value` is too generic. If you access the property `Value` (e.g. `if(result.Value == 5)`) you don't know whats behind this property. Is it the number of persons, maximal temperature threshold or a house number. For me a generic property called `Value` is not a good enough solution. How to fix it?
-
-To fix this problem a new class inherited from class `ResultBase<TResult>` have to be created.
-
-     public class TwitterResult : ResultBase<TwitterResult>
-     {
-          public TwitterProfile Profile { get; set; }
-          public List<Tweet> Tweets {get; set; }
-     }
-
-### Creating a custom Result
-FluentResults has some built-in factory methods to provide a fluent way for the creation of custom Results.
-
-     // create a custom success TwitterResult
-     TwitterResult twitterResult = Results<TwitterResult>.Ok()
-          With(res =>
-     {
-          res.Profile = twitterProfile;
-          res.Tweets = tweets
-     });
-
-     // create a custom error TwitterResult
-     TwitterResult twitterResult = Results<TwitterResult>.Fail("Loading twitter data failed");
-
 ## Further features
 Designing errors
 
