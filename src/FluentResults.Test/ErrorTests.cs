@@ -17,7 +17,7 @@ namespace FluentResults.Test
             // Assert
             error.ErrorCode.Should().BeEmpty();
             error.Reasons.Should().BeEmpty();
-            error.Tags.Should().BeEmpty();
+            error.Metadata.Keys.Should().BeEmpty();
         }
 
         [TestMethod]
@@ -90,46 +90,32 @@ namespace FluentResults.Test
         }
 
         [TestMethod]
-        public void CreateErrorWithTag_ErrorWithTag()
+        public void CreateErrorWithMetadata_ErrorWithMetadata()
         {
             // Act
             var error = new Error()
-                .WithTag("MyTag");
+                .WithMetadata("Field", "CustomerName");
 
             // Assert
             error.ErrorCode.Should().BeEmpty();
-            error.Tags.Should().HaveCount(1);
-            error.Tags[0].Should().Be("MyTag");
+            error.Metadata.Should().HaveCount(1);
+            error.Metadata.Keys.First().Should().Be("Field");
+            error.Metadata.Values.First().Should().Be("CustomerName");
         }
 
         [TestMethod]
-        public void CreateErrorWithMultipleTags_ErrorWithMultipleTags()
+        public void CreateErrorWithMultipleMetadata_ErrorWithMultipleMetadata()
         {
             // Act
             var error = new Error()
-                .WithTag("MyTag1")
-                .WithTag("MyTag2");
+                .WithMetadata("Field", "CustomerName")
+                .WithMetadata("ErrorCode", "1.1");
 
             // Assert
             error.ErrorCode.Should().BeEmpty();
-            error.Tags.Should().HaveCount(2);
-            error.Tags[0].Should().Be("MyTag1");
-            error.Tags[1].Should().Be("MyTag2");
-        }
-
-        [TestMethod]
-        public void CreateErrorWith3Tags_ErrorWith3Tags()
-        {
-            // Act
-            var error = new Error()
-                .WithTags("MyTag1", "MyTag2", "MyTag3");
-
-            // Assert
-            error.ErrorCode.Should().BeEmpty();
-            error.Tags.Should().HaveCount(3);
-            error.Tags[0].Should().Be("MyTag1");
-            error.Tags[1].Should().Be("MyTag2");
-            error.Tags[2].Should().Be("MyTag3");
+            error.Metadata.Should().HaveCount(2);
+            error.Metadata.Keys.First().Should().Be("Field");
+            error.Metadata.Keys.Skip(1).Take(1).First().Should().Be("ErrorCode");
         }
     }
 }

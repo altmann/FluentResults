@@ -44,15 +44,19 @@ namespace FluentResults
             return this;
         }
 
-        public Error WithTag(string tag)
+        public Error WithMetadata(string metadataName, object metadataValue)
         {
-            Tags.Add(tag);
+            Metadata.Add(metadataName, metadataValue);
             return this;
         }
 
-        public Error WithTags(params string[] tags)
+        public Error WithMetadata(Dictionary<string, object> metadata)
         {
-            Tags.AddRange(tags);
+            foreach (var metadataItem in metadata)
+            {
+                Metadata.Add(metadataItem.Key, metadataItem.Value);
+            }
+
             return this;
         }
 

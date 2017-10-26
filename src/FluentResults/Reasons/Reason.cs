@@ -5,11 +5,11 @@ namespace FluentResults
     public class Reason
     {
         public string Message { get; protected set; }
-        public List<string> Tags { get; protected set; }
+        public Dictionary<string, object> Metadata { get; protected set; }
 
         protected Reason()
         {
-            Tags = new List<string>();
+            Metadata = new Dictionary<string, object>();
         }
 
         protected virtual ReasonStringBuilder GetReasonStringBuilder()
@@ -17,7 +17,7 @@ namespace FluentResults
             return new ReasonStringBuilder()
                 .WithReasonType(GetType())
                 .WithInfo(nameof(Message), Message)
-                .WithInfo(nameof(Tags), string.Join("; ", Tags));
+                .WithInfo(nameof(Metadata), string.Join("; ", Metadata)); //todo: correct string
         }
 
         public override string ToString()

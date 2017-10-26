@@ -37,18 +37,7 @@ namespace FluentResults.Test
             // Assert
             error.ToString().Should().Be("Error with Message='Error message'");
         }
-
-        [TestMethod]
-        public void ErrorWithTagsToString_TypeWithMessage()
-        {
-            // Act
-            var error = new Error()
-                .WithTags("firstTag", "secondTag");
-
-            // Assert
-            error.ToString().Should().Be("Error with Tags='firstTag; secondTag'");
-        }
-
+        
         [TestMethod]
         public void ErrorWithMessageAndErrorCodeToString_TypeWithMessageAndErrorCode()
         {
