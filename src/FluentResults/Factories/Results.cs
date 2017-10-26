@@ -74,31 +74,4 @@ namespace FluentResults
             return ResultHelper.Merge<Result<TValue>>(results);
         }
     }
-
-    public static class Results<TResult> where TResult : ResultBase<TResult>, new()
-    {
-        public static TResult Ok()
-        {
-            return new TResult();
-        }
-        
-        public static TResult Fail(Error error)
-        {
-            var result = new TResult();
-            result.WithError(error);
-            return result;
-        }
-
-        public static TResult Fail(string errorMessage)
-        {
-            var result = new TResult();
-            result.WithError(new Error(errorMessage));
-            return result;
-        }
-
-        public static TResult Merge(params ResultBase[] results)
-        {
-            return ResultHelper.Merge<TResult>(results);
-        }
-    }
 }

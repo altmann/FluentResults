@@ -8,13 +8,6 @@
                 .WithValue(value);
         }
 
-        public static TResult ToResult<TResult, TValue>(this TValue value)
-            where TResult : ValueResultBase<TResult, TValue>, new()
-        {
-            return new TResult()
-                .WithValue(value);
-        }
-
         internal static string ToLabelValueStringOrEmpty(this object value, string label)
         {
             if (value == null)
