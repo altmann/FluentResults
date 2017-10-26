@@ -1,4 +1,6 @@
-﻿namespace FluentResults
+﻿using System.Collections.Generic;
+
+namespace FluentResults
 {
     public class Success : Reason
     {
@@ -7,15 +9,19 @@
             Message = message;
         }
 
-        public Success WithTag(string tag)
+        public Success WithMetadata(string metadataName, object metadataValue)
         {
-            Tags.Add(tag);
+            Metadata.Add(metadataName, metadataValue);
             return this;
         }
 
-        public Success WithTags(params string[] tags)
+        public Success WithMetadata(Dictionary<string, object> metadata)
         {
-            Tags.AddRange(tags);
+            foreach (var metadataItem in metadata)
+            {
+                Metadata.Add(metadataItem.Key, metadataItem.Value);
+            }
+            
             return this;
         }
     }

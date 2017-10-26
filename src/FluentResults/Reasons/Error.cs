@@ -5,13 +5,11 @@ namespace FluentResults
 {
     public class Error : Reason
     {
-        public string ErrorCode { get; protected set; }
         public List<Error> Reasons { get; }
 
         public Error()
         {
             Reasons = new List<Error>();
-            ErrorCode = string.Empty;
         }
 
         public Error(string message)
@@ -44,15 +42,19 @@ namespace FluentResults
             return this;
         }
 
-        public Error WithTag(string tag)
+        public Error WithMetadata(string metadataName, object metadataValue)
         {
-            Tags.Add(tag);
+            Metadata.Add(metadataName, metadataValue);
             return this;
         }
 
-        public Error WithTags(params string[] tags)
+        public Error WithMetadata(Dictionary<string, object> metadata)
         {
-            Tags.AddRange(tags);
+            foreach (var metadataItem in metadata)
+            {
+                Metadata.Add(metadataItem.Key, metadataItem.Value);
+            }
+
             return this;
         }
 
@@ -68,16 +70,9 @@ namespace FluentResults
             return this;
         }
 
-        public Error WithErrorCode(string errorCode)
-        {
-            ErrorCode = errorCode;
-            return this;
-        }
-
         protected override ReasonStringBuilder GetReasonStringBuilder()
         {
             return base.GetReasonStringBuilder()
-                .WithInfo(nameof(ErrorCode), ErrorCode)
                 .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));
         }
     }
