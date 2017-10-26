@@ -2,11 +2,11 @@ using System;
 
 namespace FluentResults
 {
-    public class MyError : Error
+    public class CustomError : Error
     {
-        public MyError()
+        public CustomError()
         {
-            Message = "My message";
+            Message = "Custom message";
             ErrorCode = "1.1";
         }
     }
@@ -27,7 +27,7 @@ namespace FluentResults
 
             voidResult = Results.Fail("First error")
                 .WithError("second error")
-                .WithError(new MyError().CausedBy(new InvalidCastException()));
+                .WithError(new CustomError().CausedBy(new InvalidCastException()));
 
 
             var valueResult = Results.Ok<int>()
@@ -62,6 +62,7 @@ namespace FluentResults
 
             var mergedResult2 = Results.Merge<int>(result1, result2, result3)
                 .WithValue(5);
+
             var convertedResult2 = mergedResult2.ConvertTo();
         }
 
