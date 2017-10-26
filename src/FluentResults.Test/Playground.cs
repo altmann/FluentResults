@@ -2,6 +2,15 @@ using System;
 
 namespace FluentResults
 {
+    public class MyError : Error
+    {
+        public MyError()
+        {
+            Message = "My message";
+            ErrorCode = "1.1";
+        }
+    }
+
     public class Playground
     {
         public void Simple()
@@ -37,26 +46,9 @@ namespace FluentResults
                 .WithError("second error");
         }
 
-        public void Customized()
-        {
-            var result = Results<MyValueResult>.Ok()
-                .WithSuccess("success message")
-                .WithValue(5);
-
-            result = Results<MyValueResult>.Ok()
-                .With(r => r.MyNumber = 3);
-            
-            result = Results<MyValueResult>.Fail(new Error("first error"))
-                .WithError("second error")
-                .WithError<MyError>();
-
-            result = Results<MyValueResult>.Fail("first error");
-        }
-
         public void TestExtensions()
         {
             var result = 5.ToResult();
-            var result2 = 5.ToResult<MyValueResult, int>();
         }
 
         public void MergeTest()
@@ -71,12 +63,6 @@ namespace FluentResults
             var mergedResult2 = Results.Merge<int>(result1, result2, result3)
                 .WithValue(5);
             var convertedResult2 = mergedResult2.ConvertTo();
-
-            var mergedResult3 = Results<MyValueResult>.Merge(result1, result2, result3);
-            var convertedResult3 = mergedResult3.ConvertTo();
-            var convertedResult4 = mergedResult3.ConvertToResultWithValueType<float>();
-
-            var convertedResult = mergedResult3.ConvertToResultWithValueType<Result>();
         }
 
         public void LogTest()
