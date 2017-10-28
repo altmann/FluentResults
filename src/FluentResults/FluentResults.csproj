@@ -7,12 +7,13 @@
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
-      Add Metadata property in Reason class. Can be used to add some further information to an error or success.
-      Remove feature Custom Results (not necessary any more)
-      Remove property Errorcode in Error class (can be now implemented via new Metadata property)
+Add Metadata property in Reason class. Can be used to add some further information to an error or success.
+Remove feature Custom Results (not necessary any more)
+Remove property Errorcode in Error class (can be now implemented via new Metadata property)
     </PackageReleaseNotes>
     <Copyright>Copyright 2017 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Results exception error handling</PackageTags>
     <ProjectUrl>https://github.com/altmann/FluentResults</ProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-64.png</PackageIconUrl>
   </PropertyGroup>
 </Project>
