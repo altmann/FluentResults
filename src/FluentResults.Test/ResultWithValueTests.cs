@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
+using System;
 
 namespace FluentResults.Test
 {
@@ -50,18 +51,36 @@ namespace FluentResults.Test
             var result = Results.Fail<int>("First error message");
 
             // Assert
-            result.Value.Should().Be(0);
+            result.ValueOrDefault.Should().Be(0);
         }
 
         [TestMethod]
-        public void CreateFailedResultWithExplicitValue_FailedResultWithValue()
+        public void CreateFailedResult_FailedResult()
         {
             // Act
-            var result = Results.Fail<int>("First error message")
-                .WithValue(5);
+            var result = Results.Fail<int>("First error message");
 
             // Assert
-            result.Value.Should().Be(5);
+
+            Action action = () => { var v = result.Value; };
+
+            action.Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage("Result is in status failed. Value is not set.");
+        }
+
+        [TestMethod]
+        public void CreateFailedResultWithExplicitValue_ShouldThrowException()
+        {
+            var failedResult = Results.Fail<int>("First error message");
+
+            // Act
+            Action action = () => { failedResult.WithValue(5); };
+
+            // Assert
+            action.Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage("Result is in status failed. Value is not set.");
         }
     }
 }
