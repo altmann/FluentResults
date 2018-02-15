@@ -53,7 +53,7 @@ namespace FluentResults.Test
         public void Fail_WithValidErrorMessage_ShouldReturnFailedResult()
         {
             // Act
-            var result = Results.Fail<int>("First error message");
+            var result = Results.Fail<int>("Error message");
 
             // Assert
             result.IsFailed.Should().BeTrue();
@@ -64,7 +64,7 @@ namespace FluentResults.Test
         public void Value_WithResultInFailedState_ShouldThrowException()
         {
             // Act
-            var result = Results.Fail<int>("First error message");
+            var result = Results.Fail<int>("Error message");
 
             // Assert
 
@@ -78,7 +78,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void WithValue_WithResultInFailedState_ShouldThrowException()
         {
-            var failedResult = Results.Fail<int>("First error message");
+            var failedResult = Results.Fail<int>("Error message");
 
             // Act
             Action action = () => { failedResult.WithValue(5); };
