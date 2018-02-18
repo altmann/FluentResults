@@ -9,9 +9,9 @@
     <PackageReleaseNotes>
 Adapted the public api to provide two separate properties for accessing the value of a ValueResult:
 - Value
-  Return the Value. If result object is in state failed then accessing property Value throw an exception. 
+  Return the Value if result object is in state success. If result object is in state failed then accessing property Value throw an exception. 
 - ValueOrDefault
-  Return the Value. If result object is in state success this property return the default value. (e.g. default
+  Return the Value if result object is in state success. If result object is in state failed this property return the default value of the value type (e.g. default default(int))
     </PackageReleaseNotes>
     <Copyright>Copyright 2018 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Results exception error handling</PackageTags>
