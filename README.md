@@ -54,7 +54,7 @@ For methods with return value the generic class `Result<T>` should be used which
      Result<int> errorResult = Results.Fail<int>("Operation failed"); //create an error result
 
 ## Processing a ValueResult
-Processing a ValueResult object is as easy as processing a Result object. In contrast to the Result object you can access the property `Value` in the success case.
+Processing a ValueResult object is as easy as processing a Result object. You can access the value within the returned ValueResult object via the properties `Value` and `ValueOrDefault`. The property `Value` throws an exception if the ValueResult object is in failed state. The property `ValueOrDefault` return the default value of the value type if the ValueResult is in success state. 
 
      Result<int> result = DoSomething();
 
@@ -62,11 +62,14 @@ Processing a ValueResult object is as easy as processing a Result object. In con
      {
           // handle error case
           Console.WriteLine(result);
+          var value1 = result.Value; // throws exception because result is in failed state
+          var value2 = result.ValueOrDefault; // return default value (=0) because result is in failed state
           return;
      }
 
      //handle success case
-     var value = result.Value;
+     var value3 = result.Value; // return value and doesn't throw exception because result is in success state
+     var value4 = result.ValueOrDefault; // return value because result is in success state
 
 ## Designing errors
 
