@@ -61,6 +61,36 @@ namespace FluentResults.Test
         }
 
         [TestMethod]
+        public void ValueOrDefault_WithDateTime_ShouldReturnFailedResult()
+        {
+            var result = Results.Fail<DateTime>("Error message");
+
+            // Act
+            var valueOrDefault = result.ValueOrDefault;
+
+            // Assert
+            var defaultDateTime = default(DateTime);
+            valueOrDefault.Should().Be(defaultDateTime);
+        }
+
+        class TestValue
+        {
+
+        }
+
+        [TestMethod]
+        public void ValueOrDefault_WithObject_ShouldReturnFailedResult()
+        {
+            var result = Results.Fail<TestValue>("Error message");
+
+            // Act
+            var valueOrDefault = result.ValueOrDefault;
+
+            // Assert
+            valueOrDefault.Should().Be(null);
+        }
+
+        [TestMethod]
         public void Value_WithResultInFailedState_ShouldThrowException()
         {
             // Act

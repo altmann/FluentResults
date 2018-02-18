@@ -2,16 +2,18 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;net45</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <PackageVersion>0.8.2</PackageVersion>
+    <PackageVersion>1.0.0.0</PackageVersion>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
-Add Metadata property in Reason class. Can be used to add some further information to an error or success.
-Remove feature Custom Results (not necessary any more)
-Remove property Errorcode in Error class (can be now implemented via new Metadata property)
+Adapted the public api to provide two separate properties for accessing the value of a ValueResult:
+- Value
+  Return the Value. If result object is in state failed then accessing property Value throw an exception. 
+- ValueOrDefault
+  Return the Value. If result object is in state success this property return the default value. (e.g. default
     </PackageReleaseNotes>
-    <Copyright>Copyright 2017 (c) Michael Altmann. All rights reserved.</Copyright>
+    <Copyright>Copyright 2018 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Results exception error handling</PackageTags>
     <ProjectUrl>https://github.com/altmann/FluentResults</ProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-64.png</PackageIconUrl>
