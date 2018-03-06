@@ -36,8 +36,7 @@ namespace FluentResults
             valueResult = Results.Ok(3);
 
             valueResult = Results.Ok<int>()
-                .WithValue(3)
-                .With(r => r.Value = 4);
+                .WithValue(3);
 
             valueResult = Results.Fail<int>("First error");
 

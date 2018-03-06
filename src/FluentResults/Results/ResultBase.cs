@@ -59,22 +59,10 @@ namespace FluentResults
         {
             return WithSuccess(new TSuccess());
         }
-        
-        public TResult With(Action<TResult> setProperty)
-        {
-            setProperty((TResult)this);
-            return (TResult)this;
-        }
 
         public Result<TNewValue> ConvertToResultWithValueType<TNewValue>()
         {
             return ResultHelper.Merge<Result<TNewValue>>(this);
-        }
-
-        public TNewResult ConvertToResultOfType<TNewResult>()
-            where TNewResult : ResultBase<TNewResult>, new()
-        {
-            return ResultHelper.Merge<TNewResult>(this);
         }
 
         public TResult Log()
