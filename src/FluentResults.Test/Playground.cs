@@ -58,10 +58,14 @@ namespace FluentResults
             var mergedResult1 = Results.Merge(result1, result2, result3);
             var convertedResult1 = mergedResult1.ToResult<int>();
 
+            Results.Ok().ToResult<int>();
+            Results.Ok<int>().ToResult<float>();
+            Results.Ok<int>().ToResult();
+
             var mergedResult2 = Results.Merge<int>(result1, result2, result3)
                 .WithValue(5);
 
-            var convertedResult2 = mergedResult2.ConvertTo();
+            var convertedResult2 = mergedResult2.ToResult();
         }
 
         public void LogTest()
