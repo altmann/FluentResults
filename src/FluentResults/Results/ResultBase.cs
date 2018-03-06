@@ -60,7 +60,7 @@ namespace FluentResults
             return WithSuccess(new TSuccess());
         }
 
-        public Result<TNewValue> ConvertToResultWithValueType<TNewValue>()
+        public Result<TNewValue> ToResult<TNewValue>()
         {
             return ResultHelper.Merge<Result<TNewValue>>(this);
         }

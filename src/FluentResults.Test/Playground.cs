@@ -56,7 +56,7 @@ namespace FluentResults
             var result3 = Results.Ok<int>();
 
             var mergedResult1 = Results.Merge(result1, result2, result3);
-            var convertedResult1 = mergedResult1.ConvertToResultWithValueType<int>();
+            var convertedResult1 = mergedResult1.ToResult<int>();
 
             var mergedResult2 = Results.Merge<int>(result1, result2, result3)
                 .WithValue(5);
