@@ -2,16 +2,17 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;net45</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <PackageVersion>1.0.0.0</PackageVersion>
+    <PackageVersion>1.1.0.0</PackageVersion>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
-Adapted the public api to provide two separate properties for accessing the value of a ValueResult:
-- Value
-  Return the Value if result object is in state success. If result object is in state failed then accessing property Value throw an exception. 
-- ValueOrDefault
-  Return the Value if result object is in state success. If result object is in state failed this property return the default value of the value type (e.g. default default(int))
+Methods removed:
+ - ConvertToResultOfType()
+
+Methods renamed:
+- ConvertToResultWithValueType() =&gt; ToResult()
+- ConvertTo() =&gt; ToResult()
     </PackageReleaseNotes>
     <Copyright>Copyright 2018 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Results exception error handling</PackageTags>
