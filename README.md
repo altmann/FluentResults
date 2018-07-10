@@ -102,7 +102,23 @@ You can also store the root cause of the error in the error object.
 
 ## Further features
 
-Merging (Combin)
+### Merging
+
+Multiple results can be merged with the static method `Merge()`.
+
+    var result1 = Results.Ok();
+    var result2 = Results.Fail("first error");
+    var result3 = Results.Ok<int>();
+
+    var mergedResult = Results.Merge(result1, result2, result3);
+
+### Converting
+
+A result object can be converted to another result object with the methods `ToResult()` and `ToResult<TValue>()`.
+
+    Results.Ok().ToResult<int>(); // converting a result to a result from type `Result<int>`
+    Results.Ok<int>().ToResult<float>(); // converting a result to a result from type `Result<float>`
+    Results.Ok<int>().ToResult(); // converting a result to a result from type `Result`
 
 Logging
 
