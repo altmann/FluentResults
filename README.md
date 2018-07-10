@@ -71,7 +71,7 @@ Processing a ValueResult object is as easy as processing a Result object. You ca
      var value3 = result.Value; // return value and doesn't throw exception because result is in success state
      var value4 = result.ValueOrDefault; // return value because result is in success state
 
-## Designing errors
+## Designing errors and success messages
 
 There are many Result Libraries which stores only simple string messages, but FluentResults stores powerful object-oriented Error and Success objects. The advantage is that all relevant information of an error is encapsulated within a class. Here is an example:
 
@@ -102,6 +102,23 @@ You can also store the root cause of the error in the error object.
 
 ## Further features
 
+### Chaining error and success messages
+
+In some cases it is necessary to chain multiple error and success messages in one result object. 
+
+    var result = Results.Fail("error message 1")
+        .WithError("error message 2")
+        .WithError("error message 3")
+        .WithSuccess("success message 1");
+        
+### Metadata
+
+It is possible to add metadata to error or success objects. 
+
+    var result1 = Result.Fail(new Error("Error 1").WithMetadata("metadata name", "metadata value"));
+    var result2 = Result.Ok()
+        .WithSuccess(new Success("Success 1").WithMetadata("metadata name", "metadata value"));
+
 ### Merging
 
 Multiple results can be merged with the static method `Merge()`.
@@ -119,6 +136,8 @@ A result object can be converted to another result object with the methods `ToRe
     Results.Ok().ToResult<int>(); // converting a result to a result from type `Result<int>`
     Results.Ok<int>().ToResult<float>(); // converting a result to a result from type `Result<float>`
     Results.Ok<int>().ToResult(); // converting a result to a result from type `Result`
+
+
 
 Logging
 
