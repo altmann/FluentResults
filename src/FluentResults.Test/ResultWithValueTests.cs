@@ -118,5 +118,17 @@ namespace FluentResults.Test
                 .Throw<InvalidOperationException>()
                 .WithMessage("Result is in status failed. Value is not set.");
         }
+
+        [TestMethod]
+        public void ToResult_ReturnFailedValueResult()
+        {
+            var valueResult = Results.Fail<int>("First error message");
+
+            // Act
+            var result = valueResult.ToResult();
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+        }
     }
 }

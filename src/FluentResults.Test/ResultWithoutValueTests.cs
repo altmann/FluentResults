@@ -77,5 +77,17 @@ namespace FluentResults.Test
             result.Reasons[0].Message.Should().Be("First error message");
             result.Reasons[1].Message.Should().Be("Second error message");
         }
+
+        [TestMethod]
+        public void ToResult_ReturnFailedValueResult()
+        {
+            var result = Results.Fail("First error message");
+
+            // Act
+            var valueResult = result.ToResult<int>();
+
+            // Assert
+            valueResult.IsFailed.Should().BeTrue();
+        }
     }
 }

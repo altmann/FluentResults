@@ -65,11 +65,6 @@ namespace FluentResults
             return ResultHelper.Merge<Result<TNewValue>>(this);
         }
 
-        public Result ToResult()
-        {
-            return ResultHelper.Merge<Result>(this);
-        }
-
         public TResult Log()
         {
             return Log(string.Empty);

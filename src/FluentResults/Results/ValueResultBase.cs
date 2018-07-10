@@ -36,6 +36,11 @@ namespace FluentResults
             return (TResult)this;
         }
 
+        public Result ToResult()
+        {
+            return ResultHelper.Merge<Result>(this);
+        }
+
         public override string ToString()
         {
             var baseString = base.ToString();
