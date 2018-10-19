@@ -16,7 +16,7 @@ Methods renamed:
     </PackageReleaseNotes>
     <Copyright>Copyright 2018 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
-    <ProjectUrl>https://github.com/altmann/FluentResults</ProjectUrl>
+    <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-64.png</PackageIconUrl>
   </PropertyGroup>
 </Project>
