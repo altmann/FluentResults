@@ -15,7 +15,7 @@ Methods renamed:
 - ConvertTo() =&gt; ToResult()
     </PackageReleaseNotes>
     <Copyright>Copyright 2018 (c) Michael Altmann. All rights reserved.</Copyright>
-    <PackageTags>Results exception error handling</PackageTags>
+    <PackageTags>Result Results exception error handling</PackageTags>
     <ProjectUrl>https://github.com/altmann/FluentResults</ProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-64.png</PackageIconUrl>
   </PropertyGroup>
