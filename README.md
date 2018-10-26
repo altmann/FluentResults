@@ -137,8 +137,33 @@ A result object can be converted to another result object with the methods `ToRe
     Results.Ok<int>().ToResult<float>(); // converting a result to a result from type `Result<float>`
     Results.Ok<int>().ToResult(); // converting a result to a result from type `Result`
 
+### Logging
 
+Sometimes it is necessary to log results. First create a logger. 
 
-Logging
+    public class MyConsoleLogger : ILogger
+    {
+        public void Log(string context, ResultBase result)
+        {
+            Console.WriteLine("{0}", result);
+        }
+    }
+
+Then you have to register your logger. 
+
+    var myLogger = new MyConsoleLogger();
+            Results.Setup(cfg => {
+                cfg.Logger = myLogger;
+            });
+
+Finally the logger can be used. 
+
+    var result = Results.Fail("Operation failed")
+        .Log();
+        
+Additionally a context as string can be passed.
+
+    var result = Results.Fail("Operation failed")
+        .Log("logger context");
 
 Extension methods
