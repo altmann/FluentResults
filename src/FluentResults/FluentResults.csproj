@@ -6,15 +6,8 @@
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>
-Methods removed:
- - ConvertToResultOfType()
-
-Methods renamed:
-- ConvertToResultWithValueType() =&gt; ToResult()
-- ConvertTo() =&gt; ToResult()
-    </PackageReleaseNotes>
-    <Copyright>Copyright 2018 (c) Michael Altmann. All rights reserved.</Copyright>
+    <PackageReleaseNotes>.NET Standard 2.0 support</PackageReleaseNotes>
+    <Copyright>Copyright 2019 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
     <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-64.png</PackageIconUrl>
