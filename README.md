@@ -168,4 +168,8 @@ Additionally a context as string can be passed.
     var result = Results.Fail("Operation failed")
         .Log("logger context");
 
-Extension methods
+## Contributers
+
+A big thanks to the project contributors!
+
+- [michaelmsm89](https://github.com/michaelmsm89)
