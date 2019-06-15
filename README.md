@@ -173,3 +173,7 @@ Additionally a context as string can be passed.
 A big thanks to the project contributors!
 
 - [michaelmsm89](https://github.com/michaelmsm89)
+
+## Copyright
+
+Copyright (c) Michael Altmann. See [LICENSE](https://raw.githubusercontent.com/altmann/FluentResults/master/LICENSE) for details.
