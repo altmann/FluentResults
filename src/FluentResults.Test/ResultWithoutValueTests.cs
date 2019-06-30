@@ -79,12 +79,24 @@ namespace FluentResults.Test
         }
 
         [TestMethod]
-        public void ToResult_ReturnFailedValueResult()
+        public void ToResult_ReturnFailedResult()
         {
             var result = Results.Fail("First error message");
 
             // Act
             var valueResult = result.ToResult<int>();
+
+            // Assert
+            valueResult.IsFailed.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void ImplicitCastOperator_ReturnFailedValueResult()
+        {
+            var result = Results.Fail("First error message");
+
+            // Act
+            Result<bool> valueResult = result;
 
             // Assert
             valueResult.IsFailed.Should().BeTrue();
