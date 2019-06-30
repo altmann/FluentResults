@@ -21,7 +21,7 @@ namespace FluentResults
 
                 return _value;
             }
-            set
+            private set
             {
                 if(IsFailed)
                     throw new InvalidOperationException("Result is in status failed. Value is not set.");
