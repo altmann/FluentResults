@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace FluentResults
 {
@@ -42,6 +43,12 @@ namespace FluentResults
 
             valueResult = Results.Fail<int>(new Error("first error"))
                 .WithError("second error");
+
+            IEnumerable<Result> results = new List<Result>();
+            Result mergedResult = results.Merge();
+
+            IEnumerable<Result<int>> results2 = new List<Result<int>>();
+            Result<IEnumerable<int>> mergedResult2 = results.Merge();
         }
 
         public void TestExtensions()
