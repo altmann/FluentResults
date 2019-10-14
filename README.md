@@ -117,9 +117,14 @@ In some cases it is necessary to chain multiple error and success messages in on
 
 It is possible to add metadata to error or success objects. 
 
-    var result1 = Results.Fail(new Error("Error 1").WithMetadata("metadata name", "metadata value"));
+    var result1 = Results.Fail(new Error("Error 1")
+	                           .WithMetadata("metadata name", "metadata value")
+							   );
+
     var result2 = Results.Ok()
-        .WithSuccess(new Success("Success 1").WithMetadata("metadata name", "metadata value"));
+        .WithSuccess(new Success("Success 1")
+		             .WithMetadata("metadata name", "metadata value")
+					 );
 
 ### Merging
 
