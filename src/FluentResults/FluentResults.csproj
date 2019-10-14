@@ -6,7 +6,10 @@
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>.NET Standard 2.1 support</PackageReleaseNotes>
+    <PackageReleaseNotes>
+.NET Standard 2.1 and .NET 4.8 support
+Add Merge() IEnumerable extension method
+    </PackageReleaseNotes>
     <Copyright>Copyright 2019 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
     <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
