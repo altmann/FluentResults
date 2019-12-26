@@ -38,6 +38,7 @@ namespace FluentResults
             return result;
         }
 
+        [Obsolete("Removed in next major version. Use Results.Ok<TValue>(TValue value) instead.")]
         public static Result<TValue> Ok<TValue>()
         {
             return new Result<TValue>();
