@@ -2,13 +2,14 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;netstandard2.0;netstandard2.1;net45;net48</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <PackageVersion>1.3.0.0</PackageVersion>
+    <PackageVersion>1.4.0.0</PackageVersion>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
-.NET Standard 2.1 and .NET 4.8 support
-Add Merge() IEnumerable extension method
+Improve ToResult() to convert between results
+Improve Merge() to merge multiple results
+Mark Result constructors as deprecated
     </PackageReleaseNotes>
     <Copyright>Copyright 2019 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
