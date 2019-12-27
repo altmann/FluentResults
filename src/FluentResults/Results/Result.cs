@@ -7,6 +7,12 @@ namespace FluentResults
         [Obsolete("Removed in next major version. Use Results.Ok() instead.")]
         public Result()
         { }
+
+        public Result<TNewValue> ToResult<TNewValue>()
+        {
+            return new Result<TNewValue>()
+                .WithReasons(Reasons);
+        }
     }
 
     public class Result<TValue> : ResultBase<Result<TValue>>
@@ -45,7 +51,18 @@ namespace FluentResults
 
         public Result ToResult()
         {
-            return ResultHelper.Merge(this);
+            return new Result()
+                .WithReasons(Reasons);
+        }
+
+        public Result<TNewValue> ToResult<TNewValue>(Func<TValue, TNewValue> valueConverter = null)
+        {
+            if(IsSuccess && valueConverter == null)
+                throw new ArgumentException("If result is success then valueConverter should not be null");
+
+            return new Result<TNewValue>()
+                .WithValue(IsFailed ? default : valueConverter(Value))
+                .WithReasons(Reasons);
         }
 
         public override string ToString()

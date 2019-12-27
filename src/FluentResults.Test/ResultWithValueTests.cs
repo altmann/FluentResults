@@ -132,6 +132,43 @@ namespace FluentResults.Test
         }
 
         [TestMethod]
+        public void ToResult_ToAntotherValueType_ReturnFailedResult()
+        {
+            var valueResult = Results.Fail<int>("First error message");
+
+            // Act
+            var result = valueResult.ToResult<float>();
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void ToResult_ToAntotherValueTypeWithOkResultAndNoConverter_ReturnFailedResult()
+        {
+            var valueResult = Results.Fail<int>("Failed");
+
+            // Act
+            var result = valueResult.ToResult<float>();
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void ToResult_ToAntotherValueTypeWithOkResultAndConverter_ReturnFailedResult()
+        {
+            var valueResult = Results.Ok(4);
+
+            // Act
+            var result = valueResult.ToResult<float>(v => v);
+
+            // Assert
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(4);
+        }
+
+        [TestMethod]
         public void ImplicitCastOperator_ReturnFailedResult()
         {
             var valueResult = Results.Fail<int>("First error message");

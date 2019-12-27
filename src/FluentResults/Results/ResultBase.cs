@@ -67,11 +67,7 @@ namespace FluentResults
             return WithSuccess(new TSuccess());
         }
 
-        public Result<TNewValue> ToResult<TNewValue>()
-        {
-            return new Result<TNewValue>()
-                .WithReasons(Reasons);
-        }
+        
 
         public TResult Log()
         {
