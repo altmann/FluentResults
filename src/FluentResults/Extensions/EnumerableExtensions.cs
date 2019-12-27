@@ -7,12 +7,12 @@ namespace FluentResults
     {
         public static Result Merge(this IEnumerable<Result> results)
         {
-            return ResultHelper.Merge<Result>(results.ToArray());
+            return ResultHelper.Merge(results.ToArray());
         }
 
-        public static Result Merge<TValue>(this IEnumerable<Result<TValue>> results)
+        public static Result<IEnumerable<TValue>> Merge<TValue>(this IEnumerable<Result<TValue>> results)
         {
-            return ResultHelper.Merge<Result<TValue>>(results.ToArray());
+            return ResultHelper.MergeWithValue(results.ToArray());
         }
     }
 }

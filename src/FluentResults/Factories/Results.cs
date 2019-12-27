@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace FluentResults
 {
@@ -67,12 +68,12 @@ namespace FluentResults
 
         public static Result Merge(params ResultBase[] results)
         {
-            return ResultHelper.Merge<Result>(results);
+            return ResultHelper.Merge(results);
         }
 
-        public static Result<TValue> Merge<TValue>(params ResultBase[] results)
+        public static Result<IEnumerable<TValue>> Merge<TValue>(params Result<TValue>[] results)
         {
-            return ResultHelper.Merge<Result<TValue>>(results);
+            return ResultHelper.MergeWithValue(results);
         }
     }
 }

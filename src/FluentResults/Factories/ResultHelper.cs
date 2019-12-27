@@ -5,10 +5,9 @@ namespace FluentResults
 {
     internal static class ResultHelper
     {
-        public static TResult Merge<TResult>(params ResultBase[] results)
-            where TResult : ResultBase<TResult>, new()
+        public static Result Merge(params ResultBase[] results)
         {
-            var finalResult = new TResult();
+            var finalResult = Results.Ok();
 
             foreach (var result in results)
             {
@@ -21,8 +20,7 @@ namespace FluentResults
             return finalResult;
         }
 
-        public static Result<IEnumerable<TValue>> Merge<TResult, TValue>(params ValueResultBase<TResult, TValue>[] results)
-            where TResult : ValueResultBase<TResult, TValue>, new()
+        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(params Result<TValue>[] results)
         {
             var finalResult = Results.Ok<IEnumerable<TValue>>();
 

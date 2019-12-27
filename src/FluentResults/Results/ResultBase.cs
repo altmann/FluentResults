@@ -27,6 +27,14 @@ namespace FluentResults
             return (TResult)this;
         }
 
+        public TResult WithReasons(IEnumerable<Reason> reasons)
+        {
+            foreach (var reason in reasons)
+                WithReason(reason);
+
+            return (TResult)this;
+        }
+
         public TResult WithError(string errorMessage)
         {
             return WithError(new Error(errorMessage));
@@ -61,7 +69,8 @@ namespace FluentResults
 
         public Result<TNewValue> ToResult<TNewValue>()
         {
-            return ResultHelper.Merge<Result<TNewValue>>(this);
+            return new Result<TNewValue>()
+                .WithReasons(Reasons);
         }
 
         public TResult Log()

@@ -23,7 +23,7 @@ namespace FluentResults.Test
         }
 
         [TestMethod]
-        public void Merge_WithResultWithValue_ShouldMergeResults()
+        public void Merge_WithFailedResultWithValue_ShouldMergeResults()
         {
             var results = new List<Result<int>>
             {
@@ -38,7 +38,7 @@ namespace FluentResults.Test
         }
 
         [TestMethod]
-        public void Merge_WithResultWithValue2_ShouldMergeResults()
+        public void Merge_WithSuccessResultWithValue_ShouldMergeResults()
         {
             var results = new List<Result<int>>
             {
@@ -50,6 +50,10 @@ namespace FluentResults.Test
 
             mergedResult.IsSuccess.Should().BeTrue();
             mergedResult.Value.Should().HaveCount(2);
+            mergedResult.Value.Should().BeEquivalentTo(new[]
+            {
+                1, 2
+            });
         }
     }
 }
