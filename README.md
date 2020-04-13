@@ -144,10 +144,10 @@ Multiple results can be merged with the static method `Merge()`.
 
 A result object can be converted to another result object with the methods `ToResult()` and `ToResult<TValue>()`.
 
-    Results.Ok().ToResult<int>(); // converting a result to a result from type `Result<int>`
-    Results.Ok<int>(5).ToResult<float>(v => v); // converting a result to a result from type `Result<float>`
-    Results.Fail<int>("Failed").ToResult<float>() // converting a result from type `Result<int>` to result from type `Result<float>` without passing the converting logic because result is in failed state and therefore no converting logic needed
-    Results.Ok<int>().ToResult(); // converting a result to a result from type `Result`
+    Results.Ok().ToResult<int>(); // converting a result to a result from type Result<int>
+    Results.Ok<int>(5).ToResult<float>(v => v); // converting a result to a result from type Result<float>
+    Results.Fail<int>("Failed").ToResult<float>() // converting a result from type Result<int> to result from type Result<float> without passing the converting logic because result is in failed state and therefore no converting logic needed
+    Results.Ok<int>().ToResult(); // converting a result to a result from type Result
 
 ### Logging
 
