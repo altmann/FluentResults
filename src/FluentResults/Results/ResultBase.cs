@@ -25,6 +25,17 @@ namespace FluentResults
 
         public bool HasError<TError>(Func<TError, bool> predicate) where TError : Error
         {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return ResultHelper.HasError(Errors, predicate);
+        }
+
+        public bool HasError(Func<Error, bool> predicate)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
             return ResultHelper.HasError(Errors, predicate);
         }
 
@@ -34,6 +45,11 @@ namespace FluentResults
         }
 
         public bool HasSuccess<TSuccess>(Func<TSuccess, bool> predicate) where TSuccess : Success
+        {
+            return ResultHelper.HasSuccess(Successes, predicate);
+        }
+
+        public bool HasSuccess(Func<Success, bool> predicate)
         {
             return ResultHelper.HasSuccess(Successes, predicate);
         }

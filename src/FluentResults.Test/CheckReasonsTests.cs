@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace FluentResults.Test
 {
     [TestClass]
-    public class CheckReasons
+    public class CheckReasonsTests
     {
         class NotFoundError : Error
         {
@@ -86,6 +86,22 @@ namespace FluentResults.Test
                 );
 
             result.HasError<NotFoundError>(e => e.Id == 2).Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void HasErrorWithMetadataKey_WithSearchedError()
+        {
+            var result = Results.Fail(new Error().WithMetadata("MetadataKey1", "MetadataValue1"));
+
+            result.HasError(e => e.HasMetadataKey("MetadataKey1")).Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void HasErrorWithMetadataValue_WithSearchedError()
+        {
+            var result = Results.Fail(new Error().WithMetadata("MetadataKey1", "MetadataValue1"));
+
+            result.HasError(e => e.HasMetadata("MetadataKey1", "MetadataValue1")).Should().BeTrue();
         }
 
         [TestMethod]
