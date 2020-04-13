@@ -51,6 +51,44 @@ namespace FluentResults.Test
         }
 
         [TestMethod]
+        public void HasErrorInNestedError_WithoutSearchedError()
+        {
+            var result = Results.Ok()
+                .WithError(new Error("Main Error")
+                    .CausedBy(new NotFoundError(2)));
+
+            result.HasError<NotFoundError>().Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void HasErrorInVeryDeepNestedError_WithoutSearchedError()
+        {
+            var result = Results.Ok()
+                .WithError(new Error("Main Error")
+                    .CausedBy(new Error("Another Error")
+                        .CausedBy(new Error("Root Error"))
+                        .CausedBy(new NotFoundError(2))
+                    )
+                );
+
+            result.HasError<NotFoundError>().Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void HasErrorInVeryDeepNestedErrorWithPredicate_WithoutSearchedError()
+        {
+            var result = Results.Ok()
+                .WithError(new Error("Main Error")
+                    .CausedBy(new Error("Another Error")
+                        .CausedBy(new Error("Root Error"))
+                        .CausedBy(new NotFoundError(2))
+                    )
+                );
+
+            result.HasError<NotFoundError>(e => e.Id == 2).Should().BeTrue();
+        }
+
+        [TestMethod]
         public void HasSuccess_WithSearchedSuccess()
         {
             var result = Results.Ok()

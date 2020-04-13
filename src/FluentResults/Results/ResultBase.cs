@@ -25,7 +25,7 @@ namespace FluentResults
 
         public bool HasError<TError>(Func<TError, bool> predicate) where TError : Error
         {
-            return Errors.Any(error => error is TError errorOfTError && predicate(errorOfTError));
+            return ResultHelper.HasError(Errors, predicate);
         }
 
         public bool HasSuccess<TSuccess>() where TSuccess : Success
@@ -35,7 +35,7 @@ namespace FluentResults
 
         public bool HasSuccess<TSuccess>(Func<TSuccess, bool> predicate) where TSuccess : Success
         {
-            return Successes.Any(success => success is TSuccess successOfTSuccess && predicate(successOfTSuccess));
+            return ResultHelper.HasSuccess(Successes, predicate);
         }
     }
 
