@@ -7,7 +7,7 @@
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
-Add HasError(..) and HasSuccess(..) methods
+Improve check error/success handling with HasError(..) and HasSuccess(..) methods
     </PackageReleaseNotes>
     <Copyright>Copyright 2020 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
