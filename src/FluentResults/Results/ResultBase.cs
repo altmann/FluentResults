@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FluentResults
@@ -15,6 +16,42 @@ namespace FluentResults
         protected ResultBase()
         {
             Reasons = new List<Reason>();
+        }
+
+        public bool HasError<TError>() where TError : Error
+        {
+            return HasError<TError>(error => true);
+        }
+
+        public bool HasError<TError>(Func<TError, bool> predicate) where TError : Error
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return ResultHelper.HasError(Errors, predicate);
+        }
+
+        public bool HasError(Func<Error, bool> predicate)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return ResultHelper.HasError(Errors, predicate);
+        }
+
+        public bool HasSuccess<TSuccess>() where TSuccess : Success
+        {
+            return HasSuccess<TSuccess>(success => true);
+        }
+
+        public bool HasSuccess<TSuccess>(Func<TSuccess, bool> predicate) where TSuccess : Success
+        {
+            return ResultHelper.HasSuccess(Successes, predicate);
+        }
+
+        public bool HasSuccess(Func<Success, bool> predicate)
+        {
+            return ResultHelper.HasSuccess(Successes, predicate);
         }
     }
 

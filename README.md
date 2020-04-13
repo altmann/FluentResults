@@ -122,13 +122,11 @@ In some cases it is necessary to chain multiple error and success messages in on
 It is possible to add metadata to error or success objects. 
 
     var result1 = Results.Fail(new Error("Error 1")
-	                           .WithMetadata("metadata name", "metadata value")
-							   );
+	    .WithMetadata("metadata name", "metadata value"));
 
     var result2 = Results.Ok()
         .WithSuccess(new Success("Success 1")
-		             .WithMetadata("metadata name", "metadata value")
-					 );
+		    .WithMetadata("metadata name", "metadata value"));
 
 ### Merging
 
@@ -144,10 +142,26 @@ Multiple results can be merged with the static method `Merge()`.
 
 A result object can be converted to another result object with the methods `ToResult()` and `ToResult<TValue>()`.
 
-    Results.Ok().ToResult<int>(); // converting a result to a result from type `Result<int>`
-    Results.Ok<int>(5).ToResult<float>(v => v); // converting a result to a result from type `Result<float>`
-    Results.Fail<int>("Failed").ToResult<float>() // converting a result from type `Result<int>` to result from type `Result<float>` without passing the converting logic because result is in failed state and therefore no converting logic needed
-    Results.Ok<int>().ToResult(); // converting a result to a result from type `Result`
+    Results.Ok().ToResult<int>(); // converting a result to a result from type Result<int>
+    Results.Ok<int>(5).ToResult<float>(v => v); // converting a result to a result from type Result<float>
+    Results.Fail<int>("Failed").ToResult<float>() // converting a result from type Result<int> to result from type Result<float> without passing the converting logic because result is in failed state and therefore no converting logic needed
+    Results.Ok<int>().ToResult(); // converting a result to a result from type Result
+
+### Handling/catching errors
+
+Similar to the catch block for exceptions the checking and handling of errors within a Result object is supported by this library with some methods: 
+
+    result.HasError<MyCustomError>(); // check if the Result object contains an error from a specific type
+    result.HasError<MyCustomError>(myCustomError => myCustomError.MyField == 2); // check if the Result object contains an error from a specific type and with a specific condition
+    result.HasError(error => error.HasMetadataKey("MyKey")); // check if the Result object contains an error with a specific metadata key
+    result.HasError(error => error.HasMetadata("MyKey", "MyValue")); // check if the Result object contains an error with a specific metadata
+
+### Handling successes
+
+Checking if a result object contains a specific success object can be done with the method `HasSuccess()`
+
+    result.HasSuccess<MyCustomSuccess>(); // check if the Result object contains a success from a specific type
+    result.HasSuccess<MyCustomSuccess>(success => success.MyField == 3); // check if the Result object contains a success from a specific type and with a specific condition
 
 ### Logging
 
