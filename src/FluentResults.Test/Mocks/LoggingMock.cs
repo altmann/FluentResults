@@ -1,6 +1,6 @@
 ﻿namespace FluentResults.Test.Mocks
 {
-    public class LoggingMock : ILogger
+    public class LoggingMock : IResultLogger
     {
         public void Log(string context, ResultBase result)
         {

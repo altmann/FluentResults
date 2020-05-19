@@ -2,7 +2,7 @@
 {
     public class ResultSettingsBuilder
     {
-        public ILogger Logger { get; set; }
+        public IResultLogger Logger { get; set; }
 
         public ResultSettingsBuilder()
         {
