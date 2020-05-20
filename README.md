@@ -167,7 +167,7 @@ Checking if a result object contains a specific success object can be done with 
 
 Sometimes it is necessary to log results. First create a logger. 
 
-    public class MyConsoleLogger : ILogger
+    public class MyConsoleLogger : IResultLogger
     {
         public void Log(string context, ResultBase result)
         {
