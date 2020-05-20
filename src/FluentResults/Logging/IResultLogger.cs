@@ -1,6 +1,6 @@
 ﻿namespace FluentResults
 {
-    public interface ILogger
+    public interface IResultLogger
     {
         void Log(string context, ResultBase result);
     }

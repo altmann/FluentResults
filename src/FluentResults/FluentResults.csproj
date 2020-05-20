@@ -2,12 +2,12 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;netstandard2.0;netstandard2.1;net45;net48</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <PackageVersion>1.5.0.0</PackageVersion>
+    <PackageVersion>1.6.0.0</PackageVersion>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
-Improve check error/success handling with HasError(..) and HasSuccess(..) methods
+Rename ILogger so that there is no name conflict with the ILogger interface from the Microsoft AspNet logging package
     </PackageReleaseNotes>
     <Copyright>Copyright 2020 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>

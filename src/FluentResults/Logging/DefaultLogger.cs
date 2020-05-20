@@ -1,6 +1,6 @@
 ﻿namespace FluentResults
 {
-    public class DefaultLogger : ILogger
+    public class DefaultLogger : IResultLogger
     {
         public void Log(string context, ResultBase result)
         {

@@ -2,6 +2,6 @@
 {
     public class ResultSettings
     {
-        public ILogger Logger { get; set; }
+        public IResultLogger Logger { get; set; }
     }
 }
