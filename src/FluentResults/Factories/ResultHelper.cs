@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
+// ReSharper disable once CheckNamespace
 namespace FluentResults
 {
     internal static class ResultHelper
     {
         public static Result Merge(params ResultBase[] results)
         {
-            var finalResult = Results.Ok();
+            var finalResult = Result.Ok();
 
             foreach (var result in results)
             {
@@ -23,7 +24,7 @@ namespace FluentResults
 
         public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(params Result<TValue>[] results)
         {
-            var finalResult = Results.Ok<IEnumerable<TValue>>();
+            var finalResult = Result.Ok<IEnumerable<TValue>>(new List<TValue>());
 
             foreach (var result in results)
             {

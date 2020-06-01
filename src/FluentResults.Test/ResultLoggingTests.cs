@@ -17,7 +17,7 @@ namespace FluentResults.Test
             });
 
             // Act
-            new Result()
+            Result.Ok()
                 .Log();
 
             // Assert
