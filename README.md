@@ -35,8 +35,8 @@ If you want a short summary read that: [Error Handling — Returning Results
 ## Creating a Result
 There are two types of Results, a success result and an error result. Both of them can be created easily:
 
-     Result successResult = Results.Ok(); //create a success result
-     Result errorResult = Results.Fail("Operation failed"); //create an error result
+     Result successResult = Result.Ok(); //create a success result
+     Result errorResult = Result.Fail("Operation failed"); //create an error result
 
 The class Result can be used for typical void methods which have no return value.
 
@@ -57,8 +57,8 @@ After you get a Result object from a method you have to process it. This means, 
 ## Creating a ValueResult
 For methods with return value the generic class `Result<T>` should be used which have a further property `Value` to store a value. You can set the property value in a fluent way.
 
-     Result<int> successResult = Results.Ok<int>(5); //create a success result with Value 5
-     Result<int> errorResult = Results.Fail<int>("Operation failed"); //create an error result
+     Result<int> successResult = Result.Ok<int>(5); //create a success result with Value 5
+     Result<int> errorResult = Result.Fail<int>("Operation failed"); //create an error result
 
 ## Processing a ValueResult
 Processing a ValueResult object is as easy as processing a Result object. You can access the value within the returned ValueResult object via the properties `Value` and `ValueOrDefault`. The property `Value` throws an exception if the ValueResult object is in failed state. The property `ValueOrDefault` return the default value of the value type if the ValueResult is in success state. 
@@ -93,7 +93,7 @@ There are many Result Libraries which stores only simple string messages, but Fl
 
 You can use this error classes with the fluent API of FluentResults. 
 
-    var result = Results.Fail(new StartDateIsAfterEndDateError(startDate, endDate));
+    var result = Result.Fail(new StartDateIsAfterEndDateError(startDate, endDate));
     
 You can also store the root cause of the error in the error object. 
 
@@ -103,7 +103,7 @@ You can also store the root cause of the error in the error object.
     }
     catch(CsvExportException ex)
     {
-        return Results.Fail(new Error("CSV Export not executed successfully")
+        return Result.Fail(new Error("CSV Export not executed successfully")
             .CausedBy(ex));
     }
 
@@ -113,7 +113,7 @@ You can also store the root cause of the error in the error object.
 
 In some cases it is necessary to chain multiple error and success messages in one result object. 
 
-    var result = Results.Fail("error message 1")
+    var result = Result.Fail("error message 1")
         .WithError("error message 2")
         .WithError("error message 3")
         .WithSuccess("success message 1");
@@ -122,10 +122,10 @@ In some cases it is necessary to chain multiple error and success messages in on
 
 It is possible to add metadata to error or success objects. 
 
-    var result1 = Results.Fail(new Error("Error 1")
+    var result1 = Result.Fail(new Error("Error 1")
 	    .WithMetadata("metadata name", "metadata value"));
 
-    var result2 = Results.Ok()
+    var result2 = Result.Ok()
         .WithSuccess(new Success("Success 1")
 		    .WithMetadata("metadata name", "metadata value"));
 
@@ -133,20 +133,20 @@ It is possible to add metadata to error or success objects.
 
 Multiple results can be merged with the static method `Merge()`.
 
-    var result1 = Results.Ok();
-    var result2 = Results.Fail("first error");
-    var result3 = Results.Ok<int>();
+    var result1 = Result.Ok();
+    var result2 = Result.Fail("first error");
+    var result3 = Result.Ok<int>();
 
-    var mergedResult = Results.Merge(result1, result2, result3);
+    var mergedResult = Result.Merge(result1, result2, result3);
 
 ### Converting
 
 A result object can be converted to another result object with the methods `ToResult()` and `ToResult<TValue>()`.
 
-    Results.Ok().ToResult<int>(); // converting a result to a result from type Result<int>
-    Results.Ok<int>(5).ToResult<float>(v => v); // converting a result to a result from type Result<float>
-    Results.Fail<int>("Failed").ToResult<float>() // converting a result from type Result<int> to result from type Result<float> without passing the converting logic because result is in failed state and therefore no converting logic needed
-    Results.Ok<int>().ToResult(); // converting a result to a result from type Result
+    Result.Ok().ToResult<int>(); // converting a result to a result from type Result<int>
+    Result.Ok<int>(5).ToResult<float>(v => v); // converting a result to a result from type Result<float>
+    Result.Fail<int>("Failed").ToResult<float>() // converting a result from type Result<int> to result from type Result<float> without passing the converting logic because result is in failed state and therefore no converting logic needed
+    Result.Ok<int>().ToResult(); // converting a result to a result from type Result
 
 ### Handling/catching errors
 
@@ -179,18 +179,18 @@ Sometimes it is necessary to log results. First create a logger.
 Then you have to register your logger. 
 
     var myLogger = new MyConsoleLogger();
-            Results.Setup(cfg => {
+            Result.Setup(cfg => {
                 cfg.Logger = myLogger;
             });
 
 Finally the logger can be used. 
 
-    var result = Results.Fail("Operation failed")
+    var result = Result.Fail("Operation failed")
         .Log();
         
 Additionally a context as string can be passed.
 
-    var result = Results.Fail("Operation failed")
+    var result = Result.Fail("Operation failed")
         .Log("logger context");
 
 ## Contributers
