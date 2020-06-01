@@ -29,7 +29,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasError_WithSearchedError()
         {
-            var result = Results.Fail(new NotFoundError(3));
+            var result = Result.Fail(new NotFoundError(3));
 
             result.HasError<NotFoundError>().Should().BeTrue();
         }
@@ -37,7 +37,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasErrorWithPredicate_WithSearchedError()
         {
-            var result = Results.Fail(new NotFoundError(3));
+            var result = Result.Fail(new NotFoundError(3));
 
             result.HasError<NotFoundError>(e => e.Id == 3).Should().BeTrue();
         }
@@ -45,7 +45,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasError_WithoutSearchedError()
         {
-            var result = Results.Ok();
+            var result = Result.Ok();
 
             result.HasError<NotFoundError>().Should().BeFalse();
         }
@@ -53,7 +53,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasErrorInNestedError_WithoutSearchedError()
         {
-            var result = Results.Ok()
+            var result = Result.Ok()
                 .WithError(new Error("Main Error")
                     .CausedBy(new NotFoundError(2)));
 
@@ -63,7 +63,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasErrorInVeryDeepNestedError_WithoutSearchedError()
         {
-            var result = Results.Ok()
+            var result = Result.Ok()
                 .WithError(new Error("Main Error")
                     .CausedBy(new Error("Another Error")
                         .CausedBy(new Error("Root Error"))
@@ -77,7 +77,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasErrorInVeryDeepNestedErrorWithPredicate_WithoutSearchedError()
         {
-            var result = Results.Ok()
+            var result = Result.Ok()
                 .WithError(new Error("Main Error")
                     .CausedBy(new Error("Another Error")
                         .CausedBy(new Error("Root Error"))
@@ -91,7 +91,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasErrorWithMetadataKey_WithSearchedError()
         {
-            var result = Results.Fail(new Error().WithMetadata("MetadataKey1", "MetadataValue1"));
+            var result = Result.Fail(new Error().WithMetadata("MetadataKey1", "MetadataValue1"));
 
             result.HasError(e => e.HasMetadataKey("MetadataKey1")).Should().BeTrue();
         }
@@ -99,7 +99,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasErrorWithMetadataValueWithPredicate_WithSearchedError()
         {
-            var result = Results.Fail(new Error().WithMetadata("MetadataKey1", "MetadataValue1"));
+            var result = Result.Fail(new Error().WithMetadata("MetadataKey1", "MetadataValue1"));
 
             result.HasError(e => e.HasMetadata("MetadataKey1", metadataValue => (string)metadataValue == "MetadataValue1")).Should().BeTrue();
         }
@@ -107,7 +107,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasErrorWithNoMetadataValueWithPredicate_WithSearchedError()
         {
-            var result = Results.Fail(new Error());
+            var result = Result.Fail(new Error());
 
             result.HasError(e => e.HasMetadata("MetadataKey1", metadataValue => (string)metadataValue == "MetadataValue1")).Should().BeFalse();
         }
@@ -115,7 +115,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasSuccess_WithSearchedSuccess()
         {
-            var result = Results.Ok()
+            var result = Result.Ok()
                 .WithSuccess(new FoundSuccess(3));
 
             result.HasSuccess<FoundSuccess>().Should().BeTrue();
@@ -124,7 +124,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasSuccessWithPredicate_WithSearchedSuccess()
         {
-            var result = Results.Ok()
+            var result = Result.Ok()
                 .WithSuccess(new FoundSuccess(3));
 
             result.HasSuccess<FoundSuccess>(e => e.Id == 3).Should().BeTrue();
@@ -133,7 +133,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void HasSuccess_WithoutSearchedSuccess()
         {
-            var result = Results.Fail("error");
+            var result = Result.Fail("error");
 
             result.HasSuccess<FoundSuccess>().Should().BeFalse();
         }

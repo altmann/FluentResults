@@ -11,7 +11,7 @@ namespace FluentResults.Test
         public void CreateOkResult_SuccessResult()
         {
             // Act
-            var okResult = Results.Ok();
+            var okResult = Result.Ok();
 
             // Assert
             okResult.IsFailed.Should().BeFalse();
@@ -26,7 +26,7 @@ namespace FluentResults.Test
         public void CreateOkResultWithSuccess_SuccessResultWithSuccess()
         {
             // Act
-            var okResult = Results.Ok()
+            var okResult = Result.Ok()
                 .WithSuccess("First success message");
 
             // Assert
@@ -39,7 +39,7 @@ namespace FluentResults.Test
         public void CreateOkResultWith2Successes_SuccessResultWith2Successes()
         {
             // Act
-            var okResult = Results.Ok()
+            var okResult = Result.Ok()
                 .WithSuccess("First success message")
                 .WithSuccess("Second success message");
 
@@ -55,7 +55,7 @@ namespace FluentResults.Test
         public void CreateFailedResult_FailedResult()
         {
             // Act
-            var result = Results.Fail("First error message");
+            var result = Result.Fail("First error message");
 
             // Assert
             result.Reasons.Should().HaveCount(1);
@@ -67,7 +67,7 @@ namespace FluentResults.Test
         public void CreateFailedResultWith2Errors_FailedResultWith2Errors()
         {
             // Act
-            var result = Results.Fail("First error message")
+            var result = Result.Fail("First error message")
                 .WithError("Second error message");
 
             // Assert
@@ -81,7 +81,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void ToResult_ReturnFailedResult()
         {
-            var result = Results.Fail("First error message");
+            var result = Result.Fail("First error message");
 
             // Act
             var valueResult = result.ToResult<int>();
@@ -93,7 +93,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void ImplicitCastOperator_ReturnFailedValueResult()
         {
-            var result = Results.Fail("First error message");
+            var result = Result.Fail("First error message");
 
             // Act
             Result<bool> valueResult = result;

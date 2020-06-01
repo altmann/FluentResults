@@ -10,7 +10,7 @@ namespace FluentResults.Test
         public void OkResultWithoutValueToString_OkResult()
         {
             // Act
-            var result = Results.Ok();
+            var result = Result.Ok();
 
             // Assert
             result.ToString().Should().Be("Result: IsSuccess='True'");
@@ -20,7 +20,7 @@ namespace FluentResults.Test
         public void FailedResultWithoutValueToString_FailedResult()
         {
             // Act
-            var result = Results.Fail("My error");
+            var result = Result.Fail("My error");
 
             // Assert
             result.ToString().Should().Be("Result: IsSuccess='False', Reasons='Error with Message='My error''");
@@ -30,7 +30,7 @@ namespace FluentResults.Test
         public void OkResultWithValueToString_OkResult()
         {
             // Act
-            var result = Results.Ok<int>();
+            var result = Result.Ok<int>();
 
             // Assert
             result.ToString().Should().Be("Result: IsSuccess='True', Value='0'");
@@ -40,7 +40,7 @@ namespace FluentResults.Test
         public void FailedResultWithValueToString_FailedResult()
         {
             // Act
-            var result = Results.Fail<int>("My error");
+            var result = Result.Fail<int>("My error");
 
             // Assert
             result.ToString().Should().Be("Result: IsSuccess='False', Reasons='Error with Message='My error'', Value='0'");

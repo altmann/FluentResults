@@ -15,33 +15,33 @@ namespace FluentResults
     {
         public void Simple()
         {
-            var voidResult = Results.Ok();
+            var voidResult = Result.Ok();
             
-            voidResult = Results.Ok()
+            voidResult = Result.Ok()
                 .WithSuccess("This is a success")
                 .WithSuccess("This is a second success");
 
-            voidResult = Results.Fail("First error");
+            voidResult = Result.Fail("First error");
 
-            voidResult = Results.Fail(new Error("First error"));
+            voidResult = Result.Fail(new Error("First error"));
 
-            voidResult = Results.Fail("First error")
+            voidResult = Result.Fail("First error")
                 .WithError("second error")
                 .WithError(new CustomError().CausedBy(new InvalidCastException()));
 
 
-            var valueResult = Results.Ok<int>()
+            var valueResult = Result.Ok<int>()
                 .WithSuccess("first success")
                 .WithValue(3);
 
-            valueResult = Results.Ok(3);
+            valueResult = Result.Ok(3);
 
-            valueResult = Results.Ok<int>()
+            valueResult = Result.Ok<int>()
                 .WithValue(3);
 
-            valueResult = Results.Fail<int>("First error");
+            valueResult = Result.Fail<int>("First error");
 
-            valueResult = Results.Fail<int>(new Error("first error"))
+            valueResult = Result.Fail<int>(new Error("first error"))
                 .WithError("second error");
 
             IEnumerable<Result> results = new List<Result>();
@@ -58,25 +58,25 @@ namespace FluentResults
 
         public void MergeTest()
         {
-            var result1 = Results.Ok();
-            var result2 = Results.Fail("first error");
-            var result3 = Results.Ok<int>();
+            var result1 = Result.Ok();
+            var result2 = Result.Fail("first error");
+            var result3 = Result.Ok<int>();
 
-            var mergedResult1 = Results.Merge(result1, result2, result3);
+            var mergedResult1 = Result.Merge(result1, result2, result3);
             var convertedResult1 = mergedResult1.ToResult<int>();
 
-            Results.Ok().ToResult<int>();
-            Results.Ok<int>().ToResult<float>();
-            Results.Ok<int>().ToResult();
+            Result.Ok().ToResult<int>();
+            Result.Ok<int>().ToResult<float>();
+            Result.Ok<int>().ToResult();
 
-            var mergedResult2 = Results.Merge(result1, result2, result3);
+            var mergedResult2 = Result.Merge(result1, result2, result3);
 
             var convertedResult2 = mergedResult2.ToResult();
         }
 
         public void LogTest()
         {
-            var result1 = Results.Ok();
+            var result1 = Result.Ok();
             result1 = result1.Log();
         }
     }

@@ -12,7 +12,7 @@ namespace FluentResults.Test
         {
             // Arrange
             var logger = new LoggingMock();
-            Results.Setup(cfg => {
+            Result.Setup(cfg => {
                 cfg.Logger = logger;
             });
 

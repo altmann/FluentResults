@@ -2,7 +2,7 @@ using System;
 
 namespace FluentResults
 {
-    public class Result : ResultBase<Result>
+    public partial class Result : ResultBase<Result>
     {
         [Obsolete("Removed in next major version. Use Results.Ok() instead.")]
         public Result()

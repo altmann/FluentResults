@@ -12,8 +12,8 @@ namespace FluentResults.Test
         {
             var results = new List<Result>
             {
-                Results.Ok(),
-                Results.Fail("Fail 1")
+                Result.Ok(),
+                Result.Fail("Fail 1")
             };
 
             var mergedResult = results.Merge();
@@ -27,8 +27,8 @@ namespace FluentResults.Test
         {
             var results = new List<Result<int>>
             {
-                Results.Ok(12),
-                Results.Fail<int>("Fail 1")
+                Result.Ok(12),
+                Result.Fail<int>("Fail 1")
             };
 
             var mergedResult = results.Merge();
@@ -42,8 +42,8 @@ namespace FluentResults.Test
         {
             var results = new List<Result<int>>
             {
-                Results.Ok(1),
-                Results.Ok(2)
+                Result.Ok(1),
+                Result.Ok(2)
             };
 
             var mergedResult = results.Merge();

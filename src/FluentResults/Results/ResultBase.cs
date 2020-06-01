@@ -113,7 +113,7 @@ namespace FluentResults
 
         public TResult Log(string context)
         {
-            var logger = Results.Settings.Logger;
+            var logger = Result.Settings.Logger;
 
             logger.Log(context, this);
 
