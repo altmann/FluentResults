@@ -71,7 +71,7 @@ namespace FluentResults
 
     public partial class Result
     {
-        internal static ResultSettings Settings { get; set; }
+        internal static ResultSettings Settings { get; private set; }
 
         static Result()
         {
