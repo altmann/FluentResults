@@ -1,5 +1,6 @@
 ﻿using System;
 
+// ReSharper disable once CheckNamespace
 namespace FluentResults
 {
     public class ExceptionalError : Error
