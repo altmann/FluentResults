@@ -21,13 +21,16 @@ namespace FluentResults
             return Metadata.ContainsKey(key);
         }
 
-        public bool HasMetadata(string key, object value)
+        public bool HasMetadata(string key, Func<object, bool> predicate)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
             if (Metadata.TryGetValue(key, out object actualValue))
-                return actualValue == value;
+                return predicate(actualValue);
 
             return false;
         }

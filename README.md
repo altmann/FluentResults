@@ -154,7 +154,7 @@ Similar to the catch block for exceptions the checking and handling of errors wi
     result.HasError<MyCustomError>(); // check if the Result object contains an error from a specific type
     result.HasError<MyCustomError>(myCustomError => myCustomError.MyField == 2); // check if the Result object contains an error from a specific type and with a specific condition
     result.HasError(error => error.HasMetadataKey("MyKey")); // check if the Result object contains an error with a specific metadata key
-    result.HasError(error => error.HasMetadata("MyKey", "MyValue")); // check if the Result object contains an error with a specific metadata
+    result.HasError(error => error.HasMetadata("MyKey", metadataValue => (string)metadataValue == "MyValue")); // check if the Result object contains an error with a specific metadata
 
 ### Handling successes
 

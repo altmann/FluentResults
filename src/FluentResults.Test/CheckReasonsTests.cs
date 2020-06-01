@@ -97,11 +97,19 @@ namespace FluentResults.Test
         }
 
         [TestMethod]
-        public void HasErrorWithMetadataValue_WithSearchedError()
+        public void HasErrorWithMetadataValueWithPredicate_WithSearchedError()
         {
             var result = Results.Fail(new Error().WithMetadata("MetadataKey1", "MetadataValue1"));
 
-            result.HasError(e => e.HasMetadata("MetadataKey1", "MetadataValue1")).Should().BeTrue();
+            result.HasError(e => e.HasMetadata("MetadataKey1", metadataValue => (string)metadataValue == "MetadataValue1")).Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void HasErrorWithNoMetadataValueWithPredicate_WithSearchedError()
+        {
+            var result = Results.Fail(new Error());
+
+            result.HasError(e => e.HasMetadata("MetadataKey1", metadataValue => (string)metadataValue == "MetadataValue1")).Should().BeFalse();
         }
 
         [TestMethod]
