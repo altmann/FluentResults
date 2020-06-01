@@ -1,11 +1,11 @@
 using System;
 
+// ReSharper disable once CheckNamespace
 namespace FluentResults
 {
     public partial class Result : ResultBase<Result>
     {
-        [Obsolete("Removed in next major version. Use Results.Ok() instead.")]
-        public Result()
+        internal Result()
         { }
 
         public Result<TNewValue> ToResult<TNewValue>()
@@ -17,8 +17,7 @@ namespace FluentResults
 
     public class Result<TValue> : ResultBase<Result<TValue>>
     {
-        [Obsolete("Removed in next major version. Use Results.Ok<TValue>(TValue value) instead.")]
-        public Result()
+        internal Result()
         { }
 
         private TValue _value;

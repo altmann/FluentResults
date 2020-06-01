@@ -11,7 +11,7 @@ namespace FluentResults.Test
         public void Ok_WithNoParams_ShouldReturnSuccessResult()
         {
             // Act
-            var okResult = Result.Ok<int>();
+            var okResult = Result.Ok<int>(default);
 
             // Assert
             okResult.IsFailed.Should().BeFalse();
@@ -39,7 +39,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void WithValue_WithValidParam_ShouldReturnSuccessResult()
         {
-            var okResult = Result.Ok<int>();
+            var okResult = Result.Ok<int>(default);
 
             // Act
             okResult.WithValue(5);

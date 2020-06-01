@@ -30,7 +30,7 @@ namespace FluentResults.Test
         public void OkResultWithValueToString_OkResult()
         {
             // Act
-            var result = Result.Ok<int>();
+            var result = Result.Ok<int>(default);
 
             // Assert
             result.ToString().Should().Be("Result: IsSuccess='True', Value='0'");

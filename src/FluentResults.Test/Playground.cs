@@ -30,13 +30,13 @@ namespace FluentResults
                 .WithError(new CustomError().CausedBy(new InvalidCastException()));
 
 
-            var valueResult = Result.Ok<int>()
+            var valueResult = Result.Ok<int>(default)
                 .WithSuccess("first success")
                 .WithValue(3);
 
             valueResult = Result.Ok(3);
 
-            valueResult = Result.Ok<int>()
+            valueResult = Result.Ok<int>(default)
                 .WithValue(3);
 
             valueResult = Result.Fail<int>("First error");
@@ -60,14 +60,14 @@ namespace FluentResults
         {
             var result1 = Result.Ok();
             var result2 = Result.Fail("first error");
-            var result3 = Result.Ok<int>();
+            var result3 = Result.Ok<int>(default);
 
             var mergedResult1 = Result.Merge(result1, result2, result3);
             var convertedResult1 = mergedResult1.ToResult<int>();
 
             Result.Ok().ToResult<int>();
-            Result.Ok<int>().ToResult<float>();
-            Result.Ok<int>().ToResult();
+            Result.Ok<int>(default).ToResult<float>();
+            Result.Ok<int>(default).ToResult();
 
             var mergedResult2 = Result.Merge(result1, result2, result3);
 

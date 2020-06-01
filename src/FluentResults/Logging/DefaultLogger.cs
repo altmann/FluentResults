@@ -1,4 +1,5 @@
-﻿namespace FluentResults
+﻿// ReSharper disable once CheckNamespace
+namespace FluentResults
 {
     public class DefaultLogger : IResultLogger
     {
