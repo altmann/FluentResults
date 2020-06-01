@@ -11,7 +11,7 @@ namespace FluentResults.Test
         public void Ok_WithNoParams_ShouldReturnSuccessResult()
         {
             // Act
-            var okResult = Results.Ok<int>();
+            var okResult = Result.Ok<int>();
 
             // Assert
             okResult.IsFailed.Should().BeFalse();
@@ -28,7 +28,7 @@ namespace FluentResults.Test
         public void Ok_WithValidValue_ShouldReturnSuccessResult()
         {
             // Act
-            var okResult = Results.Ok(5);
+            var okResult = Result.Ok(5);
 
             // Assert
             okResult.IsSuccess.Should().BeTrue();
@@ -39,7 +39,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void WithValue_WithValidParam_ShouldReturnSuccessResult()
         {
-            var okResult = Results.Ok<int>();
+            var okResult = Result.Ok<int>();
 
             // Act
             okResult.WithValue(5);
@@ -53,7 +53,7 @@ namespace FluentResults.Test
         public void Fail_WithValidErrorMessage_ShouldReturnFailedResult()
         {
             // Act
-            var result = Results.Fail<int>("Error message");
+            var result = Result.Fail<int>("Error message");
 
             // Assert
             result.IsFailed.Should().BeTrue();
@@ -63,7 +63,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void ValueOrDefault_WithDateTime_ShouldReturnFailedResult()
         {
-            var result = Results.Fail<DateTime>("Error message");
+            var result = Result.Fail<DateTime>("Error message");
 
             // Act
             var valueOrDefault = result.ValueOrDefault;
@@ -81,7 +81,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void ValueOrDefault_WithObject_ShouldReturnFailedResult()
         {
-            var result = Results.Fail<TestValue>("Error message");
+            var result = Result.Fail<TestValue>("Error message");
 
             // Act
             var valueOrDefault = result.ValueOrDefault;
@@ -94,7 +94,7 @@ namespace FluentResults.Test
         public void Value_WithResultInFailedState_ShouldThrowException()
         {
             // Act
-            var result = Results.Fail<int>("Error message");
+            var result = Result.Fail<int>("Error message");
 
             // Assert
 
@@ -108,7 +108,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void WithValue_WithResultInFailedState_ShouldThrowException()
         {
-            var failedResult = Results.Fail<int>("Error message");
+            var failedResult = Result.Fail<int>("Error message");
 
             // Act
             Action action = () => { failedResult.WithValue(5); };
@@ -122,7 +122,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void ToResult_ReturnFailedResult()
         {
-            var valueResult = Results.Fail<int>("First error message");
+            var valueResult = Result.Fail<int>("First error message");
 
             // Act
             var result = valueResult.ToResult();
@@ -134,7 +134,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void ToResult_ToAntotherValueType_ReturnFailedResult()
         {
-            var valueResult = Results.Fail<int>("First error message");
+            var valueResult = Result.Fail<int>("First error message");
 
             // Act
             var result = valueResult.ToResult<float>();
@@ -146,7 +146,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void ToResult_ToAntotherValueTypeWithOkResultAndNoConverter_ReturnFailedResult()
         {
-            var valueResult = Results.Fail<int>("Failed");
+            var valueResult = Result.Fail<int>("Failed");
 
             // Act
             var result = valueResult.ToResult<float>();
@@ -158,7 +158,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void ToResult_ToAntotherValueTypeWithOkResultAndConverter_ReturnFailedResult()
         {
-            var valueResult = Results.Ok(4);
+            var valueResult = Result.Ok(4);
 
             // Act
             var result = valueResult.ToResult<float>(v => v);
@@ -171,7 +171,7 @@ namespace FluentResults.Test
         [TestMethod]
         public void ImplicitCastOperator_ReturnFailedResult()
         {
-            var valueResult = Results.Fail<int>("First error message");
+            var valueResult = Result.Fail<int>("First error message");
 
             // Act
             Result result = valueResult;
