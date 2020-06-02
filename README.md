@@ -13,14 +13,15 @@ You should install [FluentResults with NuGet](https://www.nuget.org/packages/Flu
 
     Install-Package FluentResults
 
-## Top Features
+## Key Features
 
 - Storing multiple errors in one Result object
-- Storing not only error string messages but powerful Error objects
-- Designing Errors in a object-oriented way
+- Storing powerful Error and Success objects and not only error string messages
+- Designing Errors/Success in a object-oriented way
 - Storing the root cause chain of errors in a hierarchical way
-- Storing multiple success messages in one Result object
-- Provide .NET Standard Support
+- Provide 
+  - .NET Standard, .NET Core and .NET Full Framework support
+  - SourceLink support
 
 ## Why Results instead of exceptions
 
