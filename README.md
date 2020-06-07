@@ -34,12 +34,52 @@ If you want a second opinion read that: [Error handling: Exception or Result? by
 If you want a short summary read that: [Error Handling — Returning Results by Michael Altmann](https://medium.com/@michael_altmann/error-handling-returning-results-2b88b5ea11e9)
 
 ## Creating a Result
-There are two types of Results, a success result and an error result. Both of them can be created easily:
 
-     Result successResult = Result.Ok(); //create a success result
-     Result errorResult = Result.Fail("Operation failed"); //create an error result
+A Result can store multiple Error and Success messages.
 
-The class Result can be used for typical void methods which have no return value.
+    // create a result which indicates success
+    Result successResult1 = Result.Ok();
+    
+    // create a result with a success message
+    Result successResult2 = Result.Ok()
+                                  .WithSuccess("My success message");
+				  
+    // create a result which indicates failure
+    Result errorResult = Result.Fail("My error message");
+    
+The class `Result` is typically used by void methods which have no return value.
+
+    public Result DoTask()
+    {
+        if (this.State == TaskState.Done)
+            return Result.Fail("Task is in the wrong state.");
+	
+        // rest of the logic
+	
+        return Result.Ok();
+    }
+
+Additionally a value from a specific type can also be stored if necessary. 
+
+    // create a result which indicates success
+    Result<int> successResult1 = Result.Ok(42);
+    Result<MyCustomObject> successResult2 = Result.Ok(new MyCustomObject());
+    
+    // create a result which indicates failure
+    Result<int> errorResult = Result.Fail<int>("My error message");
+
+The class `Result<T>` is typically used by methods with a return type. 
+
+    public Result<Task> GetTask()
+    {
+        if (this.State == TaskState.Deleted)
+            return Result.Fail<Task>("Deleted Tasks can not be displayed.");
+	
+        // rest of the logic
+	
+        return Result.Ok(task);
+    }
+
 
 ## Processing a Result
 After you get a Result object from a method you have to process it. This means, you have to check if the operation completed successfully or not. In other words if the returned Result object is an error or success Result. You can distinguish between success and error results with the properties `IsSuccess` and `IsFailed`.
@@ -54,12 +94,6 @@ After you get a Result object from a method you have to process it. This means, 
      }
 
      //handle success case
-
-## Creating a ValueResult
-For methods with return value the generic class `Result<T>` should be used which have a further property `Value` to store a value. You can set the property value in a fluent way.
-
-     Result<int> successResult = Result.Ok<int>(5); //create a success result with Value 5
-     Result<int> errorResult = Result.Fail<int>("Operation failed"); //create an error result
 
 ## Processing a ValueResult
 Processing a ValueResult object is as easy as processing a Result object. You can access the value within the returned ValueResult object via the properties `Value` and `ValueOrDefault`. The property `Value` throws an exception if the ValueResult object is in failed state. The property `ValueOrDefault` return the default value of the value type if the ValueResult is in success state. 
