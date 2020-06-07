@@ -166,7 +166,7 @@ One way doing that is to call the method `WithMetadata(...)` directly at the cre
                         .WithSuccess(new Success("Success 1")
                                      .WithMetadata("metadata name", "metadata value"));
 				     
-Another way is to call WithMetadata in constructor of the Error or Success class. 
+Another way is to call `WithMetadata(...)` in constructor of the Error or Success class. 
 
     public class DomainError : Error
     {
