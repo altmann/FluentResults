@@ -135,9 +135,9 @@ With this mechanism you can also create a class `Warning`. You can choose if a W
 In some cases it is necessary to chain multiple error and success messages in one result object. 
 
     var result = Result.Fail("error message 1")
-        .WithError("error message 2")
-        .WithError("error message 3")
-        .WithSuccess("success message 1");
+                       .WithError("error message 2")
+                       .WithError("error message 3")
+                       .WithSuccess("success message 1");
 	
 ### Root cause of the error
 
@@ -150,7 +150,7 @@ You can also store the root cause of the error in the error object.
     catch(CsvExportException ex)
     {
         return Result.Fail(new Error("CSV Export not executed successfully")
-            .CausedBy(ex));
+                           .CausedBy(ex));
     }
         
 ### Metadata
@@ -161,8 +161,8 @@ It is possible to add metadata to error or success objects.
 	    .WithMetadata("metadata name", "metadata value"));
 
     var result2 = Result.Ok()
-        .WithSuccess(new Success("Success 1")
-		    .WithMetadata("metadata name", "metadata value"));
+                        .WithSuccess(new Success("Success 1")
+		                     .WithMetadata("metadata name", "metadata value"));
 
 ### Merging
 
