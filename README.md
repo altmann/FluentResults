@@ -82,34 +82,30 @@ The class `Result<T>` is typically used by methods with a return type.
 
 
 ## Processing a Result
-After you get a Result object from a method you have to process it. This means, you have to check if the operation completed successfully or not. In other words if the returned Result object is an error or success Result. You can distinguish between success and error results with the properties `IsSuccess` and `IsFailed`.
 
-     Result result = DoSomething();
-
-     if(result.IsFailed)
-     {
-          // handle error case
-          Console.WriteLine(result);
-          return;
-     }
-
-     //handle success case
-
-## Processing a ValueResult
-Processing a ValueResult object is as easy as processing a Result object. You can access the value within the returned ValueResult object via the properties `Value` and `ValueOrDefault`. The property `Value` throws an exception if the ValueResult object is in failed state. The property `ValueOrDefault` return the default value of the value type if the ValueResult is in success state. 
+After you get a Result object from a method you have to process it. This means, you have to check if the operation completed successfully or not. The properties `IsSuccess` and `IsFailed` at the Result object indicates success or failure. The value of a `Result<T>` can be accessed via the properties `Value` and `ValueOrDefault`.
 
      Result<int> result = DoSomething();
+     
+     // get all reasons why result object indicates success or failure. 
+     // contains Error and Success messages
+     IEnumerable<Reason> reasons = result.Reasons;
+     
+     // get all Error messages
+     IEnumerable<Error> errors = result.Errors;
+     
+     // get all Success messages
+     IEnumerable<Success> successes = result.Successes;
 
-     if(result.IsFailed)
+     if (result.IsFailed)
      {
           // handle error case
-          Console.WriteLine(result);
           var value1 = result.Value; // throws exception because result is in failed state
           var value2 = result.ValueOrDefault; // return default value (=0) because result is in failed state
           return;
      }
 
-     //handle success case
+     // handle success case
      var value3 = result.Value; // return value and doesn't throw exception because result is in success state
      var value4 = result.ValueOrDefault; // return value because result is in success state
 
