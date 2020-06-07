@@ -155,14 +155,27 @@ You can also store the root cause of the error in the error object.
         
 ### Metadata
 
-It is possible to add metadata to error or success objects. 
+It is possible to add metadata to Error or Success objects. 
+
+One way doing that is to call the method `WithMetadata(...)` directly at the creation of the result object. 
 
     var result1 = Result.Fail(new Error("Error 1")
-	    .WithMetadata("metadata name", "metadata value"));
+                              .WithMetadata("metadata name", "metadata value"));
 
     var result2 = Result.Ok()
                         .WithSuccess(new Success("Success 1")
-		                     .WithMetadata("metadata name", "metadata value"));
+                                     .WithMetadata("metadata name", "metadata value"));
+				     
+Another way is to call WithMetadata in constructor of the Error or Success class. 
+
+    public class DomainError : Error
+    {
+        public DomainError(string message)
+            : base(message)
+        { 
+            WithMetadata("ErrorCode", "12");
+        }
+    }
 
 ### Merging
 
