@@ -126,6 +126,8 @@ You can create your own `Success` or `Error` classes when you inherit from `Succ
         }
     }
 
+With this mechanism you can also create a class `Warning`. You can choose if a Warning in your system indicates a success or a failure by inheriting from `Success` or `Error` classes.  
+
 ## Further features
 
 ### Chaining error and success messages
