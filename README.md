@@ -45,7 +45,8 @@ A Result can store multiple Error and Success messages.
                                   .WithSuccess("My success message");
 				  
     // create a result which indicates failure
-    Result errorResult = Result.Fail("My error message");
+    Result errorResult1 = Result.Fail("My error message");
+    Result errorResult2 = Result.Fail(new StartDateIsAfterEndDateError(startDate, endDate));
     
 The class `Result` is typically used by void methods which have no return value.
 
@@ -80,7 +81,6 @@ The class `Result<T>` is typically used by methods with a return type.
         return Result.Ok(task);
     }
 
-
 ## Processing a Result
 
 After you get a Result object from a method you have to process it. This means, you have to check if the operation completed successfully or not. The properties `IsSuccess` and `IsFailed` at the Result object indicates success or failure. The value of a `Result<T>` can be accessed via the properties `Value` and `ValueOrDefault`.
@@ -111,7 +111,11 @@ After you get a Result object from a method you have to process it. This means, 
 
 ## Designing errors and success messages
 
-There are many Result Libraries which stores only simple string messages, but FluentResults stores powerful object-oriented Error and Success objects. The advantage is that all relevant information of an error is encapsulated within a class. Here is an example:
+There are many Result Libraries which stores only simple string messages. FluentResults stores instead powerful object-oriented Error and Success objects. The advantage is that all relevant information of an error is encapsulated within one class. 
+
+The classes `Success` and `Error` inherit from the base class `Reason`. If at least one `Error` object is in the `Reasons` property then the result indicates a failure and the property `IsSuccess` is false. 
+
+You can create your own `Success` or `Error` classes when you inherit from `Success` or `Error`. 
 
     public class StartDateIsAfterEndDateError : Error
     {
@@ -120,22 +124,6 @@ There are many Result Libraries which stores only simple string messages, but Fl
         { 
             Metadata.Add("ErrorCode", "12");
         }
-    }
-
-You can use this error classes with the fluent API of FluentResults. 
-
-    var result = Result.Fail(new StartDateIsAfterEndDateError(startDate, endDate));
-    
-You can also store the root cause of the error in the error object. 
-
-    try
-    {
-        //export csv file
-    }
-    catch(CsvExportException ex)
-    {
-        return Result.Fail(new Error("CSV Export not executed successfully")
-            .CausedBy(ex));
     }
 
 ## Further features
@@ -148,6 +136,20 @@ In some cases it is necessary to chain multiple error and success messages in on
         .WithError("error message 2")
         .WithError("error message 3")
         .WithSuccess("success message 1");
+	
+### Root cause of the error
+
+You can also store the root cause of the error in the error object. 
+
+    try
+    {
+        //export csv file
+    }
+    catch(CsvExportException ex)
+    {
+        return Result.Fail(new Error("CSV Export not executed successfully")
+            .CausedBy(ex));
+    }
         
 ### Metadata
 
