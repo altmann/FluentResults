@@ -19,7 +19,8 @@
     <Copyright>Copyright 2020 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
     <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-64.png</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-128.png</PackageIconUrl>
+    <PackageIcon>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-128.png</PackageIcon>
 
     <!--SourceLink-->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
