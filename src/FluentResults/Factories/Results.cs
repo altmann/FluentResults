@@ -129,5 +129,25 @@ namespace FluentResults
         {
             return ResultHelper.MergeWithValue(results);
         }
+
+        public static Result OkIf(Func<bool> condition, Error error)
+        {
+            return condition() ? Ok() : Fail(error);
+        }
+
+        public static Result OkIf(Func<bool> condition, string error)
+        {
+            return condition() ? Ok() : Fail(error);
+        }
+
+        public static Result FailIf(Func<bool> condition, Error error)
+        {
+            return condition() ? Fail(error) : Ok();
+        }
+
+        public static Result FailIf(Func<bool> condition, string error)
+        {
+            return condition() ? Fail(error) : Ok();
+        }
     }
 }
