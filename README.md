@@ -241,6 +241,20 @@ Additionally a context as string can be passed.
     var result = Result.Fail("Operation failed")
         .Log("logger context");
 
+## Samples/Best Practices
+
+### Powerful domain model inspired by Domain Driven Design
+
+
+### Serializing Result objects (ASP.NET WebApi)
+
+
+### Serializing Result objects (Hangfire)
+
+
+### Mediatr request handlers returning Result objects
+
+
 ## Contributers
 
 A big thanks to the project contributors!
