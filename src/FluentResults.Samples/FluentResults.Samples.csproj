@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.7.12" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FluentResults\FluentResults.csproj" />
   </ItemGroup>
 

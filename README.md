@@ -243,17 +243,26 @@ Additionally a context as string can be passed.
 
 ## Samples/Best Practices
 
+Here are some samples and best practices using FluentResult or the Result pattern in general with some famous or common used frameworks and libraries.
+
 ### Powerful domain model inspired by Domain Driven Design
 
+- Protecting domain invariants by using for example factory methods returning a Result object
+- Make each error unique by make your custom Error classes which inherit from Error class
+- If the method can not fail then don't use the Result class as return type. 
+- Be aware that you can merge multiple failed results or return the first failed result asap
 
-### Serializing Result objects (ASP.NET WebApi)
+### Serializing Result objects (ASP.NET WebApi, Hangfire)
 
-
-### Serializing Result objects (Hangfire)
-
+- Don't serialize FluentResult result objects. 
+- Make your own custom ResultDto class for your public api at your system boundaries
+  - So you can control which data are submitted and which data are serialized
+  - Your public api is independend on third party libraries like FluentResults
+  - You can keep your public api stable
 
 ### Mediatr request handlers returning Result objects
 
+tbd
 
 ## Contributers
 
