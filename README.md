@@ -17,7 +17,7 @@ You should install [FluentResults with NuGet](https://www.nuget.org/packages/Flu
 
 - Storing multiple errors in one Result object
 - Storing powerful Error and Success objects and not only error string messages
-- Designing Errors/Success in a object-oriented way
+- Designing Errors/Success in an object-oriented way
 - Storing the root cause chain of errors in a hierarchical way
 - Provide 
   - .NET Standard, .NET Core and .NET Full Framework support
@@ -263,12 +263,6 @@ Here are some samples and best practices using FluentResult or the Result patter
 ### Mediatr request handlers returning Result objects
 
 tbd
-
-## Contributers
-
-A big thanks to the project contributors!
-
-- [michaelmsm89](https://github.com/michaelmsm89)
 
 ## Copyright
 
