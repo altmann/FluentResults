@@ -34,21 +34,21 @@
         private static Result ValidateNumber(string number)
         {
             // option 1: set error as string message
-            return Result.FailIf(() => string.IsNullOrEmpty(number), "Number is required.");
+            return Result.FailIf(string.IsNullOrEmpty(number), "Number is required.");
 
             // option 2: set error as Error object
-            return Result.FailIf(() => string.IsNullOrEmpty(number), new Error("Number is required."));
+            return Result.FailIf(string.IsNullOrEmpty(number), new Error("Number is required."));
 
             // option 3: set error as custom Error object
-            return Result.FailIf(() => string.IsNullOrEmpty(number), new RequiredError("Number"));
+            return Result.FailIf(string.IsNullOrEmpty(number), new RequiredError("Number"));
         }
 
         private static Result ValidateStreet(string street)
         {
             // Multiple results are merged into one result
             return Result.Merge(
-                Result.FailIf(() => string.IsNullOrEmpty(street), "Street is required."),
-                Result.FailIf(() => !string.IsNullOrEmpty(street) && street.Length > 30,
+                Result.FailIf(string.IsNullOrEmpty(street), "Street is required."),
+                Result.FailIf(!string.IsNullOrEmpty(street) && street.Length > 30,
                     "Street should contain max 30 characters.")
             );
         }
