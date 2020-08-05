@@ -6,16 +6,20 @@ namespace FluentResults.Samples.MediatR.MediatRLogic.PipelineBehaviors
 {
     public class ValidationPipelineBehavior<TRequest, TResponse>
         : IPipelineBehavior<TRequest, TResponse>
-        where TResponse : ResultBase
+        where TResponse : ResultBase, new()
     {
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+            RequestHandlerDelegate<TResponse> next)
         {
             var validationResult = await ValidateAsync(request);
             if (validationResult.IsFailed)
             {
-                var res = validationResult as TResponse;
+                var result = new TResponse();
 
-                return res;
+                foreach (var reason in validationResult.Reasons)
+                    result.Reasons.Add(reason);
+
+                return result;
             }
 
             return await next();
@@ -25,6 +29,7 @@ namespace FluentResults.Samples.MediatR.MediatRLogic.PipelineBehaviors
         {
             // do here some validation, for example with fluentvalidation
             return Result.Fail("Validation failed");
+            // return Result.Ok();
         }
     }
 }

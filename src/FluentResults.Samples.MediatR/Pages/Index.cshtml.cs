@@ -19,8 +19,8 @@ namespace FluentResults.Samples.MediatR.Pages
 
         public async Task OnGet()
         {
-            //var result1 = await _mediator.Send(new CommandWithResult());
-            //_logger.LogInformation(result1.ToString());
+            var result1 = await _mediator.Send(new CommandWithResult());
+            _logger.LogInformation(result1.ToString());
 
             var result2 = await _mediator.Send(new QueryWithResult());
             _logger.LogInformation(result2.ToString());
