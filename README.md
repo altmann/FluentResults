@@ -22,6 +22,7 @@ You should install [FluentResults with NuGet](https://www.nuget.org/packages/Flu
 - Provide 
   - .NET Standard, .NET Core and .NET Full Framework support
   - SourceLink support
+  - powerful code samples which show the integration with famous or common frameworks/libraries
 
 ## Why Results instead of exceptions
 
