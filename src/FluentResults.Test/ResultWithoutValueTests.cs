@@ -103,27 +103,5 @@ namespace FluentResults.Test
             // Assert
             valueResult.IsFailed.Should().BeTrue();
         }
-        
-        [TestMethod]
-        public void ImplicitCastOperator_ReturnFailedGenericValueResult()
-        {
-            var result = Result.Fail("First error message");
-
-            // Act
-            var convertedResult = ConvertTo<Result<SampleResponse>>(result);
-            
-            // Assert
-            convertedResult.IsFailed.Should().BeTrue();
-        }
-
-        public TResponse ConvertTo<TResponse>(Result result) where TResponse : ResultBase
-        {
-            return result as TResponse;
-        }
-    }
-
-    public class SampleResponse
-    {
-
     }
 }
