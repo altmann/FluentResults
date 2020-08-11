@@ -1,6 +1,8 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using System.Linq;
+using System.Reflection;
 
 namespace FluentResults.Test
 {

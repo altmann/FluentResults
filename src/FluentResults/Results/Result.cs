@@ -5,7 +5,7 @@ namespace FluentResults
 {
     public partial class Result : ResultBase<Result>
     {
-        internal Result()
+        public Result()
         { }
 
         public Result<TNewValue> ToResult<TNewValue>()
@@ -17,7 +17,7 @@ namespace FluentResults
 
     public class Result<TValue> : ResultBase<Result<TValue>>
     {
-        internal Result()
+        public Result()
         { }
 
         private TValue _value;

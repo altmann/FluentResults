@@ -22,6 +22,7 @@ You should install [FluentResults with NuGet](https://www.nuget.org/packages/Flu
 - Provide 
   - .NET Standard, .NET Core and .NET Full Framework support
   - SourceLink support
+  - powerful code samples which show the integration with famous or common frameworks/libraries
 
 ## Why Results instead of exceptions
 
@@ -240,6 +241,17 @@ Additionally a context as string can be passed.
 
     var result = Result.Fail("Operation failed")
         .Log("logger context");
+
+## Samples/Best Practices
+
+Here are some samples and best practices using FluentResult or the Result pattern in general with some famous or common used frameworks and libraries.
+
+### [MediatR](https://github.com/jbogard/MediatR) request handlers returning Result objects
+
+- [Full functional .NET Core sample code with commands/queries and a ValidationPipelineBehavior](https://github.com/jbogard/MediatR/tree/master/src/FluentResults.Samples.MediatR)
+- Return business validation errors via a Result object from a MediatR request handler back to the consumer
+- Don't throw exceptions based on business validation errors
+- Inject command and query validation via MediatR PipelineBehavior and return a Result object instead of throwing an exception
 
 ## Copyright
 
