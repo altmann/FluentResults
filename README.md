@@ -248,7 +248,7 @@ Here are some samples and best practices using FluentResult or the Result patter
 
 ### [MediatR](https://github.com/jbogard/MediatR) request handlers returning Result objects
 
-- [Full functional .NET Core sample code with commands/queries and a ValidationPipelineBehavior](https://github.com/jbogard/MediatR/tree/master/src/FluentResults.Samples.MediatR)
+- [Full functional .NET Core sample code with commands/queries and a ValidationPipelineBehavior](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples.MediatR)
 - Return business validation errors via a Result object from a MediatR request handler back to the consumer
 - Don't throw exceptions based on business validation errors
 - Inject command and query validation via MediatR PipelineBehavior and return a Result object instead of throwing an exception
