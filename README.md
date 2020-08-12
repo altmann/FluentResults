@@ -40,11 +40,7 @@ A Result can store multiple Error and Success messages.
 
     // create a result which indicates success
     Result successResult1 = Result.Ok();
-    
-    // create a result with a success message
-    Result successResult2 = Result.Ok()
-                                  .WithSuccess("My success message");
-				  
+    			  
     // create a result which indicates failure
     Result errorResult1 = Result.Fail("My error message");
     Result errorResult2 = Result.Fail(new StartDateIsAfterEndDateError(startDate, endDate));
