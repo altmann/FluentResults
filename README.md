@@ -287,6 +287,12 @@ Here are some samples and best practices using FluentResult or the Result patter
 - Don't throw exceptions based on business validation errors
 - Inject command and query validation via MediatR PipelineBehavior and return a Result object instead of throwing an exception
 
+## Contributors
+
+- [Loreno10](https://github.com/Loreno10)
+- [JasonLandbridge](https://github.com/JasonLandbridge)
+- [michaelmsm89](https://github.com/michaelmsm89)
+
 ## Copyright
 
 Copyright (c) Michael Altmann. See [LICENSE](https://raw.githubusercontent.com/altmann/FluentResults/master/LICENSE) for details.
