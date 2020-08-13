@@ -11,7 +11,9 @@ FluentResults is a lightweight .NET library built to solve a common problem - re
 
 You should install [FluentResults with NuGet](https://www.nuget.org/packages/FluentResults/):
 
-    Install-Package FluentResults
+```
+Install-Package FluentResults
+```
 
 ## Key Features
 
@@ -38,73 +40,83 @@ If you want a short summary read that: [Error Handling — Returning Results
 
 A Result can store multiple Error and Success messages.
 
-    // create a result which indicates success
-    Result successResult1 = Result.Ok();
-    			  
-    // create a result which indicates failure
-    Result errorResult1 = Result.Fail("My error message");
-    Result errorResult2 = Result.Fail(new StartDateIsAfterEndDateError(startDate, endDate));
+```csharp
+// create a result which indicates success
+Result successResult1 = Result.Ok();
+
+// create a result which indicates failure
+Result errorResult1 = Result.Fail("My error message");
+Result errorResult2 = Result.Fail(new StartDateIsAfterEndDateError(startDate, endDate));
+```
     
 The class `Result` is typically used by void methods which have no return value.
 
-    public Result DoTask()
-    {
-        if (this.State == TaskState.Done)
-            return Result.Fail("Task is in the wrong state.");
-	
-        // rest of the logic
-	
-        return Result.Ok();
-    }
+```csharp
+public Result DoTask()
+{
+    if (this.State == TaskState.Done)
+        return Result.Fail("Task is in the wrong state.");
 
-Additionally a value from a specific type can also be stored if necessary. 
+    // rest of the logic
 
-    // create a result which indicates success
-    Result<int> successResult1 = Result.Ok(42);
-    Result<MyCustomObject> successResult2 = Result.Ok(new MyCustomObject());
-    
-    // create a result which indicates failure
-    Result<int> errorResult = Result.Fail<int>("My error message");
+    return Result.Ok();
+}
+```
+
+Additionally a value from a specific type can also be stored if necessary.
+
+```csharp
+// create a result which indicates success
+Result<int> successResult1 = Result.Ok(42);
+Result<MyCustomObject> successResult2 = Result.Ok(new MyCustomObject());
+
+// create a result which indicates failure
+Result<int> errorResult = Result.Fail<int>("My error message");
+```
 
 The class `Result<T>` is typically used by methods with a return type. 
 
-    public Result<Task> GetTask()
-    {
-        if (this.State == TaskState.Deleted)
-            return Result.Fail<Task>("Deleted Tasks can not be displayed.");
-	
-        // rest of the logic
-	
-        return Result.Ok(task);
-    }
+```csharp
+public Result<Task> GetTask()
+{
+    if (this.State == TaskState.Deleted)
+        return Result.Fail<Task>("Deleted Tasks can not be displayed.");
+
+    // rest of the logic
+
+    return Result.Ok(task);
+}
+```
 
 ## Processing a Result
 
 After you get a Result object from a method you have to process it. This means, you have to check if the operation completed successfully or not. The properties `IsSuccess` and `IsFailed` at the Result object indicates success or failure. The value of a `Result<T>` can be accessed via the properties `Value` and `ValueOrDefault`.
 
-     Result<int> result = DoSomething();
+```csharp
+Result<int> result = DoSomething();
      
-     // get all reasons why result object indicates success or failure. 
-     // contains Error and Success messages
-     IEnumerable<Reason> reasons = result.Reasons;
-     
-     // get all Error messages
-     IEnumerable<Error> errors = result.Errors;
-     
-     // get all Success messages
-     IEnumerable<Success> successes = result.Successes;
+// get all reasons why result object indicates success or failure. 
+// contains Error and Success messages
+IEnumerable<Reason> reasons = result.Reasons;
 
-     if (result.IsFailed)
-     {
-          // handle error case
-          var value1 = result.Value; // throws exception because result is in failed state
-          var value2 = result.ValueOrDefault; // return default value (=0) because result is in failed state
-          return;
-     }
+// get all Error messages
+IEnumerable<Error> errors = result.Errors;
 
-     // handle success case
-     var value3 = result.Value; // return value and doesn't throw exception because result is in success state
-     var value4 = result.ValueOrDefault; // return value because result is in success state
+// get all Success messages
+IEnumerable<Success> successes = result.Successes;
+
+if (result.IsFailed)
+{
+    // handle error case
+    var value1 = result.Value; // throws exception because result is in failed state
+    var value2 = result.ValueOrDefault; // return default value (=0) because result is in failed state
+    return;
+}
+
+// handle success case
+var value3 = result.Value; // return value and doesn't throw exception because result is in success state
+var value4 = result.ValueOrDefault; // return value because result is in success state
+```
 
 ## Designing errors and success messages
 
@@ -114,14 +126,16 @@ The classes `Success` and `Error` inherit from the base class `Reason`. If at le
 
 You can create your own `Success` or `Error` classes when you inherit from `Success` or `Error`. 
 
-    public class StartDateIsAfterEndDateError : Error
-    {
-        public StartDateIsAfterEndDateError(DateTime startDate, DateTime endDate)
-            : base($"The start date {startDate} is after the end date {endDate}")
-        { 
-            Metadata.Add("ErrorCode", "12");
-        }
+```csharp
+public class StartDateIsAfterEndDateError : Error
+{
+    public StartDateIsAfterEndDateError(DateTime startDate, DateTime endDate)
+        : base($"The start date {startDate} is after the end date {endDate}")
+    { 
+        Metadata.Add("ErrorCode", "12");
     }
+}
+```
 
 With this mechanism you can also create a class `Warning`. You can choose if a Warning in your system indicates a success or a failure by inheriting from `Success` or `Error` classes.  
 
@@ -131,112 +145,136 @@ With this mechanism you can also create a class `Warning`. You can choose if a W
 
 In some cases it is necessary to chain multiple error and success messages in one result object. 
 
-    var result = Result.Fail("error message 1")
-                       .WithError("error message 2")
-                       .WithError("error message 3")
-                       .WithSuccess("success message 1");
+```csharp
+var result = Result.Fail("error message 1")
+                    .WithError("error message 2")
+                    .WithError("error message 3")
+                    .WithSuccess("success message 1");
+```
 	
 ### Root cause of the error
 
-You can also store the root cause of the error in the error object. 
+You can also store the root cause of the error in the error object.
 
-    try
-    {
-        //export csv file
-    }
-    catch(CsvExportException ex)
-    {
-        return Result.Fail(new Error("CSV Export not executed successfully")
-                           .CausedBy(ex));
-    }
-        
+```csharp
+try
+{
+    //export csv file
+}
+catch(CsvExportException ex)
+{
+    return Result.Fail(new Error("CSV Export not executed successfully")
+                        .CausedBy(ex));
+}
+```
+
 ### Metadata
 
 It is possible to add metadata to Error or Success objects. 
 
 One way doing that is to call the method `WithMetadata(...)` directly at the creation of the result object. 
 
-    var result1 = Result.Fail(new Error("Error 1")
-                              .WithMetadata("metadata name", "metadata value"));
+```csharp
+var result1 = Result.Fail(new Error("Error 1")
+                          .WithMetadata("metadata name", "metadata value"));
 
-    var result2 = Result.Ok()
-                        .WithSuccess(new Success("Success 1")
-                                     .WithMetadata("metadata name", "metadata value"));
-				     
+var result2 = Result.Ok()
+                    .WithSuccess(new Success("Success 1")
+                                 .WithMetadata("metadata name", "metadata value"));
+```
+
 Another way is to call `WithMetadata(...)` in constructor of the Error or Success class. 
 
-    public class DomainError : Error
-    {
-        public DomainError(string message)
-            : base(message)
-        { 
-            WithMetadata("ErrorCode", "12");
-        }
+```csharp
+public class DomainError : Error
+{
+    public DomainError(string message)
+        : base(message)
+    { 
+        WithMetadata("ErrorCode", "12");
     }
+}
+```
 
 ### Merging
 
 Multiple results can be merged with the static method `Merge()`.
 
-    var result1 = Result.Ok();
-    var result2 = Result.Fail("first error");
-    var result3 = Result.Ok<int>();
+```csharp
+var result1 = Result.Ok();
+var result2 = Result.Fail("first error");
+var result3 = Result.Ok<int>();
 
-    var mergedResult = Result.Merge(result1, result2, result3);
+var mergedResult = Result.Merge(result1, result2, result3);
+```
 
 ### Converting
 
 A result object can be converted to another result object with the methods `ToResult()` and `ToResult<TValue>()`.
 
-    Result.Ok().ToResult<int>(); // converting a result to a result from type Result<int>
-    Result.Ok<int>(5).ToResult<float>(v => v); // converting a result to a result from type Result<float>
-    Result.Fail<int>("Failed").ToResult<float>() // converting a result from type Result<int> to result from type Result<float> without passing the converting logic because result is in failed state and therefore no converting logic needed
-    Result.Ok<int>().ToResult(); // converting a result to a result from type Result
+```csharp
+Result.Ok().ToResult<int>(); // converting a result to a result from type Result<int>
+Result.Ok<int>(5).ToResult<float>(v => v); // converting a result to a result from type Result<float>
+Result.Fail<int>("Failed").ToResult<float>() // converting a result from type Result<int> to result from type Result<float> without passing the converting logic because result is in failed state and therefore no converting logic needed
+Result.Ok<int>().ToResult(); // converting a result to a result from type Result
+```
 
 ### Handling/catching errors
 
 Similar to the catch block for exceptions the checking and handling of errors within a Result object is supported by this library with some methods: 
 
-    result.HasError<MyCustomError>(); // check if the Result object contains an error from a specific type
-    result.HasError<MyCustomError>(myCustomError => myCustomError.MyField == 2); // check if the Result object contains an error from a specific type and with a specific condition
-    result.HasError(error => error.HasMetadataKey("MyKey")); // check if the Result object contains an error with a specific metadata key
-    result.HasError(error => error.HasMetadata("MyKey", metadataValue => (string)metadataValue == "MyValue")); // check if the Result object contains an error with a specific metadata
+```csharp
+result.HasError<MyCustomError>(); // check if the Result object contains an error from a specific type
+result.HasError<MyCustomError>(myCustomError => myCustomError.MyField == 2); // check if the Result object contains an error from a specific type and with a specific condition
+result.HasError(error => error.HasMetadataKey("MyKey")); // check if the Result object contains an error with a specific metadata key
+result.HasError(error => error.HasMetadata("MyKey", metadataValue => (string)metadataValue == "MyValue")); // check if the Result object contains an error with a specific metadata
+```
 
 ### Handling successes
 
 Checking if a result object contains a specific success object can be done with the method `HasSuccess()`
 
-    result.HasSuccess<MyCustomSuccess>(); // check if the Result object contains a success from a specific type
-    result.HasSuccess<MyCustomSuccess>(success => success.MyField == 3); // check if the Result object contains a success from a specific type and with a specific condition
+```csharp
+result.HasSuccess<MyCustomSuccess>(); // check if the Result object contains a success from a specific type
+result.HasSuccess<MyCustomSuccess>(success => success.MyField == 3); // check if the Result object contains a success from a specific type and with a specific condition
+```
 
 ### Logging
 
 Sometimes it is necessary to log results. First create a logger. 
 
-    public class MyConsoleLogger : IResultLogger
+```csharp
+public class MyConsoleLogger : IResultLogger
+{
+    public void Log(string context, ResultBase result)
     {
-        public void Log(string context, ResultBase result)
-        {
-            Console.WriteLine("{0}", result);
-        }
+        Console.WriteLine("{0}", result);
     }
+}
+```
 
 Then you have to register your logger. 
 
-    var myLogger = new MyConsoleLogger();
-            Result.Setup(cfg => {
-                cfg.Logger = myLogger;
-            });
+```csharp
+var myLogger = new MyConsoleLogger();
+        Result.Setup(cfg => {
+            cfg.Logger = myLogger;
+        });
+```
 
 Finally the logger can be used. 
 
-    var result = Result.Fail("Operation failed")
-        .Log();
-        
+```csharp
+var result = Result.Fail("Operation failed")
+    .Log();
+```
+
 Additionally a context as string can be passed.
 
-    var result = Result.Fail("Operation failed")
-        .Log("logger context");
+```csharp
+var result = Result.Fail("Operation failed")
+    .Log("logger context");
+```
 
 ## Samples/Best Practices
 
