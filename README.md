@@ -287,7 +287,7 @@ Here are some samples and best practices using FluentResult or the Result patter
 - If the method can not fail then don't use the Result class as return type. 
 - Be aware that you can merge multiple failed results or return the first failed result asap
 
-### Serializing Result objects (ASP.NET WebApi, Hangfire)
+### Serializing Result objects (ASP.NET WebApi, [Hangfire](https://www.hangfire.io/))
 
 - Don't serialize FluentResult result objects. 
 - Make your own custom ResultDto class for your public api at your system boundaries
