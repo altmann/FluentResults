@@ -105,8 +105,6 @@ namespace FluentResults
             return WithSuccess(new TSuccess());
         }
 
-        
-
         public TResult Log()
         {
             return Log(string.Empty);

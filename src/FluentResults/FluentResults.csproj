@@ -2,19 +2,12 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;netstandard2.0;netstandard2.1;net461;net45</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <Version>2.0.0.0</Version>
+    <Version>2.1.0.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
-- ADD - Add Source Link support
-- ADD - Targeting best practices. Remove target .NET 4.8 and add target .NET 4.6.1
-- ADD - Improved docs (readme)
-- CHANGE - Factory methods like Ok(..) or Fail(..) are moved to Result class.
-- CHANGE - Factory methods on Results class like Results.Ok(..) and Results.Fail(..) are deprecated.
-- CHANGE - Result constructors are not public anymore. Use factory methods of Result instead (e.g. Result.Ok(..) or Result.Fail(..))
-- CHANGE - Method HasMetadata(...) with expression #40
-- FIX - Add version correct in Version property #36
+- CHANGE - Result constructors are public to support MediatR usecase
     </PackageReleaseNotes>
     <Copyright>Copyright 2020 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
