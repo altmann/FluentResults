@@ -151,7 +151,21 @@ var result = Result.Fail("error message 1")
                     .WithError("error message 3")
                     .WithSuccess("success message 1");
 ```
-	
+
+### Create a result depending on success/failure condition
+
+Very often you have to create a failed or success result depending on a condition. Usually you write it in this way:
+
+```csharp
+var result = string.IsNullOrEmpty(firstName) ? Result.Fail("First Name is empty") : Result.Ok();
+```
+
+With the methods ```FailIf()``` and ```OkIf()``` you can also write it in a more readable way:
+
+```csharp
+var result = Result.FailIf(string.IsNullOrEmpty(firstName), "First Name is empty");
+```
+
 ### Root cause of the error
 
 You can also store the root cause of the error in the error object.
