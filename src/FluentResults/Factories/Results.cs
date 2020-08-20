@@ -130,44 +130,24 @@ namespace FluentResults
             return ResultHelper.MergeWithValue(results);
         }
 
-        public static Result OkIf(Func<bool> condition, Error error)
+        public static Result OkIf(bool isSuccess, Error error)
         {
-            return condition() ? Ok() : Fail(error);
+            return isSuccess ? Ok() : Fail(error);
         }
 
-        public static Result OkIf(bool condition, Error error)
+        public static Result OkIf(bool isSuccess, string error)
         {
-            return condition ? Ok() : Fail(error);
+            return isSuccess ? Ok() : Fail(error);
         }
 
-        public static Result OkIf(Func<bool> condition, string error)
+        public static Result FailIf(bool isFailure, Error error)
         {
-            return condition() ? Ok() : Fail(error);
+            return isFailure ? Fail(error) : Ok();
         }
 
-        public static Result OkIf(bool condition, string error)
+        public static Result FailIf(bool isFailure, string error)
         {
-            return condition ? Ok() : Fail(error);
-        }
-
-        public static Result FailIf(Func<bool> condition, Error error)
-        {
-            return condition() ? Fail(error) : Ok();
-        }
-
-        public static Result FailIf(bool condition, Error error)
-        {
-            return condition ? Fail(error) : Ok();
-        }
-
-        public static Result FailIf(Func<bool> condition, string error)
-        {
-            return condition() ? Fail(error) : Ok();
-        }
-
-        public static Result FailIf(bool condition, string error)
-        {
-            return condition ? Fail(error) : Ok();
+            return isFailure ? Fail(error) : Ok();
         }
     }
 }

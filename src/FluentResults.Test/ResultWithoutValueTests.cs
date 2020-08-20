@@ -1,8 +1,6 @@
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using System.Linq;
-using System.Reflection;
 
 namespace FluentResults.Test
 {
@@ -102,6 +100,82 @@ namespace FluentResults.Test
 
             // Assert
             valueResult.IsFailed.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void FailIf_FailedConditionIsTrueAndWithStringErrorMessage_CreateFailedResult()
+        {
+            var result = Result.FailIf(true, "Error message");
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Single().Message.Should().Be("Error message");
+        }
+
+        [TestMethod]
+        public void FailIf_FailedConditionIsTrueAndWithObjectErrorMessage_CreateFailedResult()
+        {
+            var result = Result.FailIf(true, new Error("Error message"));
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Single().Message.Should().Be("Error message");
+        }
+
+        [TestMethod]
+        public void FailIf_FailedConditionIsFalseAndWithStringErrorMessage_CreateFailedResult()
+        {
+            var result = Result.FailIf(false, "Error message");
+
+            // Assert
+            result.IsFailed.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void FailIf_FailedConditionIsFalseAndWithObjectErrorMessage_CreateFailedResult()
+        {
+            var result = Result.FailIf(false, new Error("Error message"));
+
+            // Assert
+            result.IsFailed.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void OkIf_SuccessConditionIsTrueAndWithStringErrorMessage_CreateFailedResult()
+        {
+            var result = Result.OkIf(true, "Error message");
+
+            // Assert
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void OkIf_SuccessConditionIsTrueAndWithObjectErrorMessage_CreateFailedResult()
+        {
+            var result = Result.OkIf(true, new Error("Error message"));
+
+            // Assert
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void OkIf_SuccessConditionIsFalseAndWithStringErrorMessage_CreateFailedResult()
+        {
+            var result = Result.OkIf(false, "Error message");
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Single().Message.Should().Be("Error message");
+        }
+
+        [TestMethod]
+        public void OkIf_SuccessConditionIsFalseAndWithObjectErrorMessage_CreateFailedResult()
+        {
+            var result = Result.OkIf(false, new Error("Error message"));
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Single().Message.Should().Be("Error message");
         }
     }
 }
