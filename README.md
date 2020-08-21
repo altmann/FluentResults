@@ -305,7 +305,7 @@ Here are some samples and best practices using FluentResult or the Result patter
 ### Serializing Result objects (ASP.NET WebApi, [Hangfire](https://www.hangfire.io/))
 
 - [Asp.net WebController](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples/WebController)
-- [Hangfire Job](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples/HangfireJob)
+- [Hangfire Job](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples/HangfireJobs)
 - Don't serialize FluentResult result objects. 
 - Make your own custom ResultDto class for your public api at your system boundaries
   - So you can control which data are submitted and which data are serialized
