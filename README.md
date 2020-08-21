@@ -151,7 +151,21 @@ var result = Result.Fail("error message 1")
                     .WithError("error message 3")
                     .WithSuccess("success message 1");
 ```
-	
+
+### Create a result depending on success/failure condition
+
+Very often you have to create a failed or success result depending on a condition. Usually you write it in this way:
+
+```csharp
+var result = string.IsNullOrEmpty(firstName) ? Result.Fail("First Name is empty") : Result.Ok();
+```
+
+With the methods ```FailIf()``` and ```OkIf()``` you can also write it in a more readable way:
+
+```csharp
+var result = Result.FailIf(string.IsNullOrEmpty(firstName), "First Name is empty");
+```
+
 ### Root cause of the error
 
 You can also store the root cause of the error in the error object.
@@ -279,6 +293,24 @@ var result = Result.Fail("Operation failed")
 ## Samples/Best Practices
 
 Here are some samples and best practices using FluentResult or the Result pattern in general with some famous or common used frameworks and libraries.
+
+### Powerful domain model inspired by Domain Driven Design
+
+- [Domain model with a command handler](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples/DomainDrivenDesign)
+- Protecting domain invariants by using for example factory methods returning a Result object
+- Make each error unique by make your custom Error classes which inherit from Error class
+- If the method can not fail then don't use the Result class as return type. 
+- Be aware that you can merge multiple failed results or return the first failed result asap
+
+### Serializing Result objects (ASP.NET WebApi, [Hangfire](https://www.hangfire.io/))
+
+- [Asp.net WebController](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples/WebController)
+- [Hangfire Job](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples/HangfireJob)
+- Don't serialize FluentResult result objects. 
+- Make your own custom ResultDto class for your public api at your system boundaries
+  - So you can control which data are submitted and which data are serialized
+  - Your public api is independend on third party libraries like FluentResults
+  - You can keep your public api stable
 
 ### [MediatR](https://github.com/jbogard/MediatR) request handlers returning Result objects
 
