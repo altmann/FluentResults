@@ -7,8 +7,8 @@
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
-- ADD - Simplify the creation of results with Result.OkIf(..) and Result.FailIf(..) (see readme for documentation)
-- ADD - Samples/best practices which show the integration with famous or common frameworks/libraries (see readme)
+- ADD - Simplify the creation of results with Result.OkIf(..) and Result.FailIf(..) (see readme for documentation) #51
+- ADD - Samples/best practices which show the integration with famous or common frameworks/libraries (see readme) #52
     </PackageReleaseNotes>
     <Copyright>Copyright 2020 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
