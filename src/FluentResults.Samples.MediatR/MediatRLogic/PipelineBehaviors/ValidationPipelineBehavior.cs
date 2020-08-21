@@ -25,10 +25,10 @@ namespace FluentResults.Samples.MediatR.MediatRLogic.PipelineBehaviors
             return await next();
         }
 
-        private async Task<Result> ValidateAsync(TRequest request)
+        private Task<Result> ValidateAsync(TRequest request)
         {
             // do here some validation, for example with fluentvalidation
-            return Result.Fail("Validation failed");
+            return Task.FromResult(Result.Fail("Validation failed"));
             // return Result.Ok();
         }
     }

@@ -7,12 +7,12 @@ namespace FluentResults.Samples.MediatR.MediatRLogic.Handlers
 {
     public class QueryWithoutResultHandler : IRequestHandler<QueryWithoutResult, QueryResponse>
     {
-        public async Task<QueryResponse> Handle(QueryWithoutResult request, CancellationToken cancellationToken)
+        public Task<QueryResponse> Handle(QueryWithoutResult request, CancellationToken cancellationToken)
         {
-            return new QueryResponse
+            return Task.FromResult(new QueryResponse
             {
                 Content = "Hello"
-            };
+            });
         }
     }
 }

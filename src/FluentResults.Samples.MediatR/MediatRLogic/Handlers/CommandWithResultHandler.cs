@@ -8,11 +8,11 @@ namespace FluentResults.Samples.MediatR.MediatRLogic.Handlers
 {
     public class CommandWithResultHandler : IRequestHandler<CommandWithResult, Result>
     {
-        public async Task<Result> Handle(CommandWithResult request, CancellationToken cancellationToken)
+        public Task<Result> Handle(CommandWithResult request, CancellationToken cancellationToken)
         {
             Console.WriteLine($"Hello {nameof(CommandWithoutResult)}");
 
-            return Result.Ok();
+            return Task.FromResult(Result.Ok());
         }
     }
 }

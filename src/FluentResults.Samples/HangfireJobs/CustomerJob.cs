@@ -12,14 +12,14 @@ namespace FluentResults.Samples.HangfireJobs
             RecurringJob.AddOrUpdate(() => Dispatch(), Cron.Daily);
         }
 
-        public static async Task<ResultDto> Dispatch()
+        public static Task<ResultDto> Dispatch()
         {
             // some logic
             Console.WriteLine("Fire-and-forget!");
 
             // Use an custom ResultDto class so that the serialization is in your control
             // Transform the FluentResult Result object to an custom ResultDto object as last as possible.
-            return Result.Ok().ToResultDto();
+            return Task.FromResult(Result.Ok().ToResultDto());
         }
     }
 }

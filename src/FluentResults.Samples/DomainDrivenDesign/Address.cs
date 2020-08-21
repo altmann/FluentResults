@@ -37,10 +37,10 @@
             return Result.FailIf(string.IsNullOrEmpty(number), "Number is required.");
 
             // option 2: set error as Error object
-            return Result.FailIf(string.IsNullOrEmpty(number), new Error("Number is required."));
+            // return Result.FailIf(string.IsNullOrEmpty(number), new Error("Number is required."));
 
             // option 3: set error as custom Error object
-            return Result.FailIf(string.IsNullOrEmpty(number), new RequiredError("Number"));
+            // return Result.FailIf(string.IsNullOrEmpty(number), new RequiredError("Number"));
         }
 
         private static Result ValidateStreet(string street)
