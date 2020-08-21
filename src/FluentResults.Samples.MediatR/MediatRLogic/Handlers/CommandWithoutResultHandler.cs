@@ -8,9 +8,11 @@ namespace FluentResults.Samples.MediatR.MediatRLogic.Handlers
 {
     public class CommandWithoutResultHandler : AsyncRequestHandler<CommandWithoutResult>
     {
-        protected override async Task Handle(CommandWithoutResult request, CancellationToken cancellationToken)
+        protected override Task Handle(CommandWithoutResult request, CancellationToken cancellationToken)
         {
             Console.WriteLine($"Hello {nameof(CommandWithoutResult)}");
+
+            return Task.CompletedTask;
         }
     }
 }
