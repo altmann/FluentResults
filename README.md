@@ -319,6 +319,18 @@ Here are some samples and best practices using FluentResult or the Result patter
 - Don't throw exceptions based on business validation errors
 - Inject command and query validation via MediatR PipelineBehavior and return a Result object instead of throwing an exception
 
+## Interesting Resources about Result Pattern
+
+- [Error Handling — Returning Results by Michael Altmann](https://medium.com/@michael_altmann/error-handling-returning-results-2b88b5ea11e9)
+- [Operation Result Pattern by Carl-Hugo Marcotte](https://www.forevolve.com/en/articles/2018/03/19/operation-result/)
+- [Exceptions for flow control in C# by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/exceptions-for-flow-control/)
+- [Error handling: Exception or Result? by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/error-handling-exception-or-result/)
+- [What is an exceptional situation in code? by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/what-is-exceptional-situation/)
+- [Advanced error handling techniques by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/advanced-error-handling-techniques/)
+- [A Simple Guide by Isaac Cummings](https://medium.com/@cummingsi1993/the-operation-result-pattern-a-simple-guide-fe10ff959080)
+- [Flexible Error Handling w/ the Result Class by Khalil Stemmler](https://khalilstemmler.com/articles/enterprise-typescript-nodejs/handling-errors-result-class/)
+- [Combining ASP.NET Core validation attributes with Value Objects by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/combining-asp-net-core-attributes-with-value-objects/)
+
 ## Contributors
 
 - [Loreno10](https://github.com/Loreno10)
