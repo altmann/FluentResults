@@ -1,13 +1,12 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using System.Linq;
+using Xunit;
 
 namespace FluentResults.Test
 {
-    [TestClass]
     public class ResultWithoutValueTests
     {
-        [TestMethod]
+        [Fact]
         public void CreateOkResult_SuccessResult()
         {
             // Act
@@ -22,7 +21,7 @@ namespace FluentResults.Test
             okResult.Successes.Should().BeEmpty();
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateOkResultWithSuccess_SuccessResultWithSuccess()
         {
             // Act
@@ -35,7 +34,7 @@ namespace FluentResults.Test
             okResult.Reasons.First().Message.Should().Be("First success message");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateOkResultWith2Successes_SuccessResultWith2Successes()
         {
             // Act
@@ -51,7 +50,7 @@ namespace FluentResults.Test
             okResult.Reasons[1].Message.Should().Be("Second success message");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateFailedResult_FailedResult()
         {
             // Act
@@ -63,7 +62,7 @@ namespace FluentResults.Test
             result.Reasons[0].Message.Should().Be("First error message");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateFailedResultWith2Errors_FailedResultWith2Errors()
         {
             // Act
@@ -78,7 +77,7 @@ namespace FluentResults.Test
             result.Reasons[1].Message.Should().Be("Second error message");
         }
 
-        [TestMethod]
+        [Fact]
         public void ToResult_ReturnFailedResult()
         {
             var result = Result.Fail("First error message");
@@ -90,7 +89,7 @@ namespace FluentResults.Test
             valueResult.IsFailed.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void ImplicitCastOperator_ReturnFailedValueResult()
         {
             var result = Result.Fail("First error message");
@@ -102,7 +101,7 @@ namespace FluentResults.Test
             valueResult.IsFailed.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void FailIf_FailedConditionIsTrueAndWithStringErrorMessage_CreateFailedResult()
         {
             var result = Result.FailIf(true, "Error message");
@@ -112,7 +111,7 @@ namespace FluentResults.Test
             result.Errors.Single().Message.Should().Be("Error message");
         }
 
-        [TestMethod]
+        [Fact]
         public void FailIf_FailedConditionIsTrueAndWithObjectErrorMessage_CreateFailedResult()
         {
             var result = Result.FailIf(true, new Error("Error message"));
@@ -122,7 +121,7 @@ namespace FluentResults.Test
             result.Errors.Single().Message.Should().Be("Error message");
         }
 
-        [TestMethod]
+        [Fact]
         public void FailIf_FailedConditionIsFalseAndWithStringErrorMessage_CreateFailedResult()
         {
             var result = Result.FailIf(false, "Error message");
@@ -131,7 +130,7 @@ namespace FluentResults.Test
             result.IsFailed.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void FailIf_FailedConditionIsFalseAndWithObjectErrorMessage_CreateFailedResult()
         {
             var result = Result.FailIf(false, new Error("Error message"));
@@ -140,7 +139,7 @@ namespace FluentResults.Test
             result.IsFailed.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void OkIf_SuccessConditionIsTrueAndWithStringErrorMessage_CreateFailedResult()
         {
             var result = Result.OkIf(true, "Error message");
@@ -149,7 +148,7 @@ namespace FluentResults.Test
             result.IsSuccess.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void OkIf_SuccessConditionIsTrueAndWithObjectErrorMessage_CreateFailedResult()
         {
             var result = Result.OkIf(true, new Error("Error message"));
@@ -158,7 +157,7 @@ namespace FluentResults.Test
             result.IsSuccess.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void OkIf_SuccessConditionIsFalseAndWithStringErrorMessage_CreateFailedResult()
         {
             var result = Result.OkIf(false, "Error message");
@@ -168,7 +167,7 @@ namespace FluentResults.Test
             result.Errors.Single().Message.Should().Be("Error message");
         }
 
-        [TestMethod]
+        [Fact]
         public void OkIf_SuccessConditionIsFalseAndWithObjectErrorMessage_CreateFailedResult()
         {
             var result = Result.OkIf(false, new Error("Error message"));

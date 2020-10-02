@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace FluentResults.Test
 {
-    [TestClass]
     public class ResultStringifyTests
     {
-        [TestMethod]
+        [Fact]
         public void OkResultWithoutValueToString_OkResult()
         {
             // Act
@@ -16,7 +15,7 @@ namespace FluentResults.Test
             result.ToString().Should().Be("Result: IsSuccess='True'");
         }
 
-        [TestMethod]
+        [Fact]
         public void FailedResultWithoutValueToString_FailedResult()
         {
             // Act
@@ -26,7 +25,7 @@ namespace FluentResults.Test
             result.ToString().Should().Be("Result: IsSuccess='False', Reasons='Error with Message='My error''");
         }
 
-        [TestMethod]
+        [Fact]
         public void OkResultWithValueToString_OkResult()
         {
             // Act
@@ -36,7 +35,7 @@ namespace FluentResults.Test
             result.ToString().Should().Be("Result: IsSuccess='True', Value='0'");
         }
 
-        [TestMethod]
+        [Fact]
         public void FailedResultWithValueToString_FailedResult()
         {
             // Act

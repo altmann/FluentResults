@@ -1,13 +1,12 @@
 ﻿using FluentAssertions;
 using FluentResults.Test.Mocks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace FluentResults.Test
 {
-    [TestClass]
     public class ResultLoggingTests
     {
-        [TestMethod]
+        [Fact]
         public void LogOkResult_EmptySuccess()
         {
             // Arrange

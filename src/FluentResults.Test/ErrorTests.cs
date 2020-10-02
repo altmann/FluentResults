@@ -1,14 +1,13 @@
 ﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using Xunit;
 
 namespace FluentResults.Test
 {
-    [TestClass]
     public class ErrorTests
     {
-        [TestMethod]
+        [Fact]
         public void CreateError_EmptyError()
         {
             // Act
@@ -19,7 +18,7 @@ namespace FluentResults.Test
             error.Metadata.Keys.Should().BeEmpty();
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateErrorCausedByErrorObject_ErrorWithReason()
         {
             // Act
@@ -31,7 +30,7 @@ namespace FluentResults.Test
             error.Reasons.First().Message.Should().Be("First error message");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateErrorCausedBy2ErrorObjects_ErrorWithReason()
         {
             // Act
@@ -45,7 +44,7 @@ namespace FluentResults.Test
             error.Reasons[1].Message.Should().Be("Second error message");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateErrorCausedByErrorMessage_ErrorWithReason()
         {
             // Act
@@ -57,7 +56,7 @@ namespace FluentResults.Test
             error.Reasons.First().Message.Should().Be("First error message");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateErrorCausedByException_ErrorWithReason()
         {
             // Act
@@ -70,7 +69,7 @@ namespace FluentResults.Test
             error.Reasons.First().Message.Should().Be("Invalid Operation Exception");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateErrorCausedByMessageAndException_ErrorWithReason()
         {
             // Act
@@ -83,7 +82,7 @@ namespace FluentResults.Test
             error.Reasons.First().Message.Should().Be("First error");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateErrorWithMetadata_ErrorWithMetadata()
         {
             // Act
@@ -96,7 +95,7 @@ namespace FluentResults.Test
             error.Metadata.Values.First().Should().Be("CustomerName");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateErrorWithMultipleMetadata_ErrorWithMultipleMetadata()
         {
             // Act

@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace FluentResults.Test
 {
-    [TestClass]
     public class MergeTests
     {
-        [TestMethod]
+        [Fact]
         public void Merge_WithResultWithoutValue_ShouldMergeResults()
         {
             var results = new List<Result>
@@ -22,7 +21,7 @@ namespace FluentResults.Test
             mergedResult.Errors.Should().HaveCount(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void Merge_WithFailedResultWithValue_ShouldMergeResults()
         {
             var results = new List<Result<int>>
@@ -37,7 +36,7 @@ namespace FluentResults.Test
             mergedResult.Errors.Should().HaveCount(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void Merge_WithSuccessResultWithValue_ShouldMergeResults()
         {
             var results = new List<Result<int>>
