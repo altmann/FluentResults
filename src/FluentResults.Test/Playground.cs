@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace FluentResults
+namespace FluentResults.Test
 {
     public class CustomError : Error
     {

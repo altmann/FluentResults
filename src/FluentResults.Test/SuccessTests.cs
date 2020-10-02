@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace FluentResults.Test
 {
-    [TestClass]
     public class SuccessTests
     {
-        [TestMethod]
+        [Fact]
         public void CreateSuccess_EmptySuccess()
         {
             // Act

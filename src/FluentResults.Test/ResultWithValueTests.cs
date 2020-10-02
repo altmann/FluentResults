@@ -1,13 +1,12 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using System;
+using Xunit;
 
 namespace FluentResults.Test
 {
-    [TestClass]
     public class ResultWithValueTests
     {
-        [TestMethod]
+        [Fact]
         public void Ok_WithNoParams_ShouldReturnSuccessResult()
         {
             // Act
@@ -24,7 +23,7 @@ namespace FluentResults.Test
             okResult.ValueOrDefault.Should().Be(0);
         }
 
-        [TestMethod]
+        [Fact]
         public void Ok_WithValidValue_ShouldReturnSuccessResult()
         {
             // Act
@@ -36,7 +35,7 @@ namespace FluentResults.Test
             okResult.ValueOrDefault.Should().Be(5);
         }
 
-        [TestMethod]
+        [Fact]
         public void WithValue_WithValidParam_ShouldReturnSuccessResult()
         {
             var okResult = Result.Ok<int>(default);
@@ -49,7 +48,7 @@ namespace FluentResults.Test
             okResult.ValueOrDefault.Should().Be(5);
         }
 
-        [TestMethod]
+        [Fact]
         public void Fail_WithValidErrorMessage_ShouldReturnFailedResult()
         {
             // Act
@@ -60,7 +59,7 @@ namespace FluentResults.Test
             result.ValueOrDefault.Should().Be(0);
         }
 
-        [TestMethod]
+        [Fact]
         public void ValueOrDefault_WithDateTime_ShouldReturnFailedResult()
         {
             var result = Result.Fail<DateTime>("Error message");
@@ -78,7 +77,7 @@ namespace FluentResults.Test
 
         }
 
-        [TestMethod]
+        [Fact]
         public void ValueOrDefault_WithObject_ShouldReturnFailedResult()
         {
             var result = Result.Fail<TestValue>("Error message");
@@ -90,7 +89,7 @@ namespace FluentResults.Test
             valueOrDefault.Should().Be(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void Value_WithResultInFailedState_ShouldThrowException()
         {
             // Act
@@ -105,7 +104,7 @@ namespace FluentResults.Test
                 .WithMessage("Result is in status failed. Value is not set.");
         }
 
-        [TestMethod]
+        [Fact]
         public void WithValue_WithResultInFailedState_ShouldThrowException()
         {
             var failedResult = Result.Fail<int>("Error message");
@@ -119,7 +118,7 @@ namespace FluentResults.Test
                 .WithMessage("Result is in status failed. Value is not set.");
         }
 
-        [TestMethod]
+        [Fact]
         public void ToResult_ReturnFailedResult()
         {
             var valueResult = Result.Fail<int>("First error message");
@@ -131,7 +130,7 @@ namespace FluentResults.Test
             result.IsFailed.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void ToResult_ToAntotherValueType_ReturnFailedResult()
         {
             var valueResult = Result.Fail<int>("First error message");
@@ -143,7 +142,7 @@ namespace FluentResults.Test
             result.IsFailed.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void ToResult_ToAntotherValueTypeWithOkResultAndNoConverter_ReturnFailedResult()
         {
             var valueResult = Result.Fail<int>("Failed");
@@ -155,7 +154,7 @@ namespace FluentResults.Test
             result.IsFailed.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void ToResult_ToAntotherValueTypeWithOkResultAndConverter_ReturnFailedResult()
         {
             var valueResult = Result.Ok(4);
@@ -168,7 +167,7 @@ namespace FluentResults.Test
             result.Value.Should().Be(4);
         }
 
-        [TestMethod]
+        [Fact]
         public void ImplicitCastOperator_ReturnFailedResult()
         {
             var valueResult = Result.Fail<int>("First error message");

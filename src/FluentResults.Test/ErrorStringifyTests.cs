@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace FluentResults.Test
 {
-    [TestClass]
     public class ErrorStringifyTests
     {
-        [TestMethod]
+        [Fact]
         public void EmptyErrorToString_OnlyType()
         {
             // Act
@@ -16,7 +15,7 @@ namespace FluentResults.Test
             error.ToString().Should().Be("Error");
         }
         
-        [TestMethod]
+        [Fact]
         public void ErrorWithMessageToString_TypeWithMessage()
         {
             // Act
@@ -27,7 +26,7 @@ namespace FluentResults.Test
             error.ToString().Should().Be("Error with Message='Error message'");
         }
         
-        [TestMethod]
+        [Fact]
         public void ErrorWithReasonsToString_TypeWithReasons()
         {
             // Act

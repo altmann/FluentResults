@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace FluentResults.Test
 {
-    [TestClass]
     public class SuccessStringifyTests
     {
-        [TestMethod]
+        [Fact]
         public void EmptySuccessToString_OnlyType()
         {
             // Act
