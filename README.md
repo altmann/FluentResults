@@ -170,7 +170,7 @@ var result = Result.FailIf(string.IsNullOrEmpty(firstName), "First Name is empty
 
 You can also store the root cause of the error in the error object. With the method `CausedBy(...)` the root cause can be passed as Error or as exception. The root cause is stored in the `Reasons` property of the error object. 
 
-Example 1:
+Example 1 - root cause is an exception
 ```csharp
 try
 {
@@ -183,10 +183,25 @@ catch(CsvExportException ex)
 }
 ```
 
-Example 2:
+Example 2 - root cause is an error
 ```csharp
 Error rootCauseError = new Error("This is the root cause of the error");
 Result result = Result.Fail(new Error("Do something failed", rootCauseError));
+```
+
+Example 3 - reading root cause from errors
+````csharp
+Result result = ....;
+if (result.IsSuccess)
+   return;
+
+foreach(var error in result.Errors)
+{
+    foreach(var causedByExceptionalError in error.Reasons.OfType<ExceptionalError>())
+    {
+        Console.WriteLine(causedByExceptionalError.Exception);
+    }
+}
 ```
 
 ### Metadata
