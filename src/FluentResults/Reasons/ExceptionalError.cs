@@ -3,6 +3,9 @@
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    /// <summary>
+    /// Error class which stores additionally the exception
+    /// </summary>
     public class ExceptionalError : Error
     {
         public Exception Exception { get; }

@@ -4,9 +4,13 @@ using System.Collections.Generic;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    /// <summary>
+    /// Reason class is the base class
+    /// </summary>
     public class Reason
     {
         public string Message { get; protected set; }
+
         public Dictionary<string, object> Metadata { get; protected set; }
 
         protected Reason()
