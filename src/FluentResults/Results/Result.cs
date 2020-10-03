@@ -22,8 +22,14 @@ namespace FluentResults
 
         private TValue _value;
 
+        /// <summary>
+        /// Get the Value. If result is failed then a default value is returned. Opposite see property Value.
+        /// </summary>
         public TValue ValueOrDefault => _value;
 
+        /// <summary>
+        /// Get the Value. If result is failed then an Exception is thrown because a failed result has no value. Opposite see property ValueOrDefault.
+        /// </summary>
         public TValue Value
         {
             get
@@ -42,18 +48,27 @@ namespace FluentResults
             }
         }
 
+        /// <summary>
+        /// Set value
+        /// </summary>
         public Result<TValue> WithValue(TValue value)
         {
             Value = value;
             return this;
         }
 
+        /// <summary>
+        /// Convert result with value to result without value
+        /// </summary>
         public Result ToResult()
         {
             return new Result()
                 .WithReasons(Reasons);
         }
 
+        /// <summary>
+        /// Convert result with value to result with another value. Use valueConverter parameter to specify the value transformation logic.
+        /// </summary>
         public Result<TNewValue> ToResult<TNewValue>(Func<TValue, TNewValue> valueConverter = null)
         {
             if(IsSuccess && valueConverter == null)

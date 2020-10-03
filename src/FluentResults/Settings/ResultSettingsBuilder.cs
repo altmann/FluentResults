@@ -3,6 +3,9 @@ namespace FluentResults
 {
     public class ResultSettingsBuilder
     {
+        /// <summary>
+        /// Set the ResultLogger
+        /// </summary>
         public IResultLogger Logger { get; set; }
 
         public ResultSettingsBuilder()
