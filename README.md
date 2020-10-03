@@ -190,7 +190,7 @@ Result result = Result.Fail(new Error("Do something failed", rootCauseError));
 ```
 
 Example 3 - reading root cause from errors
-````csharp
+```csharp
 Result result = ....;
 if (result.IsSuccess)
    return;
