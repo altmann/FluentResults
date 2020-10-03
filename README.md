@@ -7,9 +7,9 @@
 [![Build status](https://dev.azure.com/altmann/FluentResults/_apis/build/status/FluentResults-CI)](https://dev.azure.com/altmann/FluentResults/_build/latest?definitionId=11)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/altmann/FluentResults/blob/master/LICENSE)
 
-FluentResults is a lightweight .NET library built to solve a common problem - returning an object indicates success or failure of an operation instead of using exceptions. 
+FluentResults is a lightweight .NET library developed to solve a common problem. It returns an object indicating success or failure of an operation instead of throwing/using exceptions. 
 
-You should install [FluentResults with NuGet](https://www.nuget.org/packages/FluentResults/):
+You can install [FluentResults with NuGet](https://www.nuget.org/packages/FluentResults/):
 
 ```
 Install-Package FluentResults
@@ -17,10 +17,10 @@ Install-Package FluentResults
 
 ## Key Features
 
-- Storing multiple errors in one Result object
-- Storing powerful Error and Success objects and not only error string messages
+- Store multiple errors in one Result object
+- Store powerful and elaborative Error and Success objects instead of only error messages in string format
 - Designing Errors/Success in an object-oriented way
-- Storing the root cause chain of errors in a hierarchical way
+- Store the root cause with chain of errors in a hierarchical way
 - Provide 
   - .NET Standard, .NET Core and .NET Full Framework support
   - SourceLink support
@@ -28,13 +28,13 @@ Install-Package FluentResults
 
 ## Why Results instead of exceptions
 
-To be honest, returning a Result object indicates success or failure is not a new idea. Martin Fowler already wrote about this pattern  in 2004.
+To be honest, returning a Result object indicating success or failure is not at all a new idea. Martin Fowler already wrote about this pattern  in 2004.
 
-If you want to know what Martin Fowler think about Results read that: [Notification by Martin Fowler](https://martinfowler.com/eaaDev/Notification.html)
+If you want to know what Martin Fowler think about Results go to [Notification by Martin Fowler](https://martinfowler.com/eaaDev/Notification.html)
 
-If you want a second opinion read that: [Error handling: Exception or Result? by Vladimir Khorikov](http://enterprisecraftsmanship.com/2017/03/13/error-handling-exception-or-result/)
+If you want a second opinion read [Error handling: Exception or Result? by Vladimir Khorikov](http://enterprisecraftsmanship.com/2017/03/13/error-handling-exception-or-result/)
 
-If you want a short summary read that: [Error Handling — Returning Results by Michael Altmann](https://medium.com/@michael_altmann/error-handling-returning-results-2b88b5ea11e9)
+If you want a short summary go to [Error Handling — Returning Results by Michael Altmann](https://medium.com/@michael_altmann/error-handling-returning-results-2b88b5ea11e9)
 
 ## Creating a Result
 
@@ -90,7 +90,7 @@ public Result<Task> GetTask()
 
 ## Processing a Result
 
-After you get a Result object from a method you have to process it. This means, you have to check if the operation completed successfully or not. The properties `IsSuccess` and `IsFailed` at the Result object indicates success or failure. The value of a `Result<T>` can be accessed via the properties `Value` and `ValueOrDefault`.
+After you get a Result object from a method you have to process it. This means, you have to check if the operation was completed successfully or not. The properties `IsSuccess` and `IsFailed` in the Result object indicate success or failure. The value of a `Result<T>` can be accessed via the properties `Value` and `ValueOrDefault`.
 
 ```csharp
 Result<int> result = DoSomething();
@@ -120,9 +120,9 @@ var value4 = result.ValueOrDefault; // return value because result is in success
 
 ## Designing errors and success messages
 
-There are many Result Libraries which stores only simple string messages. FluentResults stores instead powerful object-oriented Error and Success objects. The advantage is that all relevant information of an error is encapsulated within one class. 
+There are many Result Libraries which store only simple string messages. FluentResults instead stores powerful object-oriented Error and Success objects. The advantage is all the relevant information of an error is encapsulated within one class. 
 
-The classes `Success` and `Error` inherit from the base class `Reason`. If at least one `Error` object is in the `Reasons` property then the result indicates a failure and the property `IsSuccess` is false. 
+The classes `Success` and `Error` inherit from the base class `Reason`. If at least one `Error` object exists in the `Reasons` property then the result indicates a failure and the property `IsSuccess` is false. 
 
 You can create your own `Success` or `Error` classes when you inherit from `Success` or `Error`. 
 
@@ -154,13 +154,13 @@ var result = Result.Fail("error message 1")
 
 ### Create a result depending on success/failure condition
 
-Very often you have to create a failed or success result depending on a condition. Usually you write it in this way:
+Very often you have to create a fail or success result depending on a condition. Usually you can write it in this way:
 
 ```csharp
 var result = string.IsNullOrEmpty(firstName) ? Result.Fail("First Name is empty") : Result.Ok();
 ```
 
-With the methods ```FailIf()``` and ```OkIf()``` you can also write it in a more readable way:
+With the methods ```FailIf()``` and ```OkIf()``` you can also write in a more readable way:
 
 ```csharp
 var result = Result.FailIf(string.IsNullOrEmpty(firstName), "First Name is empty");
@@ -186,7 +186,7 @@ catch(CsvExportException ex)
 
 It is possible to add metadata to Error or Success objects. 
 
-One way doing that is to call the method `WithMetadata(...)` directly at the creation of the result object. 
+One way of doing that is to call the method `WithMetadata(...)` directly where result object is being created. 
 
 ```csharp
 var result1 = Result.Fail(new Error("Error 1")
@@ -224,7 +224,7 @@ var mergedResult = Result.Merge(result1, result2, result3);
 
 ### Converting
 
-A result object can be converted to another result object with the methods `ToResult()` and `ToResult<TValue>()`.
+A result object can be converted to another result object with methods `ToResult()` and `ToResult<TValue>()`.
 
 ```csharp
 Result.Ok().ToResult<int>(); // converting a result to a result from type Result<int>
@@ -235,7 +235,7 @@ Result.Ok<int>().ToResult(); // converting a result to a result from type Result
 
 ### Handling/catching errors
 
-Similar to the catch block for exceptions the checking and handling of errors within a Result object is supported by this library with some methods: 
+Similar to the catch block for exceptions, the checking and handling of errors within Result object is also supported using some methods: 
 
 ```csharp
 result.HasError<MyCustomError>(); // check if the Result object contains an error from a specific type
@@ -283,7 +283,7 @@ var result = Result.Fail("Operation failed")
     .Log();
 ```
 
-Additionally a context as string can be passed.
+Additionally, a context can be passed in form of a string.
 
 ```csharp
 var result = Result.Fail("Operation failed")
@@ -292,14 +292,14 @@ var result = Result.Fail("Operation failed")
 
 ## Samples/Best Practices
 
-Here are some samples and best practices using FluentResult or the Result pattern in general with some famous or common used frameworks and libraries.
+Here are some samples and best practices to be followed while using FluentResult or the Result pattern in general with some famous or commonly used frameworks and libraries.
 
 ### Powerful domain model inspired by Domain Driven Design
 
 - [Domain model with a command handler](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples/DomainDrivenDesign)
 - Protecting domain invariants by using for example factory methods returning a Result object
-- Make each error unique by make your custom Error classes which inherit from Error class
-- If the method can not fail then don't use the Result class as return type. 
+- Make each error unique by making your own custom Error classes inheriting from Error class
+- If the method doesn't have a failure scenario then don't use the Result class as return type
 - Be aware that you can merge multiple failed results or return the first failed result asap
 
 ### Serializing Result objects (ASP.NET WebApi, [Hangfire](https://www.hangfire.io/))
@@ -307,15 +307,15 @@ Here are some samples and best practices using FluentResult or the Result patter
 - [Asp.net WebController](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples/WebController)
 - [Hangfire Job](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples/HangfireJobs)
 - Don't serialize FluentResult result objects. 
-- Make your own custom ResultDto class for your public api at your system boundaries
-  - So you can control which data are submitted and which data are serialized
-  - Your public api is independend on third party libraries like FluentResults
+- Make your own custom ResultDto class for your public api in your system boundaries
+  - So you can control which data is submitted and which data is serialized
+  - Your public api is independent of third party libraries like FluentResults
   - You can keep your public api stable
 
 ### [MediatR](https://github.com/jbogard/MediatR) request handlers returning Result objects
 
 - [Full functional .NET Core sample code with commands/queries and a ValidationPipelineBehavior](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples.MediatR)
-- Return business validation errors via a Result object from a MediatR request handler back to the consumer
+- Returns business validation errors via a Result object from a MediatR request handler back to the consumer
 - Don't throw exceptions based on business validation errors
 - Inject command and query validation via MediatR PipelineBehavior and return a Result object instead of throwing an exception
 
