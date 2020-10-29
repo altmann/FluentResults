@@ -17,10 +17,11 @@ Install-Package FluentResults
 
 ## Key Features
 
-- Store multiple errors in one Result object
-- Store powerful and elaborative Error and Success objects instead of only error messages in string format
+- **Generalised container** which works in all contexts (ASP.NET MVC/WebApi, WPF, DDD Domain Model, etc)
+- Store **multiple errors** in one Result object
+- Store **powerful and elaborative Error and Success objects** instead of only error messages in string format
 - Designing Errors/Success in an object-oriented way
-- Store the root cause with chain of errors in a hierarchical way
+- Store the **root cause with chain of errors in a hierarchical way**
 - Provide 
   - .NET Standard, .NET Core and .NET Full Framework support
   - SourceLink support
@@ -390,6 +391,9 @@ Here are some samples and best practices to be followed while using FluentResult
 
 ## Contributors
 
+Thanks to all the contributers and to all the people who gave feedback!
+
+- [deepankkartikey](https://github.com/deepankkartikey)
 - [Loreno10](https://github.com/Loreno10)
 - [JasonLandbridge](https://github.com/JasonLandbridge)
 - [michaelmsm89](https://github.com/michaelmsm89)
