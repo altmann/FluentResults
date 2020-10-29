@@ -144,9 +144,9 @@ In some cases it is necessary to chain multiple error and success messages in on
 
 ```csharp
 var result = Result.Fail("error message 1")
-                    .WithError("error message 2")
-                    .WithError("error message 3")
-                    .WithSuccess("success message 1");
+                   .WithError("error message 2")
+                   .WithError("error message 3")
+                   .WithSuccess("success message 1");
 ```
 
 ### Create a result depending on success/failure condition
@@ -210,8 +210,7 @@ try
 }
 catch(CsvExportException ex)
 {
-    return Result.Fail(new Error("CSV Export not executed successfully")
-                        .CausedBy(ex));
+    return Result.Fail(new Error("CSV Export not executed successfully").CausedBy(ex));
 }
 ```
 
@@ -243,8 +242,7 @@ It is possible to add metadata to Error or Success objects.
 One way of doing that is to call the method `WithMetadata(...)` directly where result object is being created. 
 
 ```csharp
-var result1 = Result.Fail(new Error("Error 1")
-                          .WithMetadata("metadata name", "metadata value"));
+var result1 = Result.Fail(new Error("Error 1").WithMetadata("metadata name", "metadata value"));
 
 var result2 = Result.Ok()
                     .WithSuccess(new Success("Success 1")
