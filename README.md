@@ -166,6 +166,41 @@ With the methods ```FailIf()``` and ```OkIf()``` you can also write in a more re
 var result = Result.FailIf(string.IsNullOrEmpty(firstName), "First Name is empty");
 ```
 
+### Try
+
+In some scenarios you want to execute an action. If this action throws an exception then the exception should be catched and transformed to a result object. 
+
+```csharp
+var result = Result.Try(() => DoSomethingCritical());
+```
+
+In the above example the default catchHandler is used. The behavior of the default catchHandler can be overwritten via the global Result settings (see next example). You can control how the Error object looks.
+
+```csharp
+Result.Setup(cfg =>
+{
+    cfg.DefaultTryCatchHandler = exception =>
+    {
+        if (exception is SqlTypeException sqlException)
+            return new ExceptionalError("Sql Fehler", sqlException);
+
+        if (exception is DomainException domainException)
+            return new Error("Domain Fehler")
+                .CausedBy(new ExceptionError(domainException.Message, domainException));
+
+        return new Error(exception.Message);
+    };
+});
+
+var result = Result.Try(() => DoSomethingCritical());
+```
+
+It is also possible to pass the catchHandler via the ```Try``` method. 
+
+```csharp
+var result = Result.Try(() => DoSomethingCritical(), ex => new MyCustomExceptionError(ex));
+```
+
 ### Root cause of the error
 
 You can also store the root cause of the error in the error object. With the method `CausedBy(...)` the root cause can be passed as Error or as exception. The root cause is stored in the `Reasons` property of the error object. 
