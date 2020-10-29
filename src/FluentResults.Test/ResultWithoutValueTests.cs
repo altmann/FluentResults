@@ -1,5 +1,8 @@
+using System;
+using System.Data.SqlTypes;
 using FluentAssertions;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace FluentResults.Test
@@ -175,6 +178,94 @@ namespace FluentResults.Test
             // Assert
             result.IsFailed.Should().BeTrue();
             result.Errors.Single().Message.Should().Be("Error message");
+        }
+
+
+        [Fact]
+        public void Try_execute_successfully_action_return_success_result()
+        {
+            void Action()
+            {
+            }
+
+            var result = Result.Try(Action);
+
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Try_execute_failed_action_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+            void Action() => throw exception;
+
+            var result = Result.Try(Action);
+
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Should().HaveCount(1);
+
+            var error = (ExceptionalError) result.Errors.First();
+            error.Message.Should().Be(exception.Message);
+            error.Exception.Should().Be(exception);
+        }
+
+        [Fact]
+        public void Try_execute_failed_action_with_custom_catchHandler_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+            void Action() => throw exception;
+
+            var result = Result.Try(Action, e => new Error("xy"));
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+
+            var error = result.Errors.First();
+            error.Message.Should().Be("xy");
+        }
+
+        [Fact]
+        public async Task Try_execute_successfully_async_action_return_success_result()
+        {
+            Task Action()
+            {
+                return Task.FromResult(0);
+            }
+
+            var result = await Result.Try(Action);
+
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_async_action_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+            Task Action() => throw exception;
+
+            var result = await Result.Try(Action);
+
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Should().HaveCount(1);
+
+            var error = (ExceptionalError) result.Errors.First();
+            error.Message.Should().Be(exception.Message);
+            error.Exception.Should().Be(exception);
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_async_action_with_custom_catchHandler_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+            Task Action() => throw exception;
+
+            var result = await Result.Try(Action, e => new Error("xy"));
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+
+            var error = result.Errors.First();
+            error.Message.Should().Be("xy");
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
@@ -187,6 +188,76 @@ namespace FluentResults
         public static Result FailIf(bool isFailure, string error)
         {
             return isFailure ? Fail(error) : Ok();
+        }
+
+        /// <summary>
+        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        /// </summary>
+        public static Result Try(Action action, Func<Exception, Error> catchHandler = null)
+        {
+            catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
+
+            try
+            {
+                action();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return Fail(catchHandler(e));
+            }
+        }
+
+        /// <summary>
+        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        /// </summary>
+        public static async Task<Result> Try(Func<Task> action, Func<Exception, Error> catchHandler = null)
+        {
+            catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
+
+            try
+            {
+                await action();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return Fail(catchHandler(e));
+            }
+        }
+
+        /// <summary>
+        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        /// </summary>
+        public static Result<T> Try<T>(Func<T> action, Func<Exception, Error> catchHandler = null)
+        {
+            catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
+
+            try
+            {
+                return Ok(action());
+            }
+            catch (Exception e)
+            {
+                return Fail(catchHandler(e));
+            }
+        }
+
+        /// <summary>
+        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        /// </summary>
+        public static async Task<Result<T>> Try<T>(Func<Task<T>> action, Func<Exception, Error> catchHandler = null)
+        {
+            catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
+
+            try
+            {
+                return Ok(await action());
+            }
+            catch (Exception e)
+            {
+                return Fail(catchHandler(e));
+            }
         }
     }
 }
