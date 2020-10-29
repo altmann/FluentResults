@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
@@ -64,6 +65,24 @@ namespace FluentResults
         public Error CausedBy(string message)
         {
             Reasons.Add(new Error(message));
+            return this;
+        }
+
+        /// <summary>
+        /// Set the root cause of the error
+        /// </summary>
+        public Error CausedBy(IEnumerable<Error> errors)
+        {
+            Reasons.AddRange(errors);
+            return this;
+        }
+
+        /// <summary>
+        /// Set the root cause of the error
+        /// </summary>
+        public Error CausedBy(IEnumerable<string> errors)
+        {
+            Reasons.AddRange(errors.Select(errorMessage => new Error(errorMessage)));
             return this;
         }
 

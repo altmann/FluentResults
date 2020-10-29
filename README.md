@@ -203,7 +203,7 @@ var result = Result.Try(() => DoSomethingCritical(), ex => new MyCustomException
 
 ### Root cause of the error
 
-You can also store the root cause of the error in the error object. With the method `CausedBy(...)` the root cause can be passed as Error or as exception. The root cause is stored in the `Reasons` property of the error object. 
+You can also store the root cause of the error in the error object. With the method `CausedBy(...)` the root cause can be passed as Error, list of Errors, string, list of strings or as exception. The root cause is stored in the `Reasons` property of the error object. 
 
 Example 1 - root cause is an exception
 ```csharp

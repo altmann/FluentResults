@@ -132,6 +132,22 @@ namespace FluentResults
         }
 
         /// <summary>
+        /// Add multiple errors
+        /// </summary>
+        public TResult WithErrors(IEnumerable<Error> errors)
+        {
+            return WithReasons(errors);
+        }
+
+        /// <summary>
+        /// Add multiple errors
+        /// </summary>
+        public TResult WithErrors(IEnumerable<string> errors)
+        {
+            return WithReasons(errors.Select(errorMessage => new Error(errorMessage)));
+        }
+
+        /// <summary>
         /// Add an error
         /// </summary>
         public TResult WithError<TError>()
