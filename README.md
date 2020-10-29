@@ -195,7 +195,7 @@ Result.Setup(cfg =>
 var result = Result.Try(() => DoSomethingCritical());
 ```
 
-It is also possible to pass the catchHandler via the ```Try``` method. 
+It is also possible to pass a custom catchHandler via the ```Try(..)``` method. 
 
 ```csharp
 var result = Result.Try(() => DoSomethingCritical(), ex => new MyCustomExceptionError(ex));
