@@ -29,13 +29,9 @@ Install-Package FluentResults
 
 ## Why Results instead of exceptions
 
-To be honest, returning a Result object indicating success or failure is not at all a new idea. Martin Fowler already wrote about this pattern  in 2004.
+To be honest, the pattern - returning a Result object indicating success or failure - is not at all a new idea. This pattern comes from functional programming languages. With FluentResults this pattern can also be applied in .NET/C#. 
 
-If you want to know what Martin Fowler think about Results go to [Notification by Martin Fowler](https://martinfowler.com/eaaDev/Notification.html)
-
-If you want a second opinion read [Error handling: Exception or Result? by Vladimir Khorikov](http://enterprisecraftsmanship.com/2017/03/13/error-handling-exception-or-result/)
-
-If you want a short summary go to [Error Handling — Returning Results by Michael Altmann](https://medium.com/@michael_altmann/error-handling-returning-results-2b88b5ea11e9)
+The article [Exceptions for Flow Control by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/exceptions-for-flow-control/) describes very good in which scenarios the Result pattern makes sense and in which not. See the [list of Best Practices](https://github.com/altmann/FluentResults#samplesbest-practices) and [list of resources about the result pattern](https://github.com/altmann/FluentResults#interesting-resources-about-result-pattern) to learn more about the Result Pattern. 
 
 ## Creating a Result
 
