@@ -109,9 +109,7 @@ namespace FluentResults
         /// </summary>
         public TResult WithReasons(IEnumerable<Reason> reasons)
         {
-            foreach (var reason in reasons)
-                WithReason(reason);
-
+            Reasons.AddRange(reasons);
             return (TResult)this;
         }
 
