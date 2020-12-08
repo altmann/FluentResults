@@ -323,9 +323,9 @@ Then you have to register your logger.
 
 ```csharp
 var myLogger = new MyConsoleLogger();
-        Result.Setup(cfg => {
-            cfg.Logger = myLogger;
-        });
+Result.Setup(cfg => {
+    cfg.Logger = myLogger;
+});
 ```
 
 Finally the logger can be used. 
