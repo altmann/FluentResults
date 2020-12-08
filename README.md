@@ -285,7 +285,8 @@ Result.Ok().ToResult<int>();
 // converting a result to a result from type Result<float>
 Result.Ok<int>(5).ToResult<float>(v => v);
 
-// converting a result from type Result<int> to result from type Result<float> without passing the converting logic because result is in failed state and therefore no converting logic needed
+// converting a result from type Result<int> to result from type Result<float> without passing the converting
+// logic because result is in failed state and therefore no converting logic needed
 Result.Fail<int>("Failed").ToResult<float>();
 
 // converting a result to a result from type Result
@@ -315,8 +316,11 @@ result.HasError(error => error.HasMetadata("MyKey", metadataValue => (string)met
 Checking if a result object contains a specific success object can be done with the method `HasSuccess()`
 
 ```csharp
-result.HasSuccess<MyCustomSuccess>(); // check if the Result object contains a success from a specific type
-result.HasSuccess<MyCustomSuccess>(success => success.MyField == 3); // check if the Result object contains a success from a specific type and with a specific condition
+// check if the Result object contains a success from a specific type
+result.HasSuccess<MyCustomSuccess>();
+
+// check if the Result object contains a success from a specific type and with a specific condition
+result.HasSuccess<MyCustomSuccess>(success => success.MyField == 3);
 ```
 
 ### Logging
