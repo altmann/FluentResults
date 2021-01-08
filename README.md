@@ -279,10 +279,18 @@ var mergedResult = Result.Merge(result1, result2, result3);
 A result object can be converted to another result object with methods `ToResult()` and `ToResult<TValue>()`.
 
 ```csharp
-Result.Ok().ToResult<int>(); // converting a result to a result from type Result<int>
-Result.Ok<int>(5).ToResult<float>(v => v); // converting a result to a result from type Result<float>
-Result.Fail<int>("Failed").ToResult<float>() // converting a result from type Result<int> to result from type Result<float> without passing the converting logic because result is in failed state and therefore no converting logic needed
-Result.Ok<int>().ToResult(); // converting a result to a result from type Result
+// converting a result to a result from type Result<int>
+Result.Ok().ToResult<int>();
+
+// converting a result to a result from type Result<float>
+Result.Ok<int>(5).ToResult<float>(v => v);
+
+// converting a result from type Result<int> to result from type Result<float> without passing the converting
+// logic because result is in failed state and therefore no converting logic needed
+Result.Fail<int>("Failed").ToResult<float>();
+
+// converting a result to a result from type Result
+Result.Ok<int>().ToResult(); 
 ```
 
 ### Handling/catching errors
@@ -290,10 +298,17 @@ Result.Ok<int>().ToResult(); // converting a result to a result from type Result
 Similar to the catch block for exceptions, the checking and handling of errors within Result object is also supported using some methods: 
 
 ```csharp
-result.HasError<MyCustomError>(); // check if the Result object contains an error from a specific type
-result.HasError<MyCustomError>(myCustomError => myCustomError.MyField == 2); // check if the Result object contains an error from a specific type and with a specific condition
-result.HasError(error => error.HasMetadataKey("MyKey")); // check if the Result object contains an error with a specific metadata key
-result.HasError(error => error.HasMetadata("MyKey", metadataValue => (string)metadataValue == "MyValue")); // check if the Result object contains an error with a specific metadata
+// check if the Result object contains an error from a specific type
+result.HasError<MyCustomError>();
+
+// check if the Result object contains an error from a specific type and with a specific condition
+result.HasError<MyCustomError>(myCustomError => myCustomError.MyField == 2);
+
+// check if the Result object contains an error with a specific metadata key
+result.HasError(error => error.HasMetadataKey("MyKey"));
+
+// check if the Result object contains an error with a specific metadata
+result.HasError(error => error.HasMetadata("MyKey", metadataValue => (string)metadataValue == "MyValue")); 
 ```
 
 ### Handling successes
@@ -301,8 +316,11 @@ result.HasError(error => error.HasMetadata("MyKey", metadataValue => (string)met
 Checking if a result object contains a specific success object can be done with the method `HasSuccess()`
 
 ```csharp
-result.HasSuccess<MyCustomSuccess>(); // check if the Result object contains a success from a specific type
-result.HasSuccess<MyCustomSuccess>(success => success.MyField == 3); // check if the Result object contains a success from a specific type and with a specific condition
+// check if the Result object contains a success from a specific type
+result.HasSuccess<MyCustomSuccess>();
+
+// check if the Result object contains a success from a specific type and with a specific condition
+result.HasSuccess<MyCustomSuccess>(success => success.MyField == 3);
 ```
 
 ### Logging
@@ -323,9 +341,9 @@ Then you have to register your logger.
 
 ```csharp
 var myLogger = new MyConsoleLogger();
-        Result.Setup(cfg => {
-            cfg.Logger = myLogger;
-        });
+Result.Setup(cfg => {
+    cfg.Logger = myLogger;
+});
 ```
 
 Finally the logger can be used. 
