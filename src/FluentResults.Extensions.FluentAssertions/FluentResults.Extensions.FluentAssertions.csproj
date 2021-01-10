@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <PackageId>FluentResults.Extensions.FluentAssertions</PackageId>
+    <Version>0.5.0.0</Version>
+    <Authors>Michael Altmann</Authors>
+    <Description>Asserting FluentResults objects with FluentAssertions</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>
+      - ADD - Basic functionality to assert success, failure and value of result objects
+    </PackageReleaseNotes>
+    <Copyright>Copyright 2021 (c) Michael Altmann. All rights reserved.</Copyright>
+    <PackageTags>Result Results exception error handling FluentResults</PackageTags>
+    <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-128.png</PackageIconUrl>
+    <PackageIcon>FluentResults-Icon-128.png</PackageIcon>
+
+    <!--SourceLink-->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="FluentResults" Version="2.3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\resources\icons\FluentResults-Icon-128.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+</Project>
