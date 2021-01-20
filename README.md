@@ -361,6 +361,10 @@ var result = Result.Fail("Operation failed")
     .Log("logger context");
 ```
 
+### Asserting FluentResult objects
+
+Try it with the power of FluentAssertions and [FluentResults.Extensions.FluentAssertions](https://github.com/altmann/FluentResults/wiki#fluentresultsextensionsfluentassertions)
+
 ## Samples/Best Practices
 
 Here are some samples and best practices to be followed while using FluentResult or the Result pattern in general with some famous or commonly used frameworks and libraries.
