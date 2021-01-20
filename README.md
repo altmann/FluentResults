@@ -26,6 +26,7 @@ Install-Package FluentResults
   - .NET Standard, .NET Core and .NET Full Framework support
   - SourceLink support
   - powerful [code samples](https://github.com/altmann/FluentResults#samplesbest-practices) which show the integration with famous or common frameworks/libraries
+- [FluentAssertions Extension](https://github.com/altmann/FluentResults/wiki) to assert FluentResult objects in an elegant way
 
 ## Why Results instead of exceptions
 
