@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using Xunit;
 
 namespace FluentResults.Test
@@ -16,15 +17,49 @@ namespace FluentResults.Test
             success.Metadata.Should().BeEmpty();
         }
 
-#if NET5_0
-    public record MyError(int id) : IError;
 
-    [Fact]
+        public record RecordError : IError
+        {
+            public RecordError()
+            {
+            }
+
+            public RecordError(string message)
+            {
+                Message = message;
+            }
+
+            public string Message { get; init; }
+
+            public Dictionary<string, object> Metadata { get; init; }
+
+            public List<IError> Reasons { get; init; }
+        }
+
+        public record MyError(int Id, string Message) : RecordError(Message);
+        public record MyError2(int Id) : RecordError;
+
+        [Fact]
         public void CreateSuccess_2()
         {
+            var e1 = new MyError(1, "see")
+            {
+                Metadata = new Dictionary<string, object>()
+            };
+            var e2 = new MyError(1, "see")
+            {
+                Metadata = new Dictionary<string, object>()
+            };
+
+            if (e1 == e2)
+            {
+                var x = 32;
+            }
+
             // Act
-            var r = Result.Fail(new MyError(1));
+            var r = Result.Fail(e1);
+
+            var isFailed = r.IsFailed;
         }
-#endif
     }
 }
