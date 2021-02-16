@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
@@ -6,24 +7,25 @@ namespace FluentResults
     /// <summary>
     /// Error class which stores additionally the exception
     /// </summary>
-    public class ExceptionalError : Error
+    public record ExceptionalError : Error
     {
         public Exception Exception { get; }
-        
-        public ExceptionalError(Exception exception)
-            : this(exception.Message, exception)
-        { }
 
-        public ExceptionalError(string message, Exception exception)
-            : base(message)
+        public ExceptionalError(Exception exception, string? message = null)
+            : base(message ?? exception.Message)
         {
             Exception = exception;
         }
 
-        protected override ReasonStringBuilder GetReasonStringBuilder()
+        public override ExceptionalError WithMetadata(string metadataName, object metadataValue)
         {
-            return base.GetReasonStringBuilder()
-                .WithInfo(nameof(Exception), Exception.ToString());
+            return (ExceptionalError)base.WithMetadata(metadataName, metadataValue);
         }
+
+        public override ExceptionalError WithMetadata(IDictionary<string, object> metadata)
+        {
+            return (ExceptionalError)base.WithMetadata(metadata);
+        }
+
     }
 }

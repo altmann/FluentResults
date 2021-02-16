@@ -9,29 +9,33 @@ namespace FluentResults
     {
         public static Result Merge(params ResultBase[] results)
         {
+            return Merge(results.AsEnumerable());
+        }
+
+        public static Result Merge(IEnumerable<ResultBase> results)
+        {
             var finalResult = Result.Ok();
 
-            foreach (var result in results)
+            foreach (var result in results.SelectMany(r => r.Reasons))
             {
-                foreach (var reason in result.Reasons)
-                {
-                    finalResult.WithReason(reason);
-                }
+                finalResult.WithReason(result);
             }
 
             return finalResult;
         }
 
-        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(params Result<TValue>[] results)
+        public static Result<IEnumerable<TValue>> Merge<TValue>(params Result<TValue>[] results)
+        {
+            return Merge(results.AsEnumerable());
+        }
+
+        public static Result<IEnumerable<TValue>> Merge<TValue>(IEnumerable<Result<TValue>> results)
         {
             var finalResult = Result.Ok<IEnumerable<TValue>>(new List<TValue>());
 
-            foreach (var result in results)
+            foreach (var reason in results.SelectMany(r => r.Reasons))
             {
-                foreach (var reason in result.Reasons)
-                {
-                    finalResult.WithReason(reason);
-                }
+                finalResult.WithReason(reason);
             }
 
             if (finalResult.IsSuccess)
@@ -40,7 +44,7 @@ namespace FluentResults
             return finalResult;
         }
 
-        public static bool HasError<TError>(List<Error> errors, Func<TError, bool> predicate) where TError : Error
+        public static bool HasError<TError>(IReadOnlyList<Error> errors, Func<TError, bool> predicate) where TError : Error
         {
             var anyErrors = errors.Any(error => error is TError errorOfTError && predicate(errorOfTError));
             if (anyErrors)

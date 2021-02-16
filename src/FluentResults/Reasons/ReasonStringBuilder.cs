@@ -5,7 +5,7 @@ using System.Linq;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
-    public class ReasonStringBuilder
+    public record ReasonStringBuilder
     {
         private string reasonType = string.Empty;
         private readonly List<string> infos = new List<string>();

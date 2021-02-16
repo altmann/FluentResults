@@ -12,7 +12,7 @@ namespace FluentResults.Test
             var error = new Success("My first success");
 
             // Assert
-            error.ToString().Should().Be("Success with Message='My first success'");
+            error.ToString().Should().Be("Success { Message = My first success }");
         }
     }
 }

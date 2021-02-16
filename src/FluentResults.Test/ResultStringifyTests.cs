@@ -12,7 +12,7 @@ namespace FluentResults.Test
             var result = Result.Ok();
 
             // Assert
-            result.ToString().Should().Be("Result: IsSuccess='True'");
+            result.ToString().Should().Be("Result { IsSuccess = True }");
         }
 
         [Fact]
@@ -22,7 +22,7 @@ namespace FluentResults.Test
             var result = Result.Fail("My error");
 
             // Assert
-            result.ToString().Should().Be("Result: IsSuccess='False', Reasons='Error with Message='My error''");
+            result.ToString().Should().Be("Result { IsSuccess = False, Reasons = [ Error { Message = My error } ] }");
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace FluentResults.Test
             var result = Result.Ok<int>(default);
 
             // Assert
-            result.ToString().Should().Be("Result: IsSuccess='True', Value='0'");
+            result.ToString().Should().Be("Result { IsSuccess = True, Value = 0 }");
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace FluentResults.Test
             var result = Result.Fail<int>("My error");
 
             // Assert
-            result.ToString().Should().Be("Result: IsSuccess='False', Reasons='Error with Message='My error'', Value='0'");
+            result.ToString().Should().Be("Result { IsSuccess = False, Reasons = [ Error { Message = My error } ] }");
         }
     }
 }

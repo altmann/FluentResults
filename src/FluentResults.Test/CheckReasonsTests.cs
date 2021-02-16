@@ -5,24 +5,12 @@ namespace FluentResults.Test
 {
     public class CheckReasonsTests
     {
-        class NotFoundError : Error
+        record NotFoundError(int Id) : Error
         {
-            public int Id { get; }
-
-            public NotFoundError(int id)
-            {
-                Id = id;
-            }
         }
 
-        class FoundSuccess : Success
+        record FoundSuccess(int Id) : Success
         {
-            public int Id { get; }
-
-            public FoundSuccess(int id) : base("")
-            {
-                Id = id;
-            }
         }
 
         [Fact]

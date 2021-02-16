@@ -9,7 +9,7 @@ namespace FluentResults
                 .WithValue(value);
         }
 
-        internal static string ToLabelValueStringOrEmpty(this object value, string label)
+        internal static string ToLabelValueStringOrEmpty(this object? value, string label)
         {
             if (value == null)
             {

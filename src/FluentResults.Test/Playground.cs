@@ -3,12 +3,8 @@ using System.Collections.Generic;
 
 namespace FluentResults.Test
 {
-    public class CustomError : Error
+    public record CustomError() : Error("Custom message")
     {
-        public CustomError()
-        {
-            Message = "Custom message";
-        }
     }
 
     public class Playground

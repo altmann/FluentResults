@@ -12,7 +12,7 @@ namespace FluentResults.Test
             var error = new Error();
 
             // Assert
-            error.ToString().Should().Be("Error");
+            error.ToString().Should().Be("Error { Message =  }");
         }
         
         [Fact]
@@ -23,9 +23,9 @@ namespace FluentResults.Test
                 .WithMessage("Error message");
 
             // Assert
-            error.ToString().Should().Be("Error with Message='Error message'");
+            error.ToString().Should().Be("Error { Message = Error message }");
         }
-        
+
         [Fact]
         public void ErrorWithReasonsToString_TypeWithReasons()
         {
@@ -35,7 +35,19 @@ namespace FluentResults.Test
                 .CausedBy("My second cause");
 
             // Assert
-            error.ToString().Should().Be("Error with Reasons='Error with Message='My first cause'; Error with Message='My second cause''");
+            error.ToString().Should().Be("Error { Message = , Reasons = [ Error { Message = My first cause }, Error { Message = My second cause } ] }");
+        }
+
+        [Fact]
+        public void ErrorWithMetadataToString_TypeWithMetadata()
+        {
+            // Act
+            var error = new Error()
+                .WithMetadata("Key1", 123)
+                .WithMetadata("Key2", "Value");
+
+            // Assert
+            error.ToString().Should().Be("Error { Message = , Metadata = [ { Key1 = 123 }, { Key2 = Value } ] }");
         }
     }
 }
