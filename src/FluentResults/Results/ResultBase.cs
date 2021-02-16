@@ -10,7 +10,7 @@ namespace FluentResults
         /// <summary>
         /// Is true if Reasons contains at least one error
         /// </summary>
-        public bool IsFailed => Reasons.OfType<Error>().Any();
+        public bool IsFailed => Reasons.OfType<IError>().Any();
 
         /// <summary>
         /// Is true if Reasons contains no errors
@@ -20,27 +20,27 @@ namespace FluentResults
         /// <summary>
         /// Get all reasons (errors and successes)
         /// </summary>
-        public List<Reason> Reasons { get; }
+        public List<IReason> Reasons { get; }
 
         /// <summary>
         /// Get all errors
         /// </summary>
-        public List<Error> Errors => Reasons.OfType<Error>().ToList();
+        public List<IError> Errors => Reasons.OfType<IError>().ToList();
 
         /// <summary>
         /// Get all successes
         /// </summary>
-        public List<Success> Successes => Reasons.OfType<Success>().ToList();
+        public List<ISuccess> Successes => Reasons.OfType<ISuccess>().ToList();
 
         protected ResultBase()
         {
-            Reasons = new List<Reason>();
+            Reasons = new List<IReason>();
         }
 
         /// <summary>
         /// Check if the result object contains an error from a specific type
         /// </summary>
-        public bool HasError<TError>() where TError : Error
+        public bool HasError<TError>() where TError : IError
         {
             return HasError<TError>(error => true);
         }
@@ -48,7 +48,7 @@ namespace FluentResults
         /// <summary>
         /// Check if the result object contains an error from a specific type and with a specific condition
         /// </summary>
-        public bool HasError<TError>(Func<TError, bool> predicate) where TError : Error
+        public bool HasError<TError>(Func<TError, bool> predicate) where TError : IError
         {
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
@@ -59,7 +59,7 @@ namespace FluentResults
         /// <summary>
         /// Check if the result object contains an error with a specific condition
         /// </summary>
-        public bool HasError(Func<Error, bool> predicate)
+        public bool HasError(Func<IError, bool> predicate)
         {
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
@@ -70,7 +70,7 @@ namespace FluentResults
         /// <summary>
         /// Check if the result object contains a success from a specific type
         /// </summary>
-        public bool HasSuccess<TSuccess>() where TSuccess : Success
+        public bool HasSuccess<TSuccess>() where TSuccess : ISuccess
         {
             return HasSuccess<TSuccess>(success => true);
         }
@@ -78,7 +78,7 @@ namespace FluentResults
         /// <summary>
         /// Check if the result object contains a success from a specific type and with a specific condition
         /// </summary>
-        public bool HasSuccess<TSuccess>(Func<TSuccess, bool> predicate) where TSuccess : Success
+        public bool HasSuccess<TSuccess>(Func<TSuccess, bool> predicate) where TSuccess : ISuccess
         {
             return ResultHelper.HasSuccess(Successes, predicate);
         }
@@ -86,7 +86,7 @@ namespace FluentResults
         /// <summary>
         /// Check if the result object contains a success with a specific condition
         /// </summary>
-        public bool HasSuccess(Func<Success, bool> predicate)
+        public bool HasSuccess(Func<ISuccess, bool> predicate)
         {
             return ResultHelper.HasSuccess(Successes, predicate);
         }
@@ -98,7 +98,7 @@ namespace FluentResults
         /// <summary>
         /// Add a reason (success or error)
         /// </summary>
-        public TResult WithReason(Reason reason)
+        public TResult WithReason(IReason reason)
         {
             Reasons.Add(reason);
             return (TResult)this;
@@ -107,7 +107,7 @@ namespace FluentResults
         /// <summary>
         /// Add multiple reasons (success or error)
         /// </summary>
-        public TResult WithReasons(IEnumerable<Reason> reasons)
+        public TResult WithReasons(IEnumerable<IReason> reasons)
         {
             Reasons.AddRange(reasons);
             return (TResult)this;
@@ -124,7 +124,7 @@ namespace FluentResults
         /// <summary>
         /// Add an error
         /// </summary>
-        public TResult WithError(Error error)
+        public TResult WithError(IError error)
         {
             return WithReason(error);
         }
@@ -132,7 +132,7 @@ namespace FluentResults
         /// <summary>
         /// Add multiple errors
         /// </summary>
-        public TResult WithErrors(IEnumerable<Error> errors)
+        public TResult WithErrors(IEnumerable<IError> errors)
         {
             return WithReasons(errors);
         }
@@ -149,7 +149,7 @@ namespace FluentResults
         /// Add an error
         /// </summary>
         public TResult WithError<TError>()
-            where TError : Error, new()
+            where TError : IError, new()
         {
             return WithError(new TError());
         }
@@ -165,7 +165,7 @@ namespace FluentResults
         /// <summary>
         /// Add a success
         /// </summary>
-        public TResult WithSuccess(Success success)
+        public TResult WithSuccess(ISuccess success)
         {
             return WithReason(success);
         }
@@ -174,7 +174,7 @@ namespace FluentResults
         /// Add a success
         /// </summary>
         public TResult WithSuccess<TSuccess>()
-            where TSuccess : Success, new()
+            where TSuccess : ISuccess, new()
         {
             return WithSuccess(new TSuccess());
         }

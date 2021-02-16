@@ -5,19 +5,29 @@ using System.Linq;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    public interface IError : IReason
+    {
+        List<IError> Reasons { get; }
+    }
+
     /// <summary>
     /// Objects from Error class cause a failed result
     /// </summary>
-    public class Error : Reason
+    public class Error : IError
     {
+        public string Message { get; protected set; }
+
+        public Dictionary<string, object> Metadata { get; }
+
         /// <summary>
         /// Get the reasons of an error
         /// </summary>
-        public List<Error> Reasons { get; }
+        public List<IError> Reasons { get; }
 
         public Error()
         {
-            Reasons = new List<Error>();
+            Metadata = new Dictionary<string, object>();
+            Reasons = new List<IError>();
         }
 
         public Error(string message)
@@ -26,7 +36,7 @@ namespace FluentResults
             Message = message;
         }
 
-        public Error(string message, Error causedBy)
+        public Error(string message, IError causedBy)
             : this(message)
         {
             Reasons.Add(causedBy);
@@ -35,12 +45,12 @@ namespace FluentResults
         /// <summary>
         /// Set the root cause of the error
         /// </summary>
-        public Error CausedBy(Error error)
+        public Error CausedBy(IError error)
         {
             Reasons.Add(error);
             return this;
         }
-        
+
         /// <summary>
         /// Set the root cause of the error
         /// </summary>
@@ -71,7 +81,7 @@ namespace FluentResults
         /// <summary>
         /// Set the root cause of the error
         /// </summary>
-        public Error CausedBy(IEnumerable<Error> errors)
+        public Error CausedBy(IEnumerable<IError> errors)
         {
             Reasons.AddRange(errors);
             return this;
@@ -116,22 +126,31 @@ namespace FluentResults
 
             return this;
         }
-        
-        protected override ReasonStringBuilder GetReasonStringBuilder()
+
+        protected ReasonStringBuilder GetReasonStringBuilder()
         {
-            return base.GetReasonStringBuilder()
+            return new ReasonStringBuilder()
+                .WithReasonType(GetType())
+                .WithInfo(nameof(Message), Message)
+                .WithInfo(nameof(Metadata), string.Join("; ", Metadata)) //todo: correct string
                 .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));
+        }
+
+        public override string ToString()
+        {
+            return GetReasonStringBuilder()
+                .Build();
         }
     }
 
     internal class ReasonFormat
     {
-        public static string ErrorReasonsToString(List<Error> errorReasons)
+        public static string ErrorReasonsToString(List<IError> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }
 
-        public static string ReasonsToString(List<Reason> errorReasons)
+        public static string ReasonsToString(List<IReason> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }

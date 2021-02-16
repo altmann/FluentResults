@@ -3,13 +3,23 @@
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    public interface ISuccess : IReason
+    {
+
+    }
+
     /// <summary>
     /// Objects from Success class cause no failed result
     /// </summary>
-    public class Success : Reason
+    public class Success : ISuccess
     {
+        public string Message { get; protected set; }
+
+        public Dictionary<string, object> Metadata { get; }
+
         public Success(string message)
         {
+            Metadata = new Dictionary<string, object>();
             Message = message;
         }
 
@@ -31,8 +41,22 @@ namespace FluentResults
             {
                 Metadata.Add(metadataItem.Key, metadataItem.Value);
             }
-            
+
             return this;
+        }
+
+        protected ReasonStringBuilder GetReasonStringBuilder()
+        {
+            return new ReasonStringBuilder()
+                .WithReasonType(GetType())
+                .WithInfo(nameof(Message), Message)
+                .WithInfo(nameof(Metadata), string.Join("; ", Metadata)); //todo: correct string
+        }
+
+        public override string ToString()
+        {
+            return GetReasonStringBuilder()
+                .Build();
         }
     }
 }

@@ -40,7 +40,7 @@ namespace FluentResults
             return finalResult;
         }
 
-        public static bool HasError<TError>(List<Error> errors, Func<TError, bool> predicate) where TError : Error
+        public static bool HasError<TError>(List<IError> errors, Func<TError, bool> predicate) where TError : IError
         {
             var anyErrors = errors.Any(error => error is TError errorOfTError && predicate(errorOfTError));
             if (anyErrors)
@@ -56,7 +56,7 @@ namespace FluentResults
             return false;
         }
 
-        public static bool HasSuccess<TSuccess>(List<Success> successes, Func<TSuccess, bool> predicate) where TSuccess : Success
+        public static bool HasSuccess<TSuccess>(List<ISuccess> successes, Func<TSuccess, bool> predicate) where TSuccess : ISuccess
         {
             return successes.Any(success => success is TSuccess successOfTSuccess && predicate(successOfTSuccess));
         }
