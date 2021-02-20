@@ -91,7 +91,7 @@ namespace FluentResults
                 .WithReasons(Reasons);
         }
 
-        protected virtual bool PrintMembers(StringBuilder builder)
+        protected override bool PrintMembers(StringBuilder builder)
         {
             var printed = base.PrintMembers(builder);
 
