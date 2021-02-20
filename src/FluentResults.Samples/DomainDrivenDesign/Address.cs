@@ -1,4 +1,6 @@
-﻿namespace FluentResults.Samples.DomainDrivenDesign
+﻿using System.Collections.Generic;
+
+namespace FluentResults.Samples.DomainDrivenDesign
 {
     // ValueObject
     public class Address
@@ -54,15 +56,15 @@
         }
     }
 
-    public class RequiredError : Error
+    public record RequiredError : Error
     {
-        public string FieldName { get; private set; }
+        public string FieldName { get; private init; }
         
         public RequiredError(string fieldName) 
             : base($"{fieldName} is required.")
         {
             FieldName = fieldName;
-            Metadata.Add("ErrorCode", 100);
+            Metadata = new Dictionary<string, object> {{"ErrorCode", 100}};
         }
     }
 }

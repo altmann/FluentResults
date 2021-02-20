@@ -105,8 +105,8 @@ namespace FluentResults.Test
 
             // Assert
             error.Metadata.Should().HaveCount(2);
-            error.Metadata.Keys.First().Should().Be("Field");
-            error.Metadata.Keys.Skip(1).Take(1).First().Should().Be("ErrorCode");
+            error.Metadata.Keys.Should().Contain("Field");
+            error.Metadata.Keys.Should().Contain("ErrorCode");
         }
     }
 }

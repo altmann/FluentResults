@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
@@ -8,28 +10,26 @@ namespace FluentResults
     /// <summary>
     /// Objects from Error class cause a failed result
     /// </summary>
-    public class Error : Reason
+    public record Error : Reason
     {
+        private readonly ImmutableList<Error> _reasons = ImmutableList<Error>.Empty;
+
         /// <summary>
         /// Get the reasons of an error
         /// </summary>
-        public List<Error> Reasons { get; }
-
-        public Error()
+        public IReadOnlyList<Error> Reasons
         {
-            Reasons = new List<Error>();
+            get => _reasons;
+            private init => _reasons = value.ToImmutableList();
         }
 
-        public Error(string message)
-            : this()
+        public Error(string message = "", Error? causedBy = null)
+            : base(message)
         {
-            Message = message;
-        }
-
-        public Error(string message, Error causedBy)
-            : this(message)
-        {
-            Reasons.Add(causedBy);
+            if (causedBy is not null)
+            {
+                Reasons = _reasons.Add(causedBy);
+            }
         }
 
         /// <summary>
@@ -37,8 +37,10 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(Error error)
         {
-            Reasons.Add(error);
-            return this;
+            return this with
+            {
+                Reasons = _reasons.Add(error),
+            };
         }
         
         /// <summary>
@@ -46,8 +48,7 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(Exception exception)
         {
-            Reasons.Add(new ExceptionalError(exception));
-            return this;
+            return CausedBy(new ExceptionalError(exception));
         }
 
         /// <summary>
@@ -55,8 +56,7 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(string message, Exception exception)
         {
-            Reasons.Add(new ExceptionalError(message, exception));
-            return this;
+            return CausedBy(new ExceptionalError(exception, message));
         }
 
         /// <summary>
@@ -64,8 +64,7 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(string message)
         {
-            Reasons.Add(new Error(message));
-            return this;
+            return CausedBy(new Error(message));
         }
 
         /// <summary>
@@ -73,8 +72,10 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(IEnumerable<Error> errors)
         {
-            Reasons.AddRange(errors);
-            return this;
+            return this with
+            {
+                Reasons = _reasons.AddRange(errors),
+            };
         }
 
         /// <summary>
@@ -82,8 +83,23 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(IEnumerable<string> errors)
         {
-            Reasons.AddRange(errors.Select(errorMessage => new Error(errorMessage)));
-            return this;
+            return CausedBy(errors.Select(errorMessage => new Error(errorMessage)));
+        }
+
+        /// <summary>
+        /// Set the root cause of the error
+        /// </summary>
+        public Error CausedBy(params Error[] errors)
+        {
+            return CausedBy(errors.AsEnumerable());
+        }
+
+        /// <summary>
+        /// Set the root cause of the error
+        /// </summary>
+        public Error CausedBy(params string[] errors)
+        {
+            return CausedBy(errors.Select(errorMessage => new Error(errorMessage)));
         }
 
         /// <summary>
@@ -91,47 +107,67 @@ namespace FluentResults
         /// </summary>
         public Error WithMessage(string message)
         {
-            Message = message;
-            return this;
-        }
-
-        /// <summary>
-        /// Set the metadata
-        /// </summary>
-        public Error WithMetadata(string metadataName, object metadataValue)
-        {
-            Metadata.Add(metadataName, metadataValue);
-            return this;
-        }
-
-        /// <summary>
-        /// Set the metadata
-        /// </summary>
-        public Error WithMetadata(Dictionary<string, object> metadata)
-        {
-            foreach (var metadataItem in metadata)
+            return this with
             {
-                Metadata.Add(metadataItem.Key, metadataItem.Value);
-            }
+                Message = message,
+            };
+        }
 
-            return this;
+        public override Error WithMetadata(string metadataName, object metadataValue)
+        {
+            return (Error)base.WithMetadata(metadataName, metadataValue);
+        }
+
+        public override Error WithMetadata(IDictionary<string, object> metadata)
+        {
+            return (Error)base.WithMetadata(metadata);
         }
         
-        protected override ReasonStringBuilder GetReasonStringBuilder()
+        internal override IEnumerable<object> GetEqualityComponents()
         {
-            return base.GetReasonStringBuilder()
-                .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));
+            foreach (var component in base.GetEqualityComponents())
+            {
+                yield return component;
+            }
+
+            foreach (var reason in _reasons)
+            {
+                yield return reason;
+            }
+        }
+
+        protected override bool PrintMembers(StringBuilder builder)
+        {
+            if (base.PrintMembers(builder) && !_reasons.IsEmpty)
+                builder.Append(", ");
+
+            if (!_reasons.IsEmpty)
+            {
+                builder.Append(nameof(Reasons));
+                builder.Append(" = [ ");
+
+                foreach (var reason in _reasons)
+                {
+                    builder.Append(reason);
+                    builder.Append(", ");
+                }
+
+                builder.Remove(builder.Length - 2, 2);
+                builder.Append(" ]");
+            }
+
+            return true;
         }
     }
 
     internal class ReasonFormat
     {
-        public static string ErrorReasonsToString(List<Error> errorReasons)
+        public static string ErrorReasonsToString(IReadOnlyList<Error> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }
 
-        public static string ReasonsToString(List<Reason> errorReasons)
+        public static string ReasonsToString(IReadOnlyList<Reason> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }

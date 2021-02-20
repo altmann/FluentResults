@@ -6,33 +6,21 @@ namespace FluentResults
     /// <summary>
     /// Objects from Success class cause no failed result
     /// </summary>
-    public class Success : Reason
+    public record Success : Reason
     {
-        public Success(string message)
+        public Success(string message = "")
+            : base(message)
         {
-            Message = message;
         }
 
-        /// <summary>
-        /// Set the metadata
-        /// </summary>
-        public Success WithMetadata(string metadataName, object metadataValue)
+        public override Success WithMetadata(string metadataName, object metadataValue)
         {
-            Metadata.Add(metadataName, metadataValue);
-            return this;
+            return (Success)base.WithMetadata(metadataName, metadataValue);
         }
 
-        /// <summary>
-        /// Set the metadata
-        /// </summary>
-        public Success WithMetadata(Dictionary<string, object> metadata)
+        public override Success WithMetadata(IDictionary<string, object> metadata)
         {
-            foreach (var metadataItem in metadata)
-            {
-                Metadata.Add(metadataItem.Key, metadataItem.Value);
-            }
-            
-            return this;
+            return (Success)base.WithMetadata(metadata);
         }
     }
 }

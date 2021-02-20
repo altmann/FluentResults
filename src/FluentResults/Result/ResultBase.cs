@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
@@ -199,13 +200,43 @@ namespace FluentResults
             return (TResult)this;
         }
 
+        protected virtual bool PrintMembers(StringBuilder builder)
+        {
+            builder.Append(nameof(IsSuccess));
+            builder.Append(" = ");
+            builder.Append(IsSuccess);
+
+            if (Reasons.Count != 0)
+            {
+                builder.Append(", ");
+
+                builder.Append(nameof(Reasons));
+                builder.Append(" = [ ");
+
+                foreach (var reason in Reasons)
+                {
+                    builder.Append(reason);
+                    builder.Append(", ");
+                }
+
+                builder.Remove(builder.Length - 2, 2);
+                builder.Append(" ]");
+            }
+
+            return true;
+        }
+
         public override string ToString()
         {
-            var reasonsString = Reasons.Any()
-                ? $", Reasons='{ReasonFormat.ReasonsToString(Reasons)}'"
-                : string.Empty;
+            var builder = new StringBuilder();
+            builder.Append(nameof(ResultBase));
+            builder.Append(" { ");
 
-            return $"Result: IsSuccess='{IsSuccess}'{reasonsString}";
+            if (PrintMembers(builder))
+                builder.Append(" ");
+
+            builder.Append("}");
+            return builder.ToString();
         }
     }
 }
