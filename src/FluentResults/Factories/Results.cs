@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentResults.Settings;
 
-// ReSharper disable once CheckNamespace
 namespace FluentResults
 {
     [Obsolete("Removed in next major version. Use the class Result instead.")]
@@ -93,12 +93,12 @@ namespace FluentResults
         }
         
         /// <summary>
-        /// Creates a failed result with the given error
+        /// Creates a failed result with the given errors
         /// </summary>
-        public static Result Fail(Error error)
+        public static Result Fail(params Error[] errors)
         {
             var result = new Result();
-            result.WithError(error);
+            result.WithErrors(errors);
             return result;
         }
 
@@ -125,10 +125,10 @@ namespace FluentResults
         /// <summary>
         /// Creates a failed result with the given error
         /// </summary>
-        public static Result<TValue> Fail<TValue>(Error error)
+        public static Result<TValue> Fail<TValue>(params Error[] errors)
         {
             var result = new Result<TValue>();
-            result.WithError(error);
+            result.WithErrors(errors);
             return result;
         }
 
