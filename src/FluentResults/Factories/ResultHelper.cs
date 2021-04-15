@@ -6,7 +6,7 @@ namespace FluentResults
 {
     internal static class ResultHelper
     {
-        public static Result Merge(params ResultBase[] results)
+        public static Result Merge(IEnumerable<ResultBase> results)
         {
             return Result.Ok().WithReasons(results.SelectMany(result => result.Reasons));
         }

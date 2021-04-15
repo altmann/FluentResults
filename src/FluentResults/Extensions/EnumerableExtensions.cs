@@ -11,7 +11,7 @@ namespace FluentResults
         /// </summary>
         public static Result Merge(this IEnumerable<Result> results)
         {
-            return ResultHelper.Merge(results.ToArray());
+            return ResultHelper.Merge(results);
         }
 
         /// <summary>
