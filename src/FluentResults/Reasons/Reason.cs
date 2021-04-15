@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FluentResults.ReasonStringBuilder;
 
 namespace FluentResults
 {
@@ -39,9 +40,9 @@ namespace FluentResults
             return false;
         }
 
-        protected virtual ReasonStringBuilder GetReasonStringBuilder()
+        protected virtual IReasonStringBuilder GetReasonStringBuilder()
         {
-            return new ReasonStringBuilder()
+            return new DefaultReasonStringBuilder()
                 .WithReasonType(GetType())
                 .WithInfo(nameof(Message), Message)
                 .WithInfo(nameof(Metadata), string.Join("; ", Metadata)); //todo: correct string

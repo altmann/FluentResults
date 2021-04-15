@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentResults.ReasonStringBuilder;
 
 namespace FluentResults
 {
@@ -116,7 +117,7 @@ namespace FluentResults
             return this;
         }
         
-        protected override ReasonStringBuilder GetReasonStringBuilder()
+        protected override IReasonStringBuilder GetReasonStringBuilder()
         {
             return base.GetReasonStringBuilder()
                 .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));

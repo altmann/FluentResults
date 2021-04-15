@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentResults.ReasonStringBuilder;
 
 namespace FluentResults
 {
@@ -19,7 +20,7 @@ namespace FluentResults
             Exception = exception;
         }
 
-        protected override ReasonStringBuilder GetReasonStringBuilder()
+        protected override IReasonStringBuilder GetReasonStringBuilder()
         {
             return base.GetReasonStringBuilder()
                 .WithInfo(nameof(Exception), Exception.ToString());
