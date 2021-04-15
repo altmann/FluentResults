@@ -1,8 +1,7 @@
-﻿// ReSharper disable once CheckNamespace
-
+﻿
 using System;
 
-namespace FluentResults
+namespace FluentResults.Settings
 {
     public class ResultSettingsBuilder
     {
