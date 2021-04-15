@@ -15,7 +15,7 @@ namespace FluentResults.Settings
         public ResultSettingsBuilder()
         {
             // set defaults
-            Logger = new DefaultLogger();
+            Logger = new EmptyLogger();
             DefaultTryCatchHandler = ex => new ExceptionalError(ex.Message, ex);
         }
 
