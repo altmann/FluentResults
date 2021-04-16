@@ -90,5 +90,10 @@ namespace FluentResults
         {
             return result.ToResult<TValue>();
         }
+        
+        public static implicit operator Result<TValue>(TValue result)
+        {
+            return result.ToResult();
+        }
     }
 }
