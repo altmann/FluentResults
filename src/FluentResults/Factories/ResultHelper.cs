@@ -7,32 +7,15 @@ namespace FluentResults
 {
     internal static class ResultHelper
     {
-        public static Result Merge(params ResultBase[] results)
+        public static Result Merge(IEnumerable<ResultBase> results)
         {
-            var finalResult = Result.Ok();
-
-            foreach (var result in results)
-            {
-                foreach (var reason in result.Reasons)
-                {
-                    finalResult.WithReason(reason);
-                }
-            }
-
-            return finalResult;
+            return Result.Ok().WithReasons(results.SelectMany(result => result.Reasons));
         }
 
-        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(params Result<TValue>[] results)
+        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(IEnumerable<Result<TValue>> results)
         {
-            var finalResult = Result.Ok<IEnumerable<TValue>>(new List<TValue>());
-
-            foreach (var result in results)
-            {
-                foreach (var reason in result.Reasons)
-                {
-                    finalResult.WithReason(reason);
-                }
-            }
+            var finalResult = Result.Ok<IEnumerable<TValue>>(new List<TValue>())
+                .WithReasons(results.SelectMany(result => result.Reasons));
 
             if (finalResult.IsSuccess)
                 finalResult.WithValue(results.Select(r => r.Value).ToList());
