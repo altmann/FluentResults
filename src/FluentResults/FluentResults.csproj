@@ -2,19 +2,14 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;netstandard2.0;netstandard2.1;net461;net45</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <Version>2.3.0.0</Version>
+    <Version>2.4.0.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
-- ADD - Try factory method to execute an action whereby a thrown exception is transformed to an Error (see readme for documentation) #72
-- ADD - Add multiple errors via WithErrors(...) and CausedBy(...) (see readme) #73
-- ADD - Inline Docu for the public interface #64
-- ADD - Better documentation of CausedBy(...) (see readme) #60
-- ADD - Interesting resources about Result pattern (see readme) #59
-- CHANGED - Internally now xUnit is used for testing
+- CHANGED - Implicit operator from ResultT to Result is now deprecated
     </PackageReleaseNotes>
-    <Copyright>Copyright 2020 (c) Michael Altmann. All rights reserved.</Copyright>
+    <Copyright>Copyright 2021 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
     <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-128.png</PackageIconUrl>
