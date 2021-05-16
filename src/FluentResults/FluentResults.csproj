@@ -6,6 +6,7 @@
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
 - CHANGED - Implicit operator from ResultT to Result is now deprecated
     </PackageReleaseNotes>
