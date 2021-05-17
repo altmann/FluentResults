@@ -157,7 +157,7 @@ namespace FluentResults.Test
         }
 
         [Fact]
-        public void ToResult_ToAntotherValueTypeWithOkResultAndConverter_ReturnFailedResult()
+        public void ToResult_ToAntotherValueTypeWithOkResultAndConverter_ReturnSuccessResult()
         {
             var valueResult = Result.Ok(4);
 

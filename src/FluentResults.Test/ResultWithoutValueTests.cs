@@ -93,6 +93,32 @@ namespace FluentResults.Test
         }
 
         [Fact]
+        public void ToResult_WithOkResultAndValue_ReturnSuccessResult()
+        {
+            var valueResult = Result.Ok();
+
+            // Act
+            var result = valueResult.ToResult<float>(2.5f);
+
+            // Assert
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(2.5f);
+        }
+
+        [Fact]
+        public void ToResult_WithOkResultWithoutValue_ReturnSuccessResult()
+        {
+            var valueResult = Result.Ok();
+
+            // Act
+            var result = valueResult.ToResult<bool>();
+
+            // Assert
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(default);
+        }
+
+        [Fact]
         public void ImplicitCastOperator_ReturnFailedValueResult()
         {
             var result = Result.Fail("First error message");
