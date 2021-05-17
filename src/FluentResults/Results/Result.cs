@@ -8,9 +8,10 @@ namespace FluentResults
         public Result()
         { }
 
-        public Result<TNewValue> ToResult<TNewValue>()
+        public Result<TNewValue> ToResult<TNewValue>(TNewValue newValue = default)
         {
             return new Result<TNewValue>()
+                .WithValue(IsFailed ? default : newValue)
                 .WithReasons(Reasons);
         }
     }
