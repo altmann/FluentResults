@@ -2,13 +2,13 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;netstandard2.0;netstandard2.1;net461;net45</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <Version>2.4.0.0</Version>
+    <Version>2.5.0.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- CHANGED - Implicit operator from ResultT to Result is now deprecated
+- ADDED - ToResult<T>() to convert a Result to Result<T> (details see readme)
     </PackageReleaseNotes>
     <Copyright>Copyright 2021 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
