@@ -8,7 +8,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- ADDED - ToResult<T>() to convert a Result to Result<T> (details see readme)
+- ADDED - ToResultT() to convert a Result to ResultT (details see readme)
     </PackageReleaseNotes>
     <Copyright>Copyright 2021 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
