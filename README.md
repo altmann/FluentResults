@@ -280,8 +280,15 @@ var mergedResult = Result.Merge(result1, result2, result3);
 A result object can be converted to another result object with methods `ToResult()` and `ToResult<TValue>()`.
 
 ```csharp
-// converting a result to a result from type Result<int>
+// converting a result to a result from type Result<int> with default value of int
 Result.Ok().ToResult<int>();
+
+// converting a result to a result from type Result<int> with a custom value
+Result.Ok().ToResult<int>(5);
+
+// converting a failed result to a result from type Result<int> without passing a custom value
+// because result is in failed state and therefore no value is needed
+Result.Fail("Failed").ToResult<int>();
 
 // converting a result to a result from type Result<float>
 Result.Ok<int>(5).ToResult<float>(v => v);
