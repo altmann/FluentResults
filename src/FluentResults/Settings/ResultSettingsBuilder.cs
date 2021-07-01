@@ -1,5 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
-
+﻿
 using System;
 
 namespace FluentResults
@@ -16,7 +15,7 @@ namespace FluentResults
         public ResultSettingsBuilder()
         {
             // set defaults
-            Logger = new DefaultLogger();
+            Logger = new EmptyLogger();
             DefaultTryCatchHandler = ex => new ExceptionalError(ex.Message, ex);
         }
 

@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 
-// ReSharper disable once CheckNamespace
-namespace FluentResults
+namespace FluentResults.ReasonStringBuilder
 {
-    public class ReasonStringBuilder
+    public class DefaultReasonStringBuilder : IReasonStringBuilder
     {
         private string reasonType = string.Empty;
         private readonly List<string> infos = new List<string>();
          
-        public ReasonStringBuilder WithReasonType(Type type)
+        public IReasonStringBuilder WithReasonType(Type type)
         {
             reasonType = type.Name;
             return this;
         }
 
-        public ReasonStringBuilder WithInfo(string label, string value)
+        public IReasonStringBuilder WithInfo(string label, string value)
         {
             var infoString = value.ToLabelValueStringOrEmpty(label);
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-// ReSharper disable once CheckNamespace
 namespace FluentResults
 {
     [Obsolete("Removed in next major version. Use the class Result instead.")]

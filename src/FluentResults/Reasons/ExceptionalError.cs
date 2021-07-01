@@ -1,6 +1,6 @@
 ﻿using System;
+using FluentResults.ReasonStringBuilder;
 
-// ReSharper disable once CheckNamespace
 namespace FluentResults
 {
     /// <summary>
@@ -20,7 +20,7 @@ namespace FluentResults
             Exception = exception;
         }
 
-        protected override ReasonStringBuilder GetReasonStringBuilder()
+        protected override IReasonStringBuilder GetReasonStringBuilder()
         {
             return base.GetReasonStringBuilder()
                 .WithInfo(nameof(Exception), Exception.ToString());
