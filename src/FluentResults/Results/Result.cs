@@ -8,9 +8,10 @@ namespace FluentResults
         public Result()
         { }
 
-        public Result<TNewValue> ToResult<TNewValue>()
+        public Result<TNewValue> ToResult<TNewValue>(TNewValue newValue = default)
         {
             return new Result<TNewValue>()
+                .WithValue(IsFailed ? default : newValue)
                 .WithReasons(Reasons);
         }
     }
@@ -91,6 +92,7 @@ namespace FluentResults
             return result.ToResult<TValue>();
         }
 
+        [Obsolete("Removed in next major version because we could lose the Value without telling the developer. Use an explicit .ToResult() instead.")]
         public static implicit operator Result(Result<TValue> result)
         {
             return result.ToResult();

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
@@ -19,7 +18,7 @@ namespace FluentResults
         /// </summary>
         public static Result<IEnumerable<TValue>> Merge<TValue>(this IEnumerable<Result<TValue>> results)
         {
-            return ResultHelper.MergeWithValue(results.ToArray());
+            return ResultHelper.MergeWithValue(results);
         }
     }
 }

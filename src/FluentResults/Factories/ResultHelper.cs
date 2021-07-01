@@ -11,7 +11,7 @@ namespace FluentResults
             return Result.Ok().WithReasons(results.SelectMany(result => result.Reasons));
         }
 
-        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(params Result<TValue>[] results)
+        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(IEnumerable<Result<TValue>> results)
         {
             var finalResult = Result.Ok<IEnumerable<TValue>>(new List<TValue>())
                 .WithReasons(results.SelectMany(result => result.Reasons));
