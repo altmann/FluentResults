@@ -170,6 +170,18 @@ namespace FluentResults.Test
         }
 
         [Fact]
+        public void ImplicitCastOperator_ReturnFailedResult()
+        {
+            var valueResult = Result.Fail<int>("First error message");
+
+            // Act
+            Result result = valueResult;
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+        }
+
+        [Fact]
         public void Try_execute_successfully_action_return_success_result()
         {
             int Action() => 5;
