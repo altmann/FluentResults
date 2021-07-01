@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FluentResults.Settings
+namespace FluentResults
 {
     public class ResultSettings
     {
