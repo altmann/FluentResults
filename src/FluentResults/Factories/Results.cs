@@ -93,12 +93,12 @@ namespace FluentResults
         }
         
         /// <summary>
-        /// Creates a failed result with the given errors
+        /// Creates a failed result with the given error
         /// </summary>
-        public static Result Fail(params Error[] errors)
+        public static Result Fail(Error error)
         {
             var result = new Result();
-            result.WithErrors(errors);
+            result.WithError(error);
             return result;
         }
 
@@ -125,10 +125,10 @@ namespace FluentResults
         /// <summary>
         /// Creates a failed result with the given error
         /// </summary>
-        public static Result<TValue> Fail<TValue>(params Error[] errors)
+        public static Result<TValue> Fail<TValue>(Error error)
         {
             var result = new Result<TValue>();
-            result.WithErrors(errors);
+            result.WithError(error);
             return result;
         }
 
