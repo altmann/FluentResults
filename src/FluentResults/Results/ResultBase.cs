@@ -199,6 +199,19 @@ namespace FluentResults
             return (TResult)this;
         }
 
+        /// <summary>
+        /// Log the result with a typed context. Configure the logger via Result.Setup(..)
+        /// </summary>
+        public TResult Log<TContext>()
+        {
+            var logger = Result.Settings.Logger;
+
+            logger.Log<TContext>(this);
+
+            return (TResult)this;
+        }
+
+
         public override string ToString()
         {
             var reasonsString = Reasons.Any()

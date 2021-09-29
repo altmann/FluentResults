@@ -5,7 +5,12 @@ namespace FluentResults
     {
         public void Log(string context, ResultBase result)
         {
-            
+
+        }
+
+        public void Log<TContext>(ResultBase result)
+        {
+
         }
     }
 }
