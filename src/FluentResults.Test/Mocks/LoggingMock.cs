@@ -8,6 +8,12 @@
             LoggedResult = result;
         }
 
+        public void Log<TContext>(ResultBase result)
+        {
+            LoggedContext = typeof(TContext).ToString();
+            LoggedResult = result;
+        }
+
         public string LoggedContext { get; private set; }
         public ResultBase LoggedResult { get; private set; }
     }
