@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="FluentResults" Version="2.3.0.0" />
+    <PackageReference Include="FluentResults" Version="2.5.0" />
   </ItemGroup>
 
   <ItemGroup>
