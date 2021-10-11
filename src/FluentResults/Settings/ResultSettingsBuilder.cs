@@ -11,7 +11,7 @@ namespace FluentResults
         /// </summary>
         public IResultLogger Logger { get; set; }
 
-        public Func<Exception, Error> DefaultTryCatchHandler { get; set; }
+        public Func<Exception, IError> DefaultTryCatchHandler { get; set; }
 
         public ResultSettingsBuilder()
         {

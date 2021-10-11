@@ -13,19 +13,19 @@ namespace FluentResults.Samples.WebController
             return new ResultDto(false, TransformErrors(result.Errors));
         }
 
-        private static IEnumerable<ErrorDto> TransformErrors(List<Error> errors)
+        private static IEnumerable<ErrorDto> TransformErrors(List<IError> errors)
         {
             return errors.Select(TransformError);
         }
 
-        private static ErrorDto TransformError(Error error)
+        private static ErrorDto TransformError(IError error)
         {
             var errorCode = TransformErrorCode(error);
 
             return new ErrorDto(error.Message, errorCode);
         }
 
-        private static string TransformErrorCode(Error error)
+        private static string TransformErrorCode(IError error)
         {
             if (error.Metadata.TryGetValue("ErrorCode", out var errorCode))
                 return errorCode as string;

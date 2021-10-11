@@ -5,19 +5,30 @@ using System.Linq;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    public interface IError : IReason
+    {
+        List<IError> Reasons { get; }
+    }
+
     /// <summary>
     /// Objects from Error class cause a failed result
     /// </summary>
-    public class Error : Reason
+    public class Error : IError
     {
+        public string Message { get; protected set; } //todo try to make it only getter
+
+        public Dictionary<string, object> Metadata { get; }
+
         /// <summary>
         /// Get the reasons of an error
         /// </summary>
-        public List<Error> Reasons { get; }
+        public List<IError> Reasons { get; }
 
+        // todo: try to make it private
         public Error()
         {
-            Reasons = new List<Error>();
+            Metadata = new Dictionary<string, object>();
+            Reasons = new List<IError>();
         }
 
         public Error(string message)
@@ -117,21 +128,21 @@ namespace FluentResults
             return this;
         }
         
-        protected override ReasonStringBuilder GetReasonStringBuilder()
+        protected ReasonStringBuilder GetReasonStringBuilder()
         {
-            return base.GetReasonStringBuilder()
-                .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));
+            return null; //base.GetReasonStringBuilder() todo: try to make it a own class
+                //.WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));
         }
     }
 
     internal class ReasonFormat
     {
-        public static string ErrorReasonsToString(List<Error> errorReasons)
+        public static string ErrorReasonsToString(List<IError> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }
 
-        public static string ReasonsToString(List<Reason> errorReasons)
+        public static string ReasonsToString(List<IReason> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }

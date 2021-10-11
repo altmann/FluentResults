@@ -4,10 +4,17 @@ using System.Collections.Generic;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    public interface IReason
+    {
+        string Message { get; }
+
+        Dictionary<string, object> Metadata { get; }
+    }
+
     /// <summary>
     /// Reason class is the base class
     /// </summary>
-    public class Reason
+    public class Reason : IReason
     {
         public string Message { get; protected set; }
 

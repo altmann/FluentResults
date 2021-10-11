@@ -20,10 +20,10 @@ namespace FluentResults
             Exception = exception;
         }
 
-        protected override ReasonStringBuilder GetReasonStringBuilder()
+        protected ReasonStringBuilder GetReasonStringBuilder()
         {
-            return base.GetReasonStringBuilder()
-                .WithInfo(nameof(Exception), Exception.ToString());
+            return null; //base.GetReasonStringBuilder() todo refactoring
+                //.WithInfo(nameof(Exception), Exception.ToString());
         }
     }
 }

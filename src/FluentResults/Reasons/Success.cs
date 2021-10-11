@@ -3,12 +3,26 @@
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    public interface ISuccess : IReason
+    {
+
+    }
+
     /// <summary>
     /// Objects from Success class cause no failed result
     /// </summary>
-    public class Success : Reason
+    public class Success : ISuccess
     {
-        public Success(string message)
+        public string Message { get; }
+
+        public Dictionary<string, object> Metadata { get; }
+
+        private Success()
+        {
+            Metadata = new Dictionary<string, object>();
+        }
+
+        public Success(string message) : this()
         {
             Message = message;
         }
