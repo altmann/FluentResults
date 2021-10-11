@@ -342,6 +342,11 @@ public class MyConsoleLogger : IResultLogger
     {
         Console.WriteLine("{0}", result);
     }
+
+    public void Log<TContext>(ResultBase result)
+    {
+        Console.WriteLine("{0}", result);
+    }
 }
 ```
 
@@ -361,11 +366,14 @@ var result = Result.Fail("Operation failed")
     .Log();
 ```
 
-Additionally, a context can be passed in form of a string.
+Additionally, a context can be passed in form of a string or of a generic type parameter. 
 
 ```csharp
 var result = Result.Fail("Operation failed")
     .Log("logger context");
+
+var result2 = Result.Fail("Operation failed")
+    .Log<MyLoggerContext>();
 ```
 
 ### Asserting FluentResult objects
