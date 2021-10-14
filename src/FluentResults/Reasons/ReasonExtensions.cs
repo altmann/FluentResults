@@ -25,19 +25,5 @@ namespace FluentResults
 
             return false;
         }
-
-        //protected virtual ReasonStringBuilder GetReasonStringBuilder()
-        //{
-        //    return new ReasonStringBuilder()
-        //        .WithReasonType(GetType())
-        //        .WithInfo(nameof(Message), Message)
-        //        .WithInfo(nameof(Metadata), string.Join("; ", Metadata)); //todo: correct string
-        //}
-
-        //public override string ToString()
-        //{
-        //    return GetReasonStringBuilder()
-        //        .Build();
-        //}
     }
 }
