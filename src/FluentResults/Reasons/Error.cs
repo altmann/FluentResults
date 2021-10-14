@@ -51,7 +51,7 @@ namespace FluentResults
             Reasons.Add(error);
             return this;
         }
-        
+
         /// <summary>
         /// Set the root cause of the error
         /// </summary>
@@ -127,11 +127,15 @@ namespace FluentResults
 
             return this;
         }
-        
-        protected ReasonStringBuilder GetReasonStringBuilder()
+
+        public override string ToString()
         {
-            return null; //base.GetReasonStringBuilder() todo: try to make it a own class
-                //.WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));
+            return new ReasonStringBuilder()
+                .WithReasonType(GetType())
+                .WithInfo(nameof(Message), Message)
+                .WithInfo(nameof(Metadata), string.Join("; ", Metadata))
+                .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons))
+                .Build();    
         }
     }
 

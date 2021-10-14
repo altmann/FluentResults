@@ -1,16 +1,7 @@
 using System;
-using System.Collections.Generic;
 
-// ReSharper disable once CheckNamespace
 namespace FluentResults
 {
-    public interface IReason
-    {
-        string Message { get; }
-
-        Dictionary<string, object> Metadata { get; }
-    }
-    
     public static class ReasonExtensions
     {
         public static bool HasMetadataKey(this IReason reason, string key)
