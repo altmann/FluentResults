@@ -5,9 +5,8 @@ namespace FluentResults.Test
 {
     public class CustomError : Error
     {
-        public CustomError()
+        public CustomError() : base("Custom message")
         {
-            Message = "Custom message";
         }
     }
 

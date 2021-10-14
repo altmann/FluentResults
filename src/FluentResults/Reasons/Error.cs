@@ -10,7 +10,7 @@ namespace FluentResults
     /// </summary>
     public class Error : IError
     {
-        public string Message { get; protected set; } //todo try to make it only getter
+        public string Message { get; }
 
         public Dictionary<string, object> Metadata { get; }
 
@@ -18,9 +18,8 @@ namespace FluentResults
         /// Get the reasons of an error
         /// </summary>
         public List<IError> Reasons { get; }
-
-        // todo: try to make it private
-        public Error()
+        
+        private Error()
         {
             Metadata = new Dictionary<string, object>();
             Reasons = new List<IError>();
@@ -89,15 +88,6 @@ namespace FluentResults
         public Error CausedBy(IEnumerable<string> errors)
         {
             Reasons.AddRange(errors.Select(errorMessage => new Error(errorMessage)));
-            return this;
-        }
-
-        /// <summary>
-        /// Set the message
-        /// </summary>
-        public Error WithMessage(string message)
-        {
-            Message = message;
             return this;
         }
 
