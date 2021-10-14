@@ -425,10 +425,9 @@ Here are some samples and best practices to be followed while using FluentResult
 
 Thanks to all the contributers and to all the people who gave feedback!
 
-- [deepankkartikey](https://github.com/deepankkartikey)
-- [Loreno10](https://github.com/Loreno10)
-- [JasonLandbridge](https://github.com/JasonLandbridge)
-- [michaelmsm89](https://github.com/michaelmsm89)
+<a href="https://github.com/altmann/fluentresults/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=altmann/fluentresults" />
+</a>
 
 ## Copyright
 
