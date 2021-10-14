@@ -10,30 +10,18 @@ namespace FluentResults
 
         Dictionary<string, object> Metadata { get; }
     }
-
-    /// <summary>
-    /// Reason class is the base class
-    /// </summary>
-    public class Reason : IReason
+    
+    public static class ReasonExtensions
     {
-        public string Message { get; protected set; }
-
-        public Dictionary<string, object> Metadata { get; protected set; }
-
-        protected Reason()
-        {
-            Metadata = new Dictionary<string, object>();
-        }
-
-        public bool HasMetadataKey(string key)
+        public static bool HasMetadataKey(this IReason reason, string key)
         {
             if(string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            return Metadata.ContainsKey(key);
+            return reason.Metadata.ContainsKey(key);
         }
 
-        public bool HasMetadata(string key, Func<object, bool> predicate)
+        public static bool HasMetadata(this IReason reason, string key, Func<object, bool> predicate)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
@@ -41,24 +29,24 @@ namespace FluentResults
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            if (Metadata.TryGetValue(key, out object actualValue))
+            if (reason.Metadata.TryGetValue(key, out object actualValue))
                 return predicate(actualValue);
 
             return false;
         }
 
-        protected virtual ReasonStringBuilder GetReasonStringBuilder()
-        {
-            return new ReasonStringBuilder()
-                .WithReasonType(GetType())
-                .WithInfo(nameof(Message), Message)
-                .WithInfo(nameof(Metadata), string.Join("; ", Metadata)); //todo: correct string
-        }
+        //protected virtual ReasonStringBuilder GetReasonStringBuilder()
+        //{
+        //    return new ReasonStringBuilder()
+        //        .WithReasonType(GetType())
+        //        .WithInfo(nameof(Message), Message)
+        //        .WithInfo(nameof(Metadata), string.Join("; ", Metadata)); //todo: correct string
+        //}
 
-        public override string ToString()
-        {
-            return GetReasonStringBuilder()
-                .Build();
-        }
+        //public override string ToString()
+        //{
+        //    return GetReasonStringBuilder()
+        //        .Build();
+        //}
     }
 }
