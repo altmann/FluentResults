@@ -5,11 +5,6 @@ using System.Linq;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
-    public interface IError : IReason
-    {
-        List<IError> Reasons { get; }
-    }
-
     /// <summary>
     /// Objects from Error class cause a failed result
     /// </summary>
@@ -135,7 +130,7 @@ namespace FluentResults
                 .WithInfo(nameof(Message), Message)
                 .WithInfo(nameof(Metadata), string.Join("; ", Metadata))
                 .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons))
-                .Build();    
+                .Build();
         }
     }
 
