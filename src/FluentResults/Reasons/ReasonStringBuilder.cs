@@ -7,12 +7,12 @@ namespace FluentResults
 {
     public class ReasonStringBuilder
     {
-        private string reasonType = string.Empty;
-        private readonly List<string> infos = new List<string>();
+        private string _reasonType = string.Empty;
+        private readonly List<string> _infos = new List<string>();
          
         public ReasonStringBuilder WithReasonType(Type type)
         {
-            reasonType = type.Name;
+            _reasonType = type.Name;
             return this;
         }
 
@@ -22,7 +22,7 @@ namespace FluentResults
 
             if(!string.IsNullOrEmpty(infoString))
             {
-                infos.Add(infoString);
+                _infos.Add(infoString);
             }
 
             return this;
@@ -30,11 +30,11 @@ namespace FluentResults
 
         public string Build()
         {
-            var reasonInfoText = infos.Any()
-                ? " with " + ReasonInfosToString(infos)
+            var reasonInfoText = _infos.Any()
+                ? " with " + ReasonInfosToString(_infos)
                 : string.Empty;
 
-            return $"{reasonType}{reasonInfoText}";
+            return $"{_reasonType}{reasonInfoText}";
         }
 
         private static string ReasonInfosToString(List<string> reasonInfos)
