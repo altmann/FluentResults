@@ -11,11 +11,10 @@ namespace FluentResults.Extensions.FluentAssertions
             return value is List<Error>;
         }
 
-        public string Format(object value, FormattingContext context, FormatChild formatChild)
+        public void Format(object value, FormattedObjectGraph formattedGraph, FormattingContext context, FormatChild formatChild)
         {
             var errors = (IEnumerable<Error>)value;
-
-            return string.Join("; ", errors.Select(error => error.Message));
+            formattedGraph.AddFragment(string.Join("; ", errors.Select(error => error.Message)));
         }
     }
 }
