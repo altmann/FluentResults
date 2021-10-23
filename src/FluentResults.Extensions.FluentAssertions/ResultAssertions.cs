@@ -12,9 +12,10 @@ namespace FluentResults.Extensions.FluentAssertions
             ResultFormatters.Register();
         }
 
-        public ResultAssertions(Result instance)
+        public ResultAssertions(Result subject)
+            : base(subject)
         {
-            Subject = instance;
+
         }
 
         protected override string Identifier => nameof(Result);
@@ -56,9 +57,9 @@ namespace FluentResults.Extensions.FluentAssertions
             ResultFormatters.Register();
         }
 
-        public ResultAssertions(Result<T> instance)
+        public ResultAssertions(Result<T> subject)
+            : base(subject)
         {
-            Subject = instance;
         }
 
         protected override string Identifier => nameof(Result);
