@@ -6,9 +6,24 @@ namespace FluentResults
     /// <summary>
     /// Objects from Success class cause no failed result
     /// </summary>
-    public class Success : Reason
+    public class Success : ISuccess
     {
-        public Success(string message)
+        /// <summary>
+        /// Message of the success
+        /// </summary>
+        public string Message { get; }
+
+        /// <summary>
+        /// Metadata of the success
+        /// </summary>
+        public Dictionary<string, object> Metadata { get; }
+
+        private Success()
+        {
+            Metadata = new Dictionary<string, object>();
+        }
+
+        public Success(string message) : this()
         {
             Message = message;
         }
@@ -33,6 +48,15 @@ namespace FluentResults
             }
             
             return this;
+        }
+
+        public override string ToString()
+        {
+            return new ReasonStringBuilder()
+                .WithReasonType(GetType())
+                .WithInfo(nameof(Message), Message)
+                .WithInfo(nameof(Metadata), string.Join("; ", Metadata))
+                .Build();
         }
     }
 }

@@ -5,65 +5,6 @@ using System.Threading.Tasks;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
-    [Obsolete("Removed in next major version. Use the class Result instead.")]
-    public static class Results
-    {
-        public static void Setup(Action<ResultSettingsBuilder> setupFunc)
-        {
-            Result.Setup(setupFunc);
-        }
-
-        public static Result Ok()
-        {
-            return new Result();
-        }
-
-        public static Result Fail(Error error)
-        {
-            var result = new Result();
-            result.WithError(error);
-            return result;
-        }
-
-        public static Result Fail(string errorMessage)
-        {
-            var result = new Result();
-            result.WithError(new Error(errorMessage));
-            return result;
-        }
-        
-        public static Result<TValue> Ok<TValue>(TValue value)
-        {
-            var result = new Result<TValue>();
-            result.WithValue(value);
-            return result;
-        }
-
-        public static Result<TValue> Fail<TValue>(Error error)
-        {
-            var result = new Result<TValue>();
-            result.WithError(error);
-            return result;
-        }
-
-        public static Result<TValue> Fail<TValue>(string errorMessage)
-        {
-            var result = new Result<TValue>();
-            result.WithError(new Error(errorMessage));
-            return result;
-        }
-
-        public static Result Merge(params ResultBase[] results)
-        {
-            return ResultHelper.Merge(results);
-        }
-
-        public static Result<IEnumerable<TValue>> Merge<TValue>(params Result<TValue>[] results)
-        {
-            return ResultHelper.MergeWithValue(results);
-        }
-    }
-
     public partial class Result
     {
         internal static ResultSettings Settings { get; private set; }
@@ -95,7 +36,7 @@ namespace FluentResults
         /// <summary>
         /// Creates a failed result with the given error
         /// </summary>
-        public static Result Fail(Error error)
+        public static Result Fail(IError error)
         {
             var result = new Result();
             result.WithError(error);
@@ -125,7 +66,7 @@ namespace FluentResults
         /// <summary>
         /// Creates a failed result with the given error
         /// </summary>
-        public static Result<TValue> Fail<TValue>(Error error)
+        public static Result<TValue> Fail<TValue>(IError error)
         {
             var result = new Result<TValue>();
             result.WithError(error);
@@ -161,7 +102,7 @@ namespace FluentResults
         /// <summary>
         /// Create a success/failed result depending on the parameter isSuccess
         /// </summary>
-        public static Result OkIf(bool isSuccess, Error error)
+        public static Result OkIf(bool isSuccess, IError error)
         {
             return isSuccess ? Ok() : Fail(error);
         }
@@ -177,7 +118,7 @@ namespace FluentResults
         /// <summary>
         /// Create a success/failed result depending on the parameter isFailure
         /// </summary>
-        public static Result FailIf(bool isFailure, Error error)
+        public static Result FailIf(bool isFailure, IError error)
         {
             return isFailure ? Fail(error) : Ok();
         }
@@ -193,7 +134,7 @@ namespace FluentResults
         /// <summary>
         /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
         /// </summary>
-        public static Result Try(Action action, Func<Exception, Error> catchHandler = null)
+        public static Result Try(Action action, Func<Exception, IError> catchHandler = null)
         {
             catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
 
@@ -211,7 +152,7 @@ namespace FluentResults
         /// <summary>
         /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
         /// </summary>
-        public static async Task<Result> Try(Func<Task> action, Func<Exception, Error> catchHandler = null)
+        public static async Task<Result> Try(Func<Task> action, Func<Exception, IError> catchHandler = null)
         {
             catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
 
@@ -229,7 +170,7 @@ namespace FluentResults
         /// <summary>
         /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
         /// </summary>
-        public static Result<T> Try<T>(Func<T> action, Func<Exception, Error> catchHandler = null)
+        public static Result<T> Try<T>(Func<T> action, Func<Exception, IError> catchHandler = null)
         {
             catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
 
@@ -246,7 +187,7 @@ namespace FluentResults
         /// <summary>
         /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
         /// </summary>
-        public static async Task<Result<T>> Try<T>(Func<Task<T>> action, Func<Exception, Error> catchHandler = null)
+        public static async Task<Result<T>> Try<T>(Func<Task<T>> action, Func<Exception, IError> catchHandler = null)
         {
             catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
 

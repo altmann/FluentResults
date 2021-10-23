@@ -175,7 +175,7 @@ namespace FluentResults.Test
             var valueResult = Result.Fail<int>("First error message");
 
             // Act
-            Result result = valueResult;
+            Result result = valueResult.ToResult();
 
             // Assert
             result.IsFailed.Should().BeTrue();

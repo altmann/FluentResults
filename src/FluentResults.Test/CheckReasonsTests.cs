@@ -9,7 +9,7 @@ namespace FluentResults.Test
         {
             public int Id { get; }
 
-            public NotFoundError(int id)
+            public NotFoundError(int id) : base("Not Found")
             {
                 Id = id;
             }
@@ -90,7 +90,7 @@ namespace FluentResults.Test
         [Fact]
         public void HasErrorWithMetadataKey_WithSearchedError()
         {
-            var result = Result.Fail(new Error().WithMetadata("MetadataKey1", "MetadataValue1"));
+            var result = Result.Fail(new Error("").WithMetadata("MetadataKey1", "MetadataValue1"));
 
             result.HasError(e => e.HasMetadataKey("MetadataKey1")).Should().BeTrue();
         }
@@ -98,7 +98,7 @@ namespace FluentResults.Test
         [Fact]
         public void HasErrorWithMetadataValueWithPredicate_WithSearchedError()
         {
-            var result = Result.Fail(new Error().WithMetadata("MetadataKey1", "MetadataValue1"));
+            var result = Result.Fail(new Error("").WithMetadata("MetadataKey1", "MetadataValue1"));
 
             result.HasError(e => e.HasMetadata("MetadataKey1", metadataValue => (string)metadataValue == "MetadataValue1")).Should().BeTrue();
         }
@@ -106,7 +106,7 @@ namespace FluentResults.Test
         [Fact]
         public void HasErrorWithNoMetadataValueWithPredicate_WithSearchedError()
         {
-            var result = Result.Fail(new Error());
+            var result = Result.Fail(new Error(""));
 
             result.HasError(e => e.HasMetadata("MetadataKey1", metadataValue => (string)metadataValue == "MetadataValue1")).Should().BeFalse();
         }

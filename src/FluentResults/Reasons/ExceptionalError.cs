@@ -8,6 +8,9 @@ namespace FluentResults
     /// </summary>
     public class ExceptionalError : Error
     {
+        /// <summary>
+        /// Exception of the error
+        /// </summary>
         public Exception Exception { get; }
         
         public ExceptionalError(Exception exception)
@@ -20,10 +23,15 @@ namespace FluentResults
             Exception = exception;
         }
 
-        protected override ReasonStringBuilder GetReasonStringBuilder()
+        public override string ToString()
         {
-            return base.GetReasonStringBuilder()
-                .WithInfo(nameof(Exception), Exception.ToString());
+            return new ReasonStringBuilder()
+                .WithReasonType(GetType())
+                .WithInfo(nameof(Message), Message)
+                .WithInfo(nameof(Metadata), string.Join("; ", Metadata))
+                .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons))
+                .WithInfo(nameof(Exception), Exception.ToString())
+                .Build();
         }
     }
 }

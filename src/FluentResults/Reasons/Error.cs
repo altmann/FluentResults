@@ -8,16 +8,27 @@ namespace FluentResults
     /// <summary>
     /// Objects from Error class cause a failed result
     /// </summary>
-    public class Error : Reason
+    public class Error : IError
     {
+        /// <summary>
+        /// Message of the error
+        /// </summary>
+        public string Message { get; }
+
+        /// <summary>
+        /// Metadata of the error
+        /// </summary>
+        public Dictionary<string, object> Metadata { get; }
+
         /// <summary>
         /// Get the reasons of an error
         /// </summary>
-        public List<Error> Reasons { get; }
-
-        public Error()
+        public List<IError> Reasons { get; }
+        
+        private Error()
         {
-            Reasons = new List<Error>();
+            Metadata = new Dictionary<string, object>();
+            Reasons = new List<IError>();
         }
 
         public Error(string message)
@@ -40,7 +51,7 @@ namespace FluentResults
             Reasons.Add(error);
             return this;
         }
-        
+
         /// <summary>
         /// Set the root cause of the error
         /// </summary>
@@ -87,15 +98,6 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Set the message
-        /// </summary>
-        public Error WithMessage(string message)
-        {
-            Message = message;
-            return this;
-        }
-
-        /// <summary>
         /// Set the metadata
         /// </summary>
         public Error WithMetadata(string metadataName, object metadataValue)
@@ -116,22 +118,26 @@ namespace FluentResults
 
             return this;
         }
-        
-        protected override ReasonStringBuilder GetReasonStringBuilder()
+
+        public override string ToString()
         {
-            return base.GetReasonStringBuilder()
-                .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons));
+            return new ReasonStringBuilder()
+                .WithReasonType(GetType())
+                .WithInfo(nameof(Message), Message)
+                .WithInfo(nameof(Metadata), string.Join("; ", Metadata))
+                .WithInfo(nameof(Reasons), ReasonFormat.ErrorReasonsToString(Reasons))
+                .Build();
         }
     }
 
     internal class ReasonFormat
     {
-        public static string ErrorReasonsToString(List<Error> errorReasons)
+        public static string ErrorReasonsToString(List<IError> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }
 
-        public static string ReasonsToString(List<Reason> errorReasons)
+        public static string ReasonsToString(List<IReason> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }

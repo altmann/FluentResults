@@ -11,7 +11,7 @@ namespace FluentResults.Test
         public void CreateError_EmptyError()
         {
             // Act
-            var error = new Error();
+            var error = new Error("");
 
             // Assert
             error.Reasons.Should().BeEmpty();
@@ -22,7 +22,7 @@ namespace FluentResults.Test
         public void CreateErrorCausedByErrorObject_ErrorWithReason()
         {
             // Act
-            var error = new Error()
+            var error = new Error("")
                 .CausedBy(new Error("First error message"));
 
             // Assert
@@ -34,7 +34,7 @@ namespace FluentResults.Test
         public void CreateErrorCausedBy2ErrorObjects_ErrorWithReason()
         {
             // Act
-            var error = new Error()
+            var error = new Error("")
                 .CausedBy(new Error("First error message"))
                 .CausedBy(new Error("Second error message"));
 
@@ -48,7 +48,7 @@ namespace FluentResults.Test
         public void CreateErrorCausedByErrorMessage_ErrorWithReason()
         {
             // Act
-            var error = new Error()
+            var error = new Error("")
                 .CausedBy("First error message");
 
             // Assert
@@ -60,7 +60,7 @@ namespace FluentResults.Test
         public void CreateErrorCausedByException_ErrorWithReason()
         {
             // Act
-            var error = new Error()
+            var error = new Error("")
                 .CausedBy(new InvalidOperationException("Invalid Operation Exception"));
 
             // Assert
@@ -73,7 +73,7 @@ namespace FluentResults.Test
         public void CreateErrorCausedByMessageAndException_ErrorWithReason()
         {
             // Act
-            var error = new Error()
+            var error = new Error("")
                 .CausedBy("First error", new InvalidOperationException("Invalid Operation Exception"));
 
             // Assert
@@ -86,7 +86,7 @@ namespace FluentResults.Test
         public void CreateErrorWithMetadata_ErrorWithMetadata()
         {
             // Act
-            var error = new Error()
+            var error = new Error("")
                 .WithMetadata("Field", "CustomerName");
 
             // Assert
@@ -99,7 +99,7 @@ namespace FluentResults.Test
         public void CreateErrorWithMultipleMetadata_ErrorWithMultipleMetadata()
         {
             // Act
-            var error = new Error()
+            var error = new Error("")
                 .WithMetadata("Field", "CustomerName")
                 .WithMetadata("ErrorCode", "1.1");
 
