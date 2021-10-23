@@ -10,8 +10,14 @@ namespace FluentResults
     /// </summary>
     public class Error : IError
     {
+        /// <summary>
+        /// Message of the error
+        /// </summary>
         public string Message { get; }
 
+        /// <summary>
+        /// Metadata of the error
+        /// </summary>
         public Dictionary<string, object> Metadata { get; }
 
         /// <summary>

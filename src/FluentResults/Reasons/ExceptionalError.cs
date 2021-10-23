@@ -8,6 +8,9 @@ namespace FluentResults
     /// </summary>
     public class ExceptionalError : Error
     {
+        /// <summary>
+        /// Exception of the error
+        /// </summary>
         public Exception Exception { get; }
         
         public ExceptionalError(Exception exception)

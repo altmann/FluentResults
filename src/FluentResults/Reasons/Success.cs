@@ -8,8 +8,14 @@ namespace FluentResults
     /// </summary>
     public class Success : ISuccess
     {
+        /// <summary>
+        /// Message of the success
+        /// </summary>
         public string Message { get; }
 
+        /// <summary>
+        /// Metadata of the success
+        /// </summary>
         public Dictionary<string, object> Metadata { get; }
 
         private Success()

@@ -2,7 +2,5 @@
 namespace FluentResults
 {
     public interface ISuccess : IReason
-    {
-
-    }
+    { }
 }
