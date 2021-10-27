@@ -23,7 +23,7 @@ Install-Package FluentResults
 - Designing Errors/Success in an object-oriented way
 - Store the **root cause with chain of errors in a hierarchical way**
 - Provide 
-  - .NET Standard, .NET Core and .NET Full Framework support
+  - .NET Standard, .NET Core, .NET 5+ and .NET Full Framework support (details see )
   - SourceLink support
   - powerful [code samples](https://github.com/altmann/FluentResults#samplesbest-practices) which show the integration with famous or common frameworks/libraries
 - [FluentAssertions Extension](https://github.com/altmann/FluentResults/wiki) to assert FluentResult objects in an elegant way
@@ -380,6 +380,11 @@ var result2 = Result.Fail("Operation failed")
 ### Asserting FluentResult objects
 
 Try it with the power of FluentAssertions and [FluentResults.Extensions.FluentAssertions](https://github.com/altmann/FluentResults/wiki#fluentresultsextensionsfluentassertions)
+
+### .NET Targeting
+
+FluentResults 3.x and above supports .NET Standard 2.0 and .NET Standard 2.1. 
+If you need support for .NET Standard 1.1, .NET 4.6.1 or .NET 4.5 use FluentResults 2.x.
 
 ## Samples/Best Practices
 
