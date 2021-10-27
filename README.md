@@ -23,7 +23,7 @@ Install-Package FluentResults
 - Designing Errors/Success in an object-oriented way
 - Store the **root cause with chain of errors in a hierarchical way**
 - Provide 
-  - .NET Standard, .NET Core and .NET Full Framework support
+  - .NET Standard, .NET Core, .NET 5+ and .NET Full Framework support (details see https://github.com/altmann/FluentResults#net-targeting)
   - SourceLink support
   - powerful [code samples](https://github.com/altmann/FluentResults#samplesbest-practices) which show the integration with famous or common frameworks/libraries
 - [FluentAssertions Extension](https://github.com/altmann/FluentResults/wiki) to assert FluentResult objects in an elegant way
@@ -44,7 +44,8 @@ Result successResult1 = Result.Ok();
 
 // create a result which indicates failure
 Result errorResult1 = Result.Fail("My error message");
-Result errorResult2 = Result.Fail(new StartDateIsAfterEndDateError(startDate, endDate));
+Result errorResult2 = Result.Fail(new Error("My error message"));
+Result errorResult3 = Result.Fail(new StartDateIsAfterEndDateError(startDate, endDate));
 ```
     
 The class `Result` is typically used by void methods which have no return value.
@@ -95,13 +96,13 @@ Result<int> result = DoSomething();
      
 // get all reasons why result object indicates success or failure. 
 // contains Error and Success messages
-IEnumerable<Reason> reasons = result.Reasons;
+IEnumerable<IReason> reasons = result.Reasons;
 
 // get all Error messages
-IEnumerable<Error> errors = result.Errors;
+IEnumerable<IError> errors = result.Errors;
 
 // get all Success messages
-IEnumerable<Success> successes = result.Successes;
+IEnumerable<ISuccess> successes = result.Successes;
 
 if (result.IsFailed)
 {
@@ -118,11 +119,11 @@ var value4 = result.ValueOrDefault; // return value because result is in success
 
 ## Designing errors and success messages
 
-There are many Result Libraries which store only simple string messages. FluentResults instead stores powerful object-oriented Error and Success objects. The advantage is all the relevant information of an error is encapsulated within one class. 
+There are many Result Libraries which store only simple string messages. FluentResults instead stores powerful object-oriented Error and Success objects. The advantage is all the relevant information of an error or success is encapsulated within one class. 
 
-The classes `Success` and `Error` inherit from the base class `Reason`. If at least one `Error` object exists in the `Reasons` property then the result indicates a failure and the property `IsSuccess` is false. 
+The entire public api of this library uses the interfaces `IReason`, `IError` and `ISuccess` for representing a reason, error or success. `IError` and `ISuccess` inherit from `IReason`. If at least one `IError` object exists in the `Reasons` property then the result indicates a failure and the property `IsSuccess` is false. 
 
-You can create your own `Success` or `Error` classes when you inherit from `Success` or `Error`. 
+You can create your own `Success` or `Error` classes when you inherit from `ISuccess` or `IError` or if you inherit from `Success` or `Error`. 
 
 ```csharp
 public class StartDateIsAfterEndDateError : Error
@@ -227,9 +228,9 @@ Result result = ....;
 if (result.IsSuccess)
    return;
 
-foreach(var error in result.Errors)
+foreach(IError error in result.Errors)
 {
-    foreach(var causedByExceptionalError in error.Reasons.OfType<ExceptionalError>())
+    foreach(ExceptionalError causedByExceptionalError in error.Reasons.OfType<ExceptionalError>())
     {
         Console.WriteLine(causedByExceptionalError.Exception);
     }
@@ -250,7 +251,7 @@ var result2 = Result.Ok()
                                  .WithMetadata("metadata name", "metadata value"));
 ```
 
-Another way is to call `WithMetadata(...)` in constructor of the Error or Success class. 
+Another way is to call `WithMetadata(...)` in constructor of the `Error` or `Success` class. 
 
 ```csharp
 public class DomainError : Error
@@ -380,6 +381,11 @@ var result2 = Result.Fail("Operation failed")
 
 Try it with the power of FluentAssertions and [FluentResults.Extensions.FluentAssertions](https://github.com/altmann/FluentResults/wiki#fluentresultsextensionsfluentassertions)
 
+### .NET Targeting
+
+FluentResults 3.x and above supports .NET Standard 2.0 and .NET Standard 2.1. 
+If you need support for .NET Standard 1.1, .NET 4.6.1 or .NET 4.5 use FluentResults 2.x.
+
 ## Samples/Best Practices
 
 Here are some samples and best practices to be followed while using FluentResult or the Result pattern in general with some famous or commonly used frameworks and libraries.
@@ -388,7 +394,7 @@ Here are some samples and best practices to be followed while using FluentResult
 
 - [Domain model with a command handler](https://github.com/altmann/FluentResults/tree/master/src/FluentResults.Samples/DomainDrivenDesign)
 - Protecting domain invariants by using for example factory methods returning a Result object
-- Make each error unique by making your own custom Error classes inheriting from Error class
+- Make each error unique by making your own custom Error classes inheriting from IError interface or Error class
 - If the method doesn't have a failure scenario then don't use the Result class as return type
 - Be aware that you can merge multiple failed results or return the first failed result asap
 
