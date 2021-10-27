@@ -2,13 +2,17 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <Version>2.6.0.0</Version>
+    <Version>3.0.0.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- ADDED - Log() method with generic TLoggerContext parameter (details see readme)
+REMOVED - Dropped support for .NET Standard 1.1, .NET 4.6.1 and .NET 4.5 (details see readme)
+CHANGED - Introduce interfaces for Error, Success and Reason (precondition to support c# records in FluentResults). The public api uses the new interfaces IError, ISuccess and IReason and not the classes Error, Success and Reason any more
+REMOVED - Removed the obsolete marked static class Results. Use the static class Result instead.
+REMOVED - Removed the parameterless constructor of Error and Success
+REMOVED - Removed the obsolete marked implicit operator from Result TValue to Result. Use an explicit .ToResult() instead. (details see readme)
     </PackageReleaseNotes>
     <Copyright>Copyright 2021 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
