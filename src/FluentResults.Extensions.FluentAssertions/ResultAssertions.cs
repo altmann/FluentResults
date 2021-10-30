@@ -100,7 +100,7 @@ namespace FluentResults.Extensions.FluentAssertions
             return new AndConstraint<ResultAssertions<T>>(this);
         }
 
-        public AndConstraint<ResultAssertions<T>> Satisfy(Action<Result> action)
+        public AndConstraint<ResultAssertions<T>> Satisfy(Action<Result<T>> action)
         {
             action(Subject);
 
