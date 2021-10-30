@@ -384,7 +384,7 @@ Try it with the power of FluentAssertions and [FluentResults.Extensions.FluentAs
 ### .NET Targeting
 
 FluentResults 3.x and above supports .NET Standard 2.0 and .NET Standard 2.1. 
-If you need support for .NET Standard 1.1, .NET 4.6.1 or .NET 4.5 use FluentResults 2.x.
+If you need support for .NET Standard 1.1, .NET 4.6.1 or .NET 4.5 use [FluentResults 2.x](https://www.nuget.org/packages/FluentResults/2.6.0).
 
 ## Samples/Best Practices
 
