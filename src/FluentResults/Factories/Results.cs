@@ -84,9 +84,31 @@ namespace FluentResults
         }
 
         /// <summary>
+        /// Creates a success result with the given value
+        /// </summary>
+        public static Result<TValue, TError> Ok<TValue, TError>(TValue value)
+            where TError : IError
+        {
+            var result = new Result<TValue, TError>();
+            result.WithValue(value);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a failed result with the given error
+        /// </summary>
+        public static Result<TValue, TError> Fail<TValue, TError>(TError error)
+            where TError : IError
+        {
+            var result = new Result<TValue, TError>();
+            result.WithError(error);
+            return result;
+        }
+
+        /// <summary>
         /// Merge multiple result objects to one result object together
         /// </summary>
-        public static Result Merge(params ResultBase[] results)
+        public static Result Merge(params ResultBase<IError>[] results)
         {
             return ResultHelper.Merge(results);
         }
@@ -96,7 +118,7 @@ namespace FluentResults
         /// </summary>
         public static Result<IEnumerable<TValue>> Merge<TValue>(params Result<TValue>[] results)
         {
-            return ResultHelper.MergeWithValue(results);
+            return (Result<IEnumerable<TValue>>)ResultHelper.MergeWithValue(results);
         }
 
         /// <summary>
@@ -180,7 +202,7 @@ namespace FluentResults
             }
             catch (Exception e)
             {
-                return Fail(catchHandler(e));
+                return Fail<T>(catchHandler(e));
             }
         }
 
@@ -197,7 +219,7 @@ namespace FluentResults
             }
             catch (Exception e)
             {
-                return Fail(catchHandler(e));
+                return Fail<T>(catchHandler(e));
             }
         }
     }

@@ -16,6 +16,7 @@ namespace FluentResults.Test
             var okResult = Result.Ok();
 
             // Assert
+            okResult.Should().BeOfType<Result>();
             okResult.IsFailed.Should().BeFalse();
             okResult.IsSuccess.Should().BeTrue();
 
@@ -32,6 +33,7 @@ namespace FluentResults.Test
                 .WithSuccess("First success message");
 
             // Assert
+            okResult.Should().BeOfType<Result>();
             okResult.Reasons.Should().HaveCount(1);
             okResult.Reasons.First().Should().BeOfType<Success>();
             okResult.Reasons.First().Message.Should().Be("First success message");

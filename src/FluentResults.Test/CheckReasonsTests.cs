@@ -50,6 +50,14 @@ namespace FluentResults.Test
         }
 
         [Fact]
+        public void HasError_WithOtherError()
+        {
+            var result = Result.Fail(new Error(""));
+
+            result.HasError<NotFoundError>().Should().BeFalse();
+        }
+
+        [Fact]
         public void HasErrorInNestedError_WithoutSearchedError()
         {
             var result = Result.Ok()

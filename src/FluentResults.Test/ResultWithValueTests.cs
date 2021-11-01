@@ -15,6 +15,7 @@ namespace FluentResults.Test
             var okResult = Result.Ok<int>(default);
 
             // Assert
+            okResult.Should().BeOfType<Result<int>>();
             okResult.IsFailed.Should().BeFalse();
             okResult.IsSuccess.Should().BeTrue();
 
@@ -32,6 +33,7 @@ namespace FluentResults.Test
             var okResult = Result.Ok(5);
 
             // Assert
+            okResult.Should().BeOfType<Result<int>>();
             okResult.IsSuccess.Should().BeTrue();
             okResult.Value.Should().Be(5);
             okResult.ValueOrDefault.Should().Be(5);
@@ -46,6 +48,7 @@ namespace FluentResults.Test
             okResult.WithValue(5);
 
             // Assert
+            okResult.Should().BeOfType<Result<int>>();
             okResult.Value.Should().Be(5);
             okResult.ValueOrDefault.Should().Be(5);
         }

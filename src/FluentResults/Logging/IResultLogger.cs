@@ -3,7 +3,7 @@ namespace FluentResults
 {
     public interface IResultLogger
     {
-        void Log(string context, ResultBase result);
-        void Log<TContext>(ResultBase result);
+        void Log(string context, ResultBase<IError> result);
+        void Log<TContext>(ResultBase<IError> result);
     }
 }

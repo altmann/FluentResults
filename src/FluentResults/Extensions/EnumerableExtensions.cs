@@ -18,7 +18,7 @@ namespace FluentResults
         /// </summary>
         public static Result<IEnumerable<TValue>> Merge<TValue>(this IEnumerable<Result<TValue>> results)
         {
-            return ResultHelper.MergeWithValue(results);
+            return (Result<IEnumerable<TValue>>)ResultHelper.MergeWithValue(results);
         }
     }
 }

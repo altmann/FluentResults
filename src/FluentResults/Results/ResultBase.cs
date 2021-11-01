@@ -5,12 +5,13 @@ using System.Linq;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
-    public abstract class ResultBase
+    public abstract class ResultBase<TError>
+        where TError : IError
     {
         /// <summary>
         /// Is true if Reasons contains at least one error
         /// </summary>
-        public bool IsFailed => Reasons.OfType<IError>().Any();
+        public bool IsFailed => Reasons.OfType<TError>().Any();
 
         /// <summary>
         /// Is true if Reasons contains no errors
@@ -25,7 +26,7 @@ namespace FluentResults
         /// <summary>
         /// Get all errors
         /// </summary>
-        public List<IError> Errors => Reasons.OfType<IError>().ToList();
+        public List<TError> Errors => Reasons.OfType<TError>().ToList();
 
         /// <summary>
         /// Get all successes
@@ -38,33 +39,22 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Check if the result object contains an error from a specific type
+        /// Check if the result object contains an error
         /// </summary>
-        public bool HasError<TError>() where TError : IError
+        public bool HasError()
         {
-            return HasError<TError>(error => true);
-        }
-
-        /// <summary>
-        /// Check if the result object contains an error from a specific type and with a specific condition
-        /// </summary>
-        public bool HasError<TError>(Func<TError, bool> predicate) where TError : IError
-        {
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
-
-            return ResultHelper.HasError(Errors, predicate);
+            return HasError(error => true);
         }
 
         /// <summary>
         /// Check if the result object contains an error with a specific condition
         /// </summary>
-        public bool HasError(Func<IError, bool> predicate)
+        public bool HasError(Func<TError, bool> predicate)
         {
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            return ResultHelper.HasError(Errors, predicate);
+            return ResultHelper.HasError(Errors as List<IError>, predicate);
         }
 
         /// <summary>
@@ -92,8 +82,9 @@ namespace FluentResults
         }
     }
 
-    public abstract class ResultBase<TResult> : ResultBase
-        where TResult : ResultBase<TResult>
+    public abstract class ResultBase<TResult, TError> : ResultBase<TError>
+        where TResult : ResultBase<TResult, TError>
+        where TError : IError
     {
         /// <summary>
         /// Add a reason (success or error)
@@ -116,15 +107,7 @@ namespace FluentResults
         /// <summary>
         /// Add an error
         /// </summary>
-        public TResult WithError(string errorMessage)
-        {
-            return WithError(new Error(errorMessage));
-        }
-
-        /// <summary>
-        /// Add an error
-        /// </summary>
-        public TResult WithError(IError error)
+        public TResult WithError(TError error)
         {
             return WithReason(error);
         }
@@ -132,26 +115,9 @@ namespace FluentResults
         /// <summary>
         /// Add multiple errors
         /// </summary>
-        public TResult WithErrors(IEnumerable<IError> errors)
+        public TResult WithErrors(IEnumerable<TError> errors)
         {
-            return WithReasons(errors);
-        }
-
-        /// <summary>
-        /// Add multiple errors
-        /// </summary>
-        public TResult WithErrors(IEnumerable<string> errors)
-        {
-            return WithReasons(errors.Select(errorMessage => new Error(errorMessage)));
-        }
-
-        /// <summary>
-        /// Add an error
-        /// </summary>
-        public TResult WithError<TError>()
-            where TError : IError, new()
-        {
-            return WithError(new TError());
+            return WithReasons(errors as IEnumerable<IError>);
         }
 
         /// <summary>
@@ -194,7 +160,7 @@ namespace FluentResults
         {
             var logger = Result.Settings.Logger;
 
-            logger.Log(context, this);
+            logger.Log(context, this as ResultBase<IError>);
 
             return (TResult)this;
         }
@@ -206,7 +172,7 @@ namespace FluentResults
         {
             var logger = Result.Settings.Logger;
 
-            logger.Log<TContext>(this);
+            logger.Log<TContext>(this as ResultBase<IError>);
 
             return (TResult)this;
         }

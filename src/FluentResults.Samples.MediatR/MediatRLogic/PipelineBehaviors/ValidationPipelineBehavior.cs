@@ -6,7 +6,7 @@ namespace FluentResults.Samples.MediatR.MediatRLogic.PipelineBehaviors
 {
     public class ValidationPipelineBehavior<TRequest, TResponse>
         : IPipelineBehavior<TRequest, TResponse>
-        where TResponse : ResultBase, new()
+        where TResponse : ResultBase<IError>, new()
     {
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)

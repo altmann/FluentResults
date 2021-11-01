@@ -47,7 +47,14 @@ namespace FluentResults.Test
             Result mergedResult = results.Merge();
 
             IEnumerable<Result<int>> results2 = new List<Result<int>>();
-            Result<IEnumerable<int>> mergedResult2 = results.Merge();
+            Result<IEnumerable<int>> mergedResult2 = results2.Merge();
+        }
+
+        public void WithErrorType()
+        {
+            var result = Result.Ok<int, CustomError>(1);
+            result.HasError();
+            result.HasError(e => e.Message == "Custom message");
         }
 
         public void TestExtensions()
