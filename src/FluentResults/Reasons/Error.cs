@@ -31,15 +31,27 @@ namespace FluentResults
             Reasons = new List<IError>();
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Error"/>
+        /// </summary>
+        /// <param name="message">Discription of the error</param>
         public Error(string message)
             : this()
         {
             Message = message;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Error"/>
+        /// </summary>
+        /// <param name="message">Discription of the error</param>
+        /// <param name="causedBy">The root cause of the <see cref="Error"/></param>
         public Error(string message, Error causedBy)
             : this(message)
         {
+            if (causedBy == null)
+                throw new ArgumentNullException(nameof(causedBy));
+
             Reasons.Add(causedBy);
         }
 
@@ -48,6 +60,9 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(Error error)
         {
+            if (error == null)
+                throw new ArgumentNullException(nameof(error));
+
             Reasons.Add(error);
             return this;
         }
@@ -57,6 +72,9 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(Exception exception)
         {
+            if (exception == null)
+                throw new ArgumentNullException(nameof(exception));
+
             Reasons.Add(new ExceptionalError(exception));
             return this;
         }
@@ -66,6 +84,9 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(string message, Exception exception)
         {
+            if (exception == null)
+                throw new ArgumentNullException(nameof(exception));
+
             Reasons.Add(new ExceptionalError(message, exception));
             return this;
         }
@@ -84,6 +105,9 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(IEnumerable<Error> errors)
         {
+            if (errors == null)
+                throw new ArgumentNullException(nameof(errors));
+
             Reasons.AddRange(errors);
             return this;
         }
@@ -93,6 +117,9 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(IEnumerable<string> errors)
         {
+            if (errors == null)
+                throw new ArgumentNullException(nameof(errors));
+
             Reasons.AddRange(errors.Select(errorMessage => new Error(errorMessage)));
             return this;
         }
