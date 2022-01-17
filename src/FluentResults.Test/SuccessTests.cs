@@ -15,5 +15,21 @@ namespace FluentResults.Test
             success.Message.Should().Be("My success message");
             success.Metadata.Should().BeEmpty();
         }
+
+        [Fact]
+        public void CreateCustomSuccessWithNoMessage_CustomSuccessWithMessage()
+        {
+            // Act
+            var error = new CustomSuccess();
+
+            // Assert
+            error.Message.Should().BeNull();
+            error.Metadata.Keys.Should().BeEmpty();
+        }
+
+        public class CustomSuccess : Success
+        {
+
+        }
     }
 }

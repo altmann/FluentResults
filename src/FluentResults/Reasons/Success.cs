@@ -11,14 +11,14 @@ namespace FluentResults
         /// <summary>
         /// Message of the success
         /// </summary>
-        public string Message { get; }
+        public string Message { get; protected set; }
 
         /// <summary>
         /// Metadata of the success
         /// </summary>
         public Dictionary<string, object> Metadata { get; }
 
-        private Success()
+        protected Success()
         {
             Metadata = new Dictionary<string, object>();
         }

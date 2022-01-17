@@ -108,5 +108,22 @@ namespace FluentResults.Test
             error.Metadata.Keys.First().Should().Be("Field");
             error.Metadata.Keys.Skip(1).Take(1).First().Should().Be("ErrorCode");
         }
+
+        [Fact]
+        public void CreateCustomErrorWithNoMessage_CustomErrorWithMessage()
+        {
+            // Act
+            var error = new CustomError();
+
+            // Assert
+            error.Message.Should().BeNull();
+            error.Reasons.Should().BeEmpty();
+            error.Metadata.Keys.Should().BeEmpty();
+        }
+
+        public class CustomError : Error
+        {
+
+        }
     }
 }

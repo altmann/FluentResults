@@ -13,7 +13,7 @@ namespace FluentResults
         /// <summary>
         /// Message of the error
         /// </summary>
-        public string Message { get; }
+        public string Message { get; protected set; }
 
         /// <summary>
         /// Metadata of the error
@@ -25,7 +25,7 @@ namespace FluentResults
         /// </summary>
         public List<IError> Reasons { get; }
         
-        private Error()
+        protected Error()
         {
             Metadata = new Dictionary<string, object>();
             Reasons = new List<IError>();
