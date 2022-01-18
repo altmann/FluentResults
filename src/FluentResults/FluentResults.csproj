@@ -2,15 +2,15 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <Version>3.1.0.0</Version>
+    <Version>3.1.1.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-CHANGED - Add some null checks and api documentation to the Error class
-    </PackageReleaseNotes>
-    <Copyright>Copyright 2021 (c) Michael Altmann. All rights reserved.</Copyright>
+		CHANGED - Error and Success base class have now protected parameterless contructor (previous private constructor) #107
+	</PackageReleaseNotes>
+    <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
     <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-128.png</PackageIconUrl>
