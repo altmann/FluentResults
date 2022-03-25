@@ -66,6 +66,25 @@ namespace FluentResults
 
             return ResultHelper.HasError(Errors, predicate);
         }
+        
+        /// <summary>
+        /// Check if the result object contains an exception from a specific type
+        /// </summary>
+        public bool HasException<TException>() where TException : Exception
+        {
+            return HasException<TException>(error => true);
+        }
+
+        /// <summary>
+        /// Check if the result object contains an exception from a specific type and with a specific condition
+        /// </summary>
+        public bool HasException<TException>(Func<TException, bool> predicate) where TException : Exception
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return ResultHelper.HasException(Errors, predicate);
+        }
 
         /// <summary>
         /// Check if the result object contains a success from a specific type

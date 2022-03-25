@@ -39,6 +39,22 @@ namespace FluentResults
             return false;
         }
 
+        public static bool HasException<TException>(List<IError> errors, Func<TException, bool> predicate) where TException : Exception
+        {
+            var anyErrors = errors.Any(e => e.Reasons.OfType<ExceptionalError>().Any(r => r.Exception is TException exceptionOfTException && predicate(exceptionOfTException)));
+            if (anyErrors)
+                return true;
+
+            foreach (var error in errors)
+            {
+                var anyError = HasException(error.Reasons, predicate);
+                if (anyError)
+                    return true;
+            }
+
+            return false;
+        }
+
         public static bool HasSuccess<TSuccess>(List<ISuccess> successes, Func<TSuccess, bool> predicate) where TSuccess : ISuccess
         {
             return successes.Any(success => success is TSuccess successOfTSuccess && predicate(successOfTSuccess));
