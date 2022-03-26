@@ -332,6 +332,18 @@ result.HasSuccess<MyCustomSuccess>();
 result.HasSuccess<MyCustomSuccess>(success => success.MyField == 3);
 ```
 
+### Handling/catching exceptions
+
+Same has the handling of errors, the checking and handling of exceptions within Result object is also supported using some methods: 
+
+```csharp
+// check if the Result object contains an exception from a specific type
+result.HasException<MyCustomException>();
+
+// check if the Result object contains an exception from a specific type and with a specific condition
+result.HasException<MyCustomException>(MyCustomException => MyCustomException.MyField == 1);
+```
+
 ### Logging
 
 Sometimes it is necessary to log results. First create a logger. 
