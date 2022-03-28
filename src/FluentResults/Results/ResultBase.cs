@@ -5,30 +5,58 @@ using System.Linq;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
-    public abstract class ResultBase
+    public interface IResultBase
     {
         /// <summary>
         /// Is true if Reasons contains at least one error
         /// </summary>
-        public bool IsFailed => Reasons.OfType<IError>().Any();
+        bool IsFailed { get; }
 
         /// <summary>
         /// Is true if Reasons contains no errors
         /// </summary>
-        public bool IsSuccess => !IsFailed;
+        bool IsSuccess { get; }
 
         /// <summary>
         /// Get all reasons (errors and successes)
         /// </summary>
-        public List<IReason> Reasons { get; }
+        List<IReason> Reasons { get; }
 
         /// <summary>
         /// Get all errors
         /// </summary>
-        public List<IError> Errors => Reasons.OfType<IError>().ToList();
+        List<IError> Errors { get; }
 
         /// <summary>
         /// Get all successes
+        /// </summary>
+        List<ISuccess> Successes { get; }
+    }
+
+    public abstract class ResultBase : IResultBase
+    {
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public bool IsFailed => Reasons.OfType<IError>().Any();
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public bool IsSuccess => !IsFailed;
+        
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public List<IReason> Reasons { get; }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public List<IError> Errors => Reasons.OfType<IError>().ToList();
+
+        /// <summary>
+        /// <inheritdoc/>
         /// </summary>
         public List<ISuccess> Successes => Reasons.OfType<ISuccess>().ToList();
 
@@ -113,6 +141,7 @@ namespace FluentResults
 
     public abstract class ResultBase<TResult> : ResultBase
         where TResult : ResultBase<TResult>
+
     {
         /// <summary>
         /// Add a reason (success or error)
