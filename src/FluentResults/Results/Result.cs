@@ -16,7 +16,20 @@ namespace FluentResults
         }
     }
 
-    public class Result<TValue> : ResultBase<Result<TValue>>
+    public interface IResult<out TValue> : IResultBase
+    {
+        /// <summary>
+        /// Get the Value. If result is failed then an Exception is thrown because a failed result has no value. Opposite see property ValueOrDefault.
+        /// </summary>
+        TValue Value { get; }
+
+        /// <summary>
+        /// Get the Value. If result is failed then a default value is returned. Opposite see property Value.
+        /// </summary>
+        TValue ValueOrDefault { get; }
+    }
+
+    public class Result<TValue> : ResultBase<Result<TValue>>, IResult<TValue>
     {
         public Result()
         { }
@@ -24,12 +37,12 @@ namespace FluentResults
         private TValue _value;
 
         /// <summary>
-        /// Get the Value. If result is failed then a default value is returned. Opposite see property Value.
+        /// <inheritdoc/>
         /// </summary>
         public TValue ValueOrDefault => _value;
 
         /// <summary>
-        /// Get the Value. If result is failed then an Exception is thrown because a failed result has no value. Opposite see property ValueOrDefault.
+        /// <inheritdoc/>
         /// </summary>
         public TValue Value
         {
