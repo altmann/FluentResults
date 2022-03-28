@@ -5,6 +5,15 @@ namespace FluentResults.Test
 {
     public class CheckReasonsTests
     {
+        class CustomException : System.Exception
+        {  
+            public int Id { get; }
+            public CustomException(int id) : base("Custom exception")
+            {
+                     Id = id;
+            }
+        }
+
         class NotFoundError : Error
         {
             public int Id { get; }
@@ -23,6 +32,70 @@ namespace FluentResults.Test
             {
                 Id = id;
             }
+        }
+
+        [Fact]
+        public void HasException_WithSearchedError()
+        {
+            var result = Result.Fail(new NotFoundError(3).CausedBy(new CustomException(1)));
+
+            result.HasException<CustomException>().Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasExceptionWithPredicate_WithSearchedError()
+        {
+            var result = Result.Fail(new NotFoundError(3).CausedBy(new CustomException(1)));
+
+            result.HasException<CustomException>(e => e.Id == 1).Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasException_WithoutSearchedError()
+        {
+            var result = Result.Ok();
+
+            result.HasException<CustomException>().Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasExceptionInNestedError_WithoutSearchedError()
+        {
+            var result = Result.Ok()
+                .WithError(new Error("Main Error")
+                    .CausedBy(new CustomException(1)));
+
+            result.HasException<CustomException>().Should().BeTrue();
+        }
+
+       [Fact]
+        public void HasExceptionInVeryDeepNestedError_WithoutSearchedError()
+        {
+            var result = Result.Ok()
+                .WithError(new Error("Main Error")
+                    .CausedBy(new Error("Another Error")
+                        .CausedBy(new Error("Root Error"))
+                        .CausedBy(new NotFoundError(2))
+                        .CausedBy(new CustomException(1))
+                    )
+                );
+
+            result.HasException<CustomException>().Should().BeTrue();
+        }
+
+       [Fact]
+        public void HasExceptionInVeryDeepNestedErrorWithPredicate_WithoutSearchedError()
+        {
+            var result = Result.Ok()
+                .WithError(new Error("Main Error")
+                    .CausedBy(new Error("Another Error")
+                        .CausedBy(new Error("Root Error"))
+                        .CausedBy(new NotFoundError(2))
+                        .CausedBy(new CustomException(1))
+                    )
+                );
+
+            result.HasException<CustomException>(e => e.Id == 1).Should().BeTrue();
         }
 
         [Fact]
