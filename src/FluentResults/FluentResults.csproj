@@ -8,7 +8,8 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-	    ADDED - HasException(...) to check if any exception is within the result #113
+		ADDED - HasException(...) to check if any exception is within the result #113
+		ADDED - Added covariant interfaces for Result classes #110
 	</PackageReleaseNotes>
     <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
