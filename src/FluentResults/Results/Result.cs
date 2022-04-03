@@ -48,15 +48,13 @@ namespace FluentResults
         {
             get
             {
-                if (IsFailed)
-                    throw new InvalidOperationException("Result is in status failed. Value is not set.");
+                ThrowIfFailed();
 
                 return _value;
             }
             private set
             {
-                if (IsFailed)
-                    throw new InvalidOperationException("Result is in status failed. Value is not set.");
+                ThrowIfFailed();
 
                 _value = value;
             }
@@ -103,6 +101,19 @@ namespace FluentResults
         public static implicit operator Result<TValue>(Result result)
         {
             return result.ToResult<TValue>();
+        }
+
+        private void ThrowIfFailed()
+        {
+            if(!IsFailed)
+            {
+                return;
+            }
+
+            string msg = 
+                $"Result is in status failed. Value is not set. Having: {ReasonFormat.ErrorReasonsToString(Errors)}";
+
+            throw new InvalidOperationException(msg);
         }
     }
 }
