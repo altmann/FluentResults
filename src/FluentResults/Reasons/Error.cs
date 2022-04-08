@@ -159,12 +159,12 @@ namespace FluentResults
 
     internal class ReasonFormat
     {
-        public static string ErrorReasonsToString(List<IError> errorReasons)
+        public static string ErrorReasonsToString(IReadOnlyCollection<IError> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }
 
-        public static string ReasonsToString(List<IReason> errorReasons)
+        public static string ReasonsToString(IReadOnlyCollection<IReason> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }
