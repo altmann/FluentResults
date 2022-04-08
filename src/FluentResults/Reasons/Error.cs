@@ -96,7 +96,7 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(string message)
         {
-            Reasons.Add(new Error(message));
+            Reasons.Add(Result.Settings.ErrorFactory(message));
             return this;
         }
 
@@ -120,7 +120,7 @@ namespace FluentResults
             if (errors == null)
                 throw new ArgumentNullException(nameof(errors));
 
-            Reasons.AddRange(errors.Select(errorMessage => new Error(errorMessage)));
+            Reasons.AddRange(errors.Select(errorMessage => Result.Settings.ErrorFactory(errorMessage)));
             return this;
         }
 

@@ -166,7 +166,7 @@ namespace FluentResults
         /// </summary>
         public TResult WithError(string errorMessage)
         {
-            return WithError(new Error(errorMessage));
+            return WithError(Result.Settings.ErrorFactory(errorMessage));
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace FluentResults
         /// </summary>
         public TResult WithErrors(IEnumerable<string> errors)
         {
-            return WithReasons(errors.Select(errorMessage => new Error(errorMessage)));
+            return WithReasons(errors.Select(errorMessage => Result.Settings.ErrorFactory(errorMessage)));
         }
 
         /// <summary>
@@ -207,13 +207,13 @@ namespace FluentResults
         /// </summary>
         public TResult WithSuccess(string successMessage)
         {
-            return WithSuccess(new Success(successMessage));
+            return WithSuccess(Result.Settings.SuccessFactory(successMessage));
         }
 
         /// <summary>
         /// Add a success
         /// </summary>
-        public TResult WithSuccess(Success success)
+        public TResult WithSuccess(ISuccess success)
         {
             return WithReason(success);
         }
