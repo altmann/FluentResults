@@ -2,14 +2,13 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <Version>3.3.0.0</Version>
+    <Version>3.4.0.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		ADDED - HasException(...) to check if any exception is within the result #113
-		ADDED - Added covariant interfaces for Result classes #110
+		ADDED - Add ErrorFactory and SuccessFactory in Result.Settings
 	</PackageReleaseNotes>
     <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
