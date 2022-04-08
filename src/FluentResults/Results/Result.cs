@@ -105,15 +105,8 @@ namespace FluentResults
 
         private void ThrowIfFailed()
         {
-            if(!IsFailed)
-            {
-                return;
-            }
-
-            string msg = 
-                $"Result is in status failed. Value is not set. Having: {ReasonFormat.ErrorReasonsToString(Errors)}";
-
-            throw new InvalidOperationException(msg);
+            if (IsFailed)
+                throw new InvalidOperationException($"Result is in status failed. Value is not set. Having: {ReasonFormat.ErrorReasonsToString(Errors)}");
         }
     }
 }
