@@ -200,25 +200,6 @@ It is also possible to pass a custom catchHandler via the ```Try(..)``` method.
 var result = Result.Try(() => DoSomethingCritical(), ex => new MyCustomExceptionError(ex));
 ```
 
-### Register factories for ISuccess and IError
-
-Within the FluentResults library in some scenarios an IError or ISuccess object is created. For example if the method ```Result.Fail("My Error")``` is called then internally an Error object is created. If you need to overwrite this behavior and create in this scenario a custom IError class then you can set the error factory via the settings. 
-
-```csharp
-Result.Setup(cfg =>
-{
-    cfg.SuccessFactory = successMessage =>
-    {
-        return new Success(successMessage).WithMetadata("Timestamp", DateTime.Now);
-    };
-    
-    cfg.ErrorFactory = errorMessage =>
-    {
-        return new Error(errorMessage).WithMetadata("Timestamp", DateTime.Now);
-    };
-});
-```
-
 ### Root cause of the error
 
 You can also store the root cause of the error in the error object. With the method `CausedBy(...)` the root cause can be passed as Error, list of Errors, string, list of strings or as exception. The root cause is stored in the `Reasons` property of the error object. 
@@ -319,6 +300,22 @@ Result.Fail<int>("Failed").ToResult<float>();
 
 // converting a result to a result from type Result
 Result.Ok<int>().ToResult(); 
+```
+
+### Set global factories for ISuccess/IError/IExceptionalError
+
+Within the FluentResults library in some scenarios an ISuccess, IError or IExceptionalError object is created. For example if the method ```Result.Fail("My Error")``` is called then internally an IError object is created. If you need to overwrite this behavior and create in this scenario a custom error class then you can set the error factory via the settings. The same extension points are also available for ISuccess and IExceptionalError. 
+
+```csharp
+Result.Setup(cfg =>
+{
+    cfg.SuccessFactory = successMessage => new Success(successMessage).WithMetadata("Timestamp", DateTime.Now);
+    
+    cfg.ErrorFactory = errorMessage => new Error(errorMessage).WithMetadata("Timestamp", DateTime.Now);
+    
+    cfg.ExceptionalErrorFactory = (errorMessage, exception) => new ExceptionalError(errorMessage ?? exception.Message, exception)
+    .WithMetadata("Timestamp", DateTime.Now);
+});
 ```
 
 ### Handling/catching errors
