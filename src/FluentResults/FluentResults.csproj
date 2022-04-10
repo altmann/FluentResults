@@ -8,7 +8,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		ADDED - Add ErrorFactory and SuccessFactory in Result.Settings
+		ADDED - Make ErrorFactory, ExceptionalErrorFactory and SuccessFactory configurable via Result.Setup(...). Details see readme #116 
 	</PackageReleaseNotes>
     <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>

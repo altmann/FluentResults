@@ -75,7 +75,7 @@ namespace FluentResults
             if (exception == null)
                 throw new ArgumentNullException(nameof(exception));
 
-            Reasons.Add(new ExceptionalError(exception));
+            Reasons.Add(Result.Settings.ExceptionalErrorFactory(null, exception));
             return this;
         }
 
@@ -87,7 +87,7 @@ namespace FluentResults
             if (exception == null)
                 throw new ArgumentNullException(nameof(exception));
 
-            Reasons.Add(new ExceptionalError(message, exception));
+            Reasons.Add(Result.Settings.ExceptionalErrorFactory(message, exception));
             return this;
         }
 

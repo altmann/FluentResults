@@ -12,5 +12,7 @@ namespace FluentResults
         public Func<string, ISuccess> SuccessFactory { get; set; }
 
         public Func<string, IError> ErrorFactory { get; set; }
+
+        public Func<string, Exception, IExceptionalError> ExceptionalErrorFactory { get; set; }
     }
 }

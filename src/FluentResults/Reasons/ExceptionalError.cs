@@ -6,7 +6,7 @@ namespace FluentResults
     /// <summary>
     /// Error class which stores additionally the exception
     /// </summary>
-    public class ExceptionalError : Error
+    public class ExceptionalError : Error, IExceptionalError
     {
         /// <summary>
         /// Exception of the error
