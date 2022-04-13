@@ -405,7 +405,7 @@ var result2 = Result.Fail("Operation failed")
     .Log<MyLoggerContext>("More info about the result");
 ```
 
-You can also log results only on successes ou failures:
+You can also log results only on successes or failures:
 
 ```csharp
 Result<int> result = DoSomething();
