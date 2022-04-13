@@ -362,24 +362,24 @@ result.HasException<MyCustomException>(MyCustomException => MyCustomException.My
 
 ### Logging
 
-Sometimes it is necessary to log results. First create a logger. 
+Sometimes it is necessary to log results. First create a logger:
 
 ```csharp
 public class MyConsoleLogger : IResultLogger
 {
-    public void Log(string context, ResultBase result)
+    public void Log(string context, string content, ResultBase result)
     {
-        Console.WriteLine("{0}", result);
+        Console.WriteLine("Result: {0} {1} <{2}>", result.Reasons.Select(reason => reason.Message), content, context);
     }
 
-    public void Log<TContext>(ResultBase result)
+    public void Log<TContext>(string content, ResultBase result)
     {
-        Console.WriteLine("{0}", result);
+        Console.WriteLine("Result: {0} {1} <{2}>", result.Reasons.Select(reason => reason.Message), content, typeof(TContext).FullName);
     }
 }
 ```
 
-Then you have to register your logger. 
+Then you must register your logger in the Result settings:
 
 ```csharp
 var myLogger = new MyConsoleLogger();
@@ -388,22 +388,32 @@ Result.Setup(cfg => {
 });
 ```
 
-Finally the logger can be used. 
+Finally the logger can be used on any result:
 
 ```csharp
 var result = Result.Fail("Operation failed")
     .Log();
 ```
 
-Additionally, a context can be passed in form of a string or of a generic type parameter. 
+Additionally, a context can be passed in form of a string or of a generic type parameter. A custom message that provide more information can also be passed as content.
 
 ```csharp
 var result = Result.Fail("Operation failed")
-    .Log("logger context");
+    .Log("logger context", "More info about the result");
 
 var result2 = Result.Fail("Operation failed")
-    .Log<MyLoggerContext>();
+    .Log<MyLoggerContext>("More info about the result");
 ```
+
+You can also log results only on successes ou failures:
+
+```csharp
+Result<int> result = DoSomething();
+
+result.LogIfSuccess();
+result.LogIfFailed();
+```
+
 
 ### Asserting FluentResult objects
 
