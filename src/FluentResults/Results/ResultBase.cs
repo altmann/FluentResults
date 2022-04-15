@@ -44,7 +44,7 @@ namespace FluentResults
         /// <inheritdoc/>
         /// </summary>
         public bool IsSuccess => !IsFailed;
-        
+
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
@@ -94,7 +94,7 @@ namespace FluentResults
 
             return ResultHelper.HasError(Errors, predicate);
         }
-        
+
         /// <summary>
         /// Check if the result object contains an exception from a specific type
         /// </summary>
@@ -236,13 +236,13 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Log the result with a specific logger context
+        /// Log the result with a specific logger context. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult Log(string context)
+        public TResult Log(string context, string content = null)
         {
             var logger = Result.Settings.Logger;
 
-            logger.Log(context, this);
+            logger.Log(context, content, this);
 
             return (TResult)this;
         }
@@ -250,15 +250,92 @@ namespace FluentResults
         /// <summary>
         /// Log the result with a typed context. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult Log<TContext>()
+        public TResult Log<TContext>(string content = null)
         {
             var logger = Result.Settings.Logger;
 
-            logger.Log<TContext>(this);
+            logger.Log<TContext>(content, this);
 
             return (TResult)this;
         }
 
+        /// <summary>
+        /// Log the result only when it is successful. Configure the logger via Result.Setup(..)
+        /// </summary>
+        public TResult LogIfSuccess()
+        {
+            if (IsSuccess)
+            {
+                return Log();
+            }
+
+            return (TResult)this;
+        }
+
+        /// <summary>
+        /// Log the result with a specific logger context only when it is successful. Configure the logger via Result.Setup(..)
+        /// </summary>
+        public TResult LogIfSuccess(string context, string content = null)
+        {
+            if (IsSuccess)
+            {
+                return Log(context, content);
+            }
+
+            return (TResult)this;
+        }
+
+        /// <summary>
+        /// Log the result with a typed context only when it is successful. Configure the logger via Result.Setup(..)
+        /// </summary>
+        public TResult LogIfSuccess<TContext>(string content = null)
+        {
+            if (IsSuccess)
+            {
+                return Log<TContext>(content);
+            }
+
+            return (TResult)this;
+        }
+
+        /// <summary>
+        /// Log the result only when it is failed. Configure the logger via Result.Setup(..)
+        /// </summary>
+        public TResult LogIfFailed()
+        {
+            if (IsFailed)
+            {
+                return Log();
+            }
+
+            return (TResult)this;
+        }
+
+        /// <summary>
+        /// Log the result with a specific logger context only when it is failed. Configure the logger via Result.Setup(..)
+        /// </summary>
+        public TResult LogIfFailed(string context, string content = null)
+        {
+            if (IsFailed)
+            {
+                return Log(context, content);
+            }
+
+            return (TResult)this;
+        }
+
+        /// <summary>
+        /// Log the result with a typed context only when it is failed. Configure the logger via Result.Setup(..)
+        /// </summary>
+        public TResult LogIfFailed<TContext>(string content = null)
+        {
+            if (IsFailed)
+            {
+                return Log<TContext>(content);
+            }
+
+            return (TResult)this;
+        }
 
         public override string ToString()
         {
