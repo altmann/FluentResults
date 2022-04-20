@@ -24,7 +24,7 @@ namespace FluentResults
         /// Get the reasons of an error
         /// </summary>
         public List<IError> Reasons { get; }
-        
+
         protected Error()
         {
             Metadata = new Dictionary<string, object>();
@@ -70,6 +70,18 @@ namespace FluentResults
         /// <summary>
         /// Set the root cause of the error
         /// </summary>
+        public Error CausedBy(IError error)
+        {
+            if (error == null)
+                throw new ArgumentNullException(nameof(error));
+
+            Reasons.Add(error);
+            return this;
+        }
+
+        /// <summary>
+        /// Set the root cause of the error
+        /// </summary>
         public Error CausedBy(Exception exception)
         {
             if (exception == null)
@@ -104,6 +116,18 @@ namespace FluentResults
         /// Set the root cause of the error
         /// </summary>
         public Error CausedBy(IEnumerable<Error> errors)
+        {
+            if (errors == null)
+                throw new ArgumentNullException(nameof(errors));
+
+            Reasons.AddRange(errors);
+            return this;
+        }
+
+        /// <summary>
+        /// Set the root cause of the error
+        /// </summary>
+        public Error CausedBy(IEnumerable<IError> errors)
         {
             if (errors == null)
                 throw new ArgumentNullException(nameof(errors));
