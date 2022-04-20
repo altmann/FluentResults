@@ -265,9 +265,7 @@ namespace FluentResults
         public TResult LogIfSuccess()
         {
             if (IsSuccess)
-            {
                 return Log();
-            }
 
             return (TResult)this;
         }
@@ -278,9 +276,7 @@ namespace FluentResults
         public TResult LogIfSuccess(string context, string content = null)
         {
             if (IsSuccess)
-            {
                 return Log(context, content);
-            }
 
             return (TResult)this;
         }
@@ -291,9 +287,7 @@ namespace FluentResults
         public TResult LogIfSuccess<TContext>(string content = null)
         {
             if (IsSuccess)
-            {
                 return Log<TContext>(content);
-            }
 
             return (TResult)this;
         }
@@ -304,9 +298,7 @@ namespace FluentResults
         public TResult LogIfFailed()
         {
             if (IsFailed)
-            {
                 return Log();
-            }
 
             return (TResult)this;
         }
@@ -317,9 +309,7 @@ namespace FluentResults
         public TResult LogIfFailed(string context, string content = null)
         {
             if (IsFailed)
-            {
                 return Log(context, content);
-            }
 
             return (TResult)this;
         }
@@ -330,9 +320,7 @@ namespace FluentResults
         public TResult LogIfFailed<TContext>(string content = null)
         {
             if (IsFailed)
-            {
                 return Log<TContext>(content);
-            }
 
             return (TResult)this;
         }
