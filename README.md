@@ -360,6 +360,19 @@ result.HasException<MyCustomException>();
 result.HasException<MyCustomException>(MyCustomException => MyCustomException.MyField == 1);
 ```
 
+### Pattern Matching
+
+```csharp
+var result = Result.Fail<int>("Error 1");
+
+var outcome = result switch
+{
+     { IsFailed: true } => $"Errored because {result.Errors}",
+     { IsSuccess: true } => $"Value is {result.Value}",
+     _ => null
+};
+```
+
 ### Logging
 
 Sometimes it is necessary to log results. First create a logger:
