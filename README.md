@@ -418,6 +418,12 @@ var result2 = Result.Fail("Operation failed")
     .Log<MyLoggerContext>("More info about the result");
 ```
 
+It's also possible to specify the desired log level:
+```csharp
+var result = Result.Ok().Log(LogLevel.Debug);
+var result = Result.Fail().Log<MyContext>("Additional context", LogLevel.Error);
+```
+
 You can also log results only on successes or failures:
 
 ```csharp
