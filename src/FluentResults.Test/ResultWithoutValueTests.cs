@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.SqlTypes;
 using FluentAssertions;
 using System.Linq;
@@ -90,6 +91,31 @@ namespace FluentResults.Test
 
             // Assert
             valueResult.IsFailed.Should().BeTrue();
+        }
+        
+        [Fact]
+        public void CreateFailedResultWithListOfErrors_FailedResultWithErrors()
+        {
+            // Act
+            var errors = new List<string> {"First error message", "Second error message"};
+            var result = Result.Fail(errors);
+
+            // Assert
+            result.Reasons.Should().HaveCount(2);
+            result.Reasons[0].Should().BeOfType<Error>();
+            result.Reasons[1].Should().BeOfType<Error>();
+            result.Reasons[0].Message.Should().Be("First error message");
+            result.Reasons[1].Message.Should().Be("Second error message");
+        }
+        
+        [Fact]
+        public void Fail_WithNullEnumerableOfErrorMessages_ShouldThrow()
+        {
+            // Act
+            Action act = () => Result.Fail((IEnumerable<string>)null);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
