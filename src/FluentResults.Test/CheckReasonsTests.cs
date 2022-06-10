@@ -6,11 +6,11 @@ namespace FluentResults.Test
     public class CheckReasonsTests
     {
         class CustomException : System.Exception
-        {  
+        {
             public int Id { get; }
             public CustomException(int id) : base("Custom exception")
             {
-                     Id = id;
+                Id = id;
             }
         }
 
@@ -33,6 +33,41 @@ namespace FluentResults.Test
                 Id = id;
             }
         }
+
+        [Fact]
+        public void HasException_WithRootError()
+        {
+            var result = Result.Fail(new ExceptionalError(new CustomException(1)));
+
+            result.HasException<CustomException>().Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasExceptionWithPredicate_WithRootError()
+        {
+            var result = Result.Fail(new ExceptionalError(new CustomException(1)));
+
+            result.HasException<CustomException>(e => e.Id == 1).Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasExceptionInNestedError_WithRootError()
+        {
+            var result = Result.Ok()
+                .WithError(new ExceptionalError(new CustomException(1)));
+
+            result.HasException<CustomException>().Should().BeTrue();
+        }
+        
+        [Fact]
+        public void HasExceptionWithPredicatInNestedError_WithRootError()
+        {
+            var result = Result.Ok()
+                .WithError(new ExceptionalError(new CustomException(1)));
+
+            result.HasException<CustomException>(e => e.Id == 1).Should().BeTrue();
+        }
+
 
         [Fact]
         public void HasException_WithSearchedError()
@@ -68,7 +103,7 @@ namespace FluentResults.Test
             result.HasException<CustomException>().Should().BeTrue();
         }
 
-       [Fact]
+        [Fact]
         public void HasExceptionInVeryDeepNestedError_WithoutSearchedError()
         {
             var result = Result.Ok()
@@ -83,7 +118,7 @@ namespace FluentResults.Test
             result.HasException<CustomException>().Should().BeTrue();
         }
 
-       [Fact]
+        [Fact]
         public void HasExceptionInVeryDeepNestedErrorWithPredicate_WithoutSearchedError()
         {
             var result = Result.Ok()
