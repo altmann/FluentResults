@@ -46,6 +46,8 @@ Result successResult1 = Result.Ok();
 Result errorResult1 = Result.Fail("My error message");
 Result errorResult2 = Result.Fail(new Error("My error message"));
 Result errorResult3 = Result.Fail(new StartDateIsAfterEndDateError(startDate, endDate));
+Result errorResult4 = Result.Fail(new List<string> { "Error 1", "Error 2" });
+Result errorResult5 = Result.Fail(new List<IError> { new Error("Error 1"), new Error("Error 2") });
 ```
     
 The class `Result` is typically used by void methods which have no return value.
