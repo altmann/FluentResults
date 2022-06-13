@@ -380,12 +380,12 @@ Sometimes it is necessary to log results. First create a logger:
 ```csharp
 public class MyConsoleLogger : IResultLogger
 {
-    public void Log(string context, string content, ResultBase result)
+    public void Log(string context, string content, ResultBase result, LogLevel logLevel)
     {
         Console.WriteLine("Result: {0} {1} <{2}>", result.Reasons.Select(reason => reason.Message), content, context);
     }
 
-    public void Log<TContext>(string content, ResultBase result)
+    public void Log<TContext>(string content, ResultBase result, LogLevel logLevel)
     {
         Console.WriteLine("Result: {0} {1} <{2}>", result.Reasons.Select(reason => reason.Message), content, typeof(TContext).FullName);
     }
