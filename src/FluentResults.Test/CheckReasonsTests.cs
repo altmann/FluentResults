@@ -8,6 +8,7 @@ namespace FluentResults.Test
         class CustomException : System.Exception
         {
             public int Id { get; }
+
             public CustomException(int id) : base("Custom exception")
             {
                 Id = id;
@@ -196,6 +197,17 @@ namespace FluentResults.Test
         }
 
         [Fact]
+        public void HasErrorInNestedErrorWithPredicate_WithoutSearchedError()
+        {
+            var originalResult = Result.Fail(new NotFoundError(1));
+            var result = Result.Fail(new NotFoundError(2)
+                    .CausedBy(originalResult.Errors));
+
+            result.HasError<NotFoundError>(e => e.Id == 1).Should().BeTrue();
+            result.HasError<NotFoundError>(e => e.Id == 2).Should().BeTrue();
+        }
+
+        [Fact]
         public void HasErrorWithMetadataKey_WithSearchedError()
         {
             var result = Result.Fail(new Error("").WithMetadata("MetadataKey1", "MetadataValue1"));
@@ -208,7 +220,7 @@ namespace FluentResults.Test
         {
             var result = Result.Fail(new Error("").WithMetadata("MetadataKey1", "MetadataValue1"));
 
-            result.HasError(e => e.HasMetadata("MetadataKey1", metadataValue => (string)metadataValue == "MetadataValue1")).Should().BeTrue();
+            result.HasError(e => e.HasMetadata("MetadataKey1", metadataValue => (string) metadataValue == "MetadataValue1")).Should().BeTrue();
         }
 
         [Fact]
@@ -216,7 +228,7 @@ namespace FluentResults.Test
         {
             var result = Result.Fail(new Error(""));
 
-            result.HasError(e => e.HasMetadata("MetadataKey1", metadataValue => (string)metadataValue == "MetadataValue1")).Should().BeFalse();
+            result.HasError(e => e.HasMetadata("MetadataKey1", metadataValue => (string) metadataValue == "MetadataValue1")).Should().BeFalse();
         }
 
         [Fact]
