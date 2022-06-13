@@ -41,7 +41,9 @@ namespace FluentResults
 
         public static bool HasException<TException>(List<IError> errors, Func<TException, bool> predicate) where TException : Exception
         {
-            var anyErrors = errors.Any(e => e.Reasons.OfType<IExceptionalError>().Any(r => r.Exception is TException exceptionOfTException && predicate(exceptionOfTException)));
+            var anyErrors = errors.Any(e => (e is ExceptionalError && ((ExceptionalError)e).Exception is TException rootExceptionOfTException && predicate(rootExceptionOfTException)) ||
+                                             e.Reasons.OfType<ExceptionalError>().Any(r => r.Exception is TException exceptionOfTException && predicate(exceptionOfTException)));
+          
             if (anyErrors)
                 return true;
 
