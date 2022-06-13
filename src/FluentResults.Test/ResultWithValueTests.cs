@@ -125,7 +125,35 @@ namespace FluentResults.Test
             // Assert
             act.Should().Throw<ArgumentNullException>();
         }
-        
+
+        [Fact]
+        public void Fail_WithValidErrors_ShouldReturnFailedResult()
+        {
+            // Act
+            var errors = new List<IError> { new Error("First error message"), new Error("Second error message") };
+            var result = Result.Fail<int>(errors);
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+            result.Reasons.Should().HaveCount(2);
+            result.Reasons[0].Should().BeOfType<Error>();
+            result.Reasons[1].Should().BeOfType<Error>();
+            result.Reasons[0].Message.Should().Be("First error message");
+            result.Reasons[1].Message.Should().Be("Second error message");
+            result.ValueOrDefault.Should().Be(0);
+        }
+
+        [Fact]
+        public void Fail_WithNullEnumerableOfErrors_ShouldThrow()
+        {
+            // Act
+            Action act = () => Result.Fail<int>((IEnumerable<IError>)null);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>();
+        }
+
+
         [Fact]
         public void ValueOrDefault_WithDateTime_ShouldReturnFailedResult()
         {

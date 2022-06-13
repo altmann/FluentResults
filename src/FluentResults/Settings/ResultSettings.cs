@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
@@ -14,8 +13,6 @@ namespace FluentResults
 
         public Func<string, IError> ErrorFactory { get; set; }
         
-        public Func<IEnumerable<string>, IEnumerable<IError>> MultipleErrorFactory { get; set; }
-
         public Func<string, Exception, IExceptionalError> ExceptionalErrorFactory { get; set; }
     }
 }

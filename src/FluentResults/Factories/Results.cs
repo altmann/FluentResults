@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
@@ -44,7 +45,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given error message. Internally an error object from type <see cref="Error"/> is created. 
+        /// Creates a failed result with the given error message. Internally an error object from the error factory is created. 
         /// </summary>
         public static Result Fail(string errorMessage)
         {
@@ -54,7 +55,7 @@ namespace FluentResults
         }
         
         /// <summary>
-        /// Creates a failed result with the given error messages. Internally a list of error objects from type <see cref="Error"/> is created
+        /// Creates a failed result with the given error messages. Internally a list of error objects from the error factory is created
         /// </summary>
         public static Result Fail(IEnumerable<string> errorMessages)
         {
@@ -62,10 +63,23 @@ namespace FluentResults
                 throw new ArgumentNullException(nameof(errorMessages), "The list of error messages cannot be null");
             
             var result = new Result();
-            result.WithErrors(Settings.MultipleErrorFactory(errorMessages));
+            result.WithErrors(errorMessages.Select(Settings.ErrorFactory));
             return result;
         }
-        
+
+        /// <summary>
+        /// Creates a failed result with the given errors.
+        /// </summary>
+        public static Result Fail(IEnumerable<IError> errors)
+        {
+            if (errors == null)
+                throw new ArgumentNullException(nameof(errors), "The list of errors cannot be null");
+
+            var result = new Result();
+            result.WithErrors(errors);
+            return result;
+        }
+
         /// <summary>
         /// Creates a success result with the given value
         /// </summary>
@@ -87,7 +101,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given error message. Internally an error object from type <see cref="Error"/> is created. 
+        /// Creates a failed result with the given error message. Internally an error object from the error factory is created. 
         /// </summary>
         public static Result<TValue> Fail<TValue>(string errorMessage)
         {
@@ -97,7 +111,7 @@ namespace FluentResults
         }
         
         /// <summary>
-        /// Creates a failed result with the given error messages. Internally a list of error objects from type <see cref="Error"/> is created. 
+        /// Creates a failed result with the given error messages. Internally a list of error objects from the error factory is created. 
         /// </summary>
         public static Result<TValue> Fail<TValue>(IEnumerable<string> errorMessages)
         {
@@ -105,7 +119,20 @@ namespace FluentResults
                 throw new ArgumentNullException(nameof(errorMessages), "The list of error messages cannot be null");
             
             var result = new Result<TValue>();
-            result.WithErrors(Settings.MultipleErrorFactory(errorMessages));
+            result.WithErrors(errorMessages.Select(Settings.ErrorFactory));
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a failed result with the given errors.
+        /// </summary>
+        public static Result<TValue> Fail<TValue>(IEnumerable<IError> errors)
+        {
+            if (errors == null)
+                throw new ArgumentNullException(nameof(errors), "The list of errors cannot be null");
+
+            var result = new Result<TValue>();
+            result.WithErrors(errors);
             return result;
         }
 
