@@ -2,14 +2,17 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <Version>3.5.0.0</Version>
+    <Version>3.6.0.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		ADDED - Add methods LogIfSuccess() and LogIfFailed() #119
-        CHANGED - Add parameter content in IResultLogger #119
+		ADDED - Creating a result with multiple errors or error messages #122
+		ADDED - LogLevel can now be passed via Log(...) method #124
+		ADDED - IntelliSense support - generation of a documentation file #127
+		FIXED - HasException(...) now also search the top level errors for the exception #126
+		CHANGED - CausedBy(...) method now expect an IError and not an Error object
 	</PackageReleaseNotes>
     <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
