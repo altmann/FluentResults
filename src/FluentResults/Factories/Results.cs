@@ -49,7 +49,7 @@ namespace FluentResults
         public static Result Fail(string errorMessage)
         {
             var result = new Result();
-            result.WithError(new Error(errorMessage));
+            result.WithError(Settings.ErrorFactory(errorMessage));
             return result;
         }
         
@@ -79,7 +79,7 @@ namespace FluentResults
         public static Result<TValue> Fail<TValue>(string errorMessage)
         {
             var result = new Result<TValue>();
-            result.WithError(new Error(errorMessage));
+            result.WithError(Settings.ErrorFactory(errorMessage));
             return result;
         }
 

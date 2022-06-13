@@ -302,6 +302,22 @@ Result.Fail<int>("Failed").ToResult<float>();
 Result.Ok<int>().ToResult(); 
 ```
 
+### Set global factories for ISuccess/IError/IExceptionalError
+
+Within the FluentResults library in some scenarios an ISuccess, IError or IExceptionalError object is created. For example if the method ```Result.Fail("My Error")``` is called then internally an IError object is created. If you need to overwrite this behavior and create in this scenario a custom error class then you can set the error factory via the settings. The same extension points are also available for ISuccess and IExceptionalError. 
+
+```csharp
+Result.Setup(cfg =>
+{
+    cfg.SuccessFactory = successMessage => new Success(successMessage).WithMetadata("Timestamp", DateTime.Now);
+    
+    cfg.ErrorFactory = errorMessage => new Error(errorMessage).WithMetadata("Timestamp", DateTime.Now);
+    
+    cfg.ExceptionalErrorFactory = (errorMessage, exception) => new ExceptionalError(errorMessage ?? exception.Message, exception)
+    .WithMetadata("Timestamp", DateTime.Now);
+});
+```
+
 ### Handling/catching errors
 
 Similar to the catch block for exceptions, the checking and handling of errors within Result object is also supported using some methods: 
@@ -344,26 +360,39 @@ result.HasException<MyCustomException>();
 result.HasException<MyCustomException>(MyCustomException => MyCustomException.MyField == 1);
 ```
 
+### Pattern Matching
+
+```csharp
+var result = Result.Fail<int>("Error 1");
+
+var outcome = result switch
+{
+     { IsFailed: true } => $"Errored because {result.Errors}",
+     { IsSuccess: true } => $"Value is {result.Value}",
+     _ => null
+};
+```
+
 ### Logging
 
-Sometimes it is necessary to log results. First create a logger. 
+Sometimes it is necessary to log results. First create a logger:
 
 ```csharp
 public class MyConsoleLogger : IResultLogger
 {
-    public void Log(string context, ResultBase result)
+    public void Log(string context, string content, ResultBase result)
     {
-        Console.WriteLine("{0}", result);
+        Console.WriteLine("Result: {0} {1} <{2}>", result.Reasons.Select(reason => reason.Message), content, context);
     }
 
-    public void Log<TContext>(ResultBase result)
+    public void Log<TContext>(string content, ResultBase result)
     {
-        Console.WriteLine("{0}", result);
+        Console.WriteLine("Result: {0} {1} <{2}>", result.Reasons.Select(reason => reason.Message), content, typeof(TContext).FullName);
     }
 }
 ```
 
-Then you have to register your logger. 
+Then you must register your logger in the Result settings:
 
 ```csharp
 var myLogger = new MyConsoleLogger();
@@ -372,22 +401,32 @@ Result.Setup(cfg => {
 });
 ```
 
-Finally the logger can be used. 
+Finally the logger can be used on any result:
 
 ```csharp
 var result = Result.Fail("Operation failed")
     .Log();
 ```
 
-Additionally, a context can be passed in form of a string or of a generic type parameter. 
+Additionally, a context can be passed in form of a string or of a generic type parameter. A custom message that provide more information can also be passed as content.
 
 ```csharp
 var result = Result.Fail("Operation failed")
-    .Log("logger context");
+    .Log("logger context", "More info about the result");
 
 var result2 = Result.Fail("Operation failed")
-    .Log<MyLoggerContext>();
+    .Log<MyLoggerContext>("More info about the result");
 ```
+
+You can also log results only on successes or failures:
+
+```csharp
+Result<int> result = DoSomething();
+
+result.LogIfSuccess();
+result.LogIfFailed();
+```
+
 
 ### Asserting FluentResult objects
 

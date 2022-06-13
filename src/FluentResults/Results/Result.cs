@@ -16,7 +16,20 @@ namespace FluentResults
         }
     }
 
-    public class Result<TValue> : ResultBase<Result<TValue>>
+    public interface IResult<out TValue> : IResultBase
+    {
+        /// <summary>
+        /// Get the Value. If result is failed then an Exception is thrown because a failed result has no value. Opposite see property ValueOrDefault.
+        /// </summary>
+        TValue Value { get; }
+
+        /// <summary>
+        /// Get the Value. If result is failed then a default value is returned. Opposite see property Value.
+        /// </summary>
+        TValue ValueOrDefault { get; }
+    }
+
+    public class Result<TValue> : ResultBase<Result<TValue>>, IResult<TValue>
     {
         public Result()
         { }
@@ -24,26 +37,24 @@ namespace FluentResults
         private TValue _value;
 
         /// <summary>
-        /// Get the Value. If result is failed then a default value is returned. Opposite see property Value.
+        /// <inheritdoc/>
         /// </summary>
         public TValue ValueOrDefault => _value;
 
         /// <summary>
-        /// Get the Value. If result is failed then an Exception is thrown because a failed result has no value. Opposite see property ValueOrDefault.
+        /// <inheritdoc/>
         /// </summary>
         public TValue Value
         {
             get
             {
-                if (IsFailed)
-                    throw new InvalidOperationException("Result is in status failed. Value is not set.");
+                ThrowIfFailed();
 
                 return _value;
             }
             private set
             {
-                if (IsFailed)
-                    throw new InvalidOperationException("Result is in status failed. Value is not set.");
+                ThrowIfFailed();
 
                 _value = value;
             }
@@ -90,6 +101,12 @@ namespace FluentResults
         public static implicit operator Result<TValue>(Result result)
         {
             return result.ToResult<TValue>();
+        }
+
+        private void ThrowIfFailed()
+        {
+            if (IsFailed)
+                throw new InvalidOperationException($"Result is in status failed. Value is not set. Having: {ReasonFormat.ErrorReasonsToString(Errors)}");
         }
     }
 }

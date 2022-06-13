@@ -103,7 +103,23 @@ namespace FluentResults.Test
 
             action.Should()
                 .Throw<InvalidOperationException>()
-                .WithMessage("Result is in status failed. Value is not set.");
+                .WithMessage("Result is in status failed. Value is not set. Having: Error with Message='Error message'");
+        }
+
+        [Fact]
+        public void Value_WithResultInFailedStateWithMultipleErrors_ShouldThrowException()
+        {
+            // Act
+            var result = Result.Fail<int>("Error message")
+                               .WithError("Actual error");
+
+            // Assert
+
+            Action action = () => { var v = result.Value; };
+
+            action.Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage("Result is in status failed. Value is not set. Having: Error with Message='Error message'; Error with Message='Actual error'");
         }
 
         [Fact]
@@ -117,7 +133,7 @@ namespace FluentResults.Test
             // Assert
             action.Should()
                 .Throw<InvalidOperationException>()
-                .WithMessage("Result is in status failed. Value is not set.");
+                .WithMessage("Result is in status failed. Value is not set. Having: Error with Message='Error message'");
         }
 
         [Fact]

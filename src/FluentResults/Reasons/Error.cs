@@ -75,7 +75,7 @@ namespace FluentResults
             if (exception == null)
                 throw new ArgumentNullException(nameof(exception));
 
-            Reasons.Add(new ExceptionalError(exception));
+            Reasons.Add(Result.Settings.ExceptionalErrorFactory(null, exception));
             return this;
         }
 
@@ -87,7 +87,7 @@ namespace FluentResults
             if (exception == null)
                 throw new ArgumentNullException(nameof(exception));
 
-            Reasons.Add(new ExceptionalError(message, exception));
+            Reasons.Add(Result.Settings.ExceptionalErrorFactory(message, exception));
             return this;
         }
 
@@ -96,7 +96,7 @@ namespace FluentResults
         /// </summary>
         public Error CausedBy(string message)
         {
-            Reasons.Add(new Error(message));
+            Reasons.Add(Result.Settings.ErrorFactory(message));
             return this;
         }
 
@@ -120,7 +120,7 @@ namespace FluentResults
             if (errors == null)
                 throw new ArgumentNullException(nameof(errors));
 
-            Reasons.AddRange(errors.Select(errorMessage => new Error(errorMessage)));
+            Reasons.AddRange(errors.Select(errorMessage => Result.Settings.ErrorFactory(errorMessage)));
             return this;
         }
 
@@ -159,12 +159,12 @@ namespace FluentResults
 
     internal class ReasonFormat
     {
-        public static string ErrorReasonsToString(List<IError> errorReasons)
+        public static string ErrorReasonsToString(IReadOnlyCollection<IError> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }
 
-        public static string ReasonsToString(List<IReason> errorReasons)
+        public static string ReasonsToString(IReadOnlyCollection<IReason> errorReasons)
         {
             return string.Join("; ", errorReasons);
         }
