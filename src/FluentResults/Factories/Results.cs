@@ -44,12 +44,25 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given error message. Internally an error object from type `Error` is created. 
+        /// Creates a failed result with the given error message. Internally an error object from type <see cref="Error"/> is created. 
         /// </summary>
         public static Result Fail(string errorMessage)
         {
             var result = new Result();
             result.WithError(Settings.ErrorFactory(errorMessage));
+            return result;
+        }
+        
+        /// <summary>
+        /// Creates a failed result with the given error messages. Internally a list of error objects from type <see cref="Error"/> is created
+        /// </summary>
+        public static Result Fail(IEnumerable<string> errorMessages)
+        {
+            if (errorMessages == null)
+                throw new ArgumentNullException(nameof(errorMessages), "The list of error messages cannot be null");
+            
+            var result = new Result();
+            result.WithErrors(Settings.MultipleErrorFactory(errorMessages));
             return result;
         }
         
@@ -74,12 +87,25 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given error message. Internally an error object from type Error is created. 
+        /// Creates a failed result with the given error message. Internally an error object from type <see cref="Error"/> is created. 
         /// </summary>
         public static Result<TValue> Fail<TValue>(string errorMessage)
         {
             var result = new Result<TValue>();
             result.WithError(Settings.ErrorFactory(errorMessage));
+            return result;
+        }
+        
+        /// <summary>
+        /// Creates a failed result with the given error messages. Internally a list of error objects from type <see cref="Error"/> is created. 
+        /// </summary>
+        public static Result<TValue> Fail<TValue>(IEnumerable<string> errorMessages)
+        {
+            if (errorMessages == null)
+                throw new ArgumentNullException(nameof(errorMessages), "The list of error messages cannot be null");
+            
+            var result = new Result<TValue>();
+            result.WithErrors(Settings.MultipleErrorFactory(errorMessages));
             return result;
         }
 
