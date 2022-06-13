@@ -1,5 +1,6 @@
 using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -97,7 +98,34 @@ namespace FluentResults.Test
             result.IsFailed.Should().BeTrue();
             result.ValueOrDefault.Should().Be(0);
         }
+        
+        [Fact]
+        public void Fail_WithValidErrorMessages_ShouldReturnFailedResult()
+        {
+            // Act
+            var errors = new List<string> {"First error message", "Second error message"};
+            var result = Result.Fail<int>(errors);
 
+            // Assert
+            result.IsFailed.Should().BeTrue();
+            result.Reasons.Should().HaveCount(2);
+            result.Reasons[0].Should().BeOfType<Error>();
+            result.Reasons[1].Should().BeOfType<Error>();
+            result.Reasons[0].Message.Should().Be("First error message");
+            result.Reasons[1].Message.Should().Be("Second error message");
+            result.ValueOrDefault.Should().Be(0);
+        }
+        
+        [Fact]
+        public void Fail_WithNullEnumerableOfErrorMessages_ShouldThrow()
+        {
+            // Act
+            Action act = () => Result.Fail<int>((IEnumerable<string>)null);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>();
+        }
+        
         [Fact]
         public void ValueOrDefault_WithDateTime_ShouldReturnFailedResult()
         {
@@ -136,7 +164,7 @@ namespace FluentResults.Test
 
             // Assert
 
-            Action action = () => { var v = result.Value; };
+            Action action = () => { var _ = result.Value; };
 
             action.Should()
                 .Throw<InvalidOperationException>()
@@ -152,7 +180,7 @@ namespace FluentResults.Test
 
             // Assert
 
-            Action action = () => { var v = result.Value; };
+            Action action = () => { var _ = result.Value; };
 
             action.Should()
                 .Throw<InvalidOperationException>()
@@ -186,7 +214,7 @@ namespace FluentResults.Test
         }
 
         [Fact]
-        public void ToResult_ToAntotherValueType_ReturnFailedResult()
+        public void ToResult_ToAnotherValueType_ReturnFailedResult()
         {
             var valueResult = Result.Fail<int>("First error message");
 
@@ -198,7 +226,7 @@ namespace FluentResults.Test
         }
 
         [Fact]
-        public void ToResult_ToAntotherValueTypeWithOkResultAndNoConverter_ReturnFailedResult()
+        public void ToResult_ToAnotherValueTypeWithOkResultAndNoConverter_ReturnFailedResult()
         {
             var valueResult = Result.Fail<int>("Failed");
 
@@ -210,7 +238,7 @@ namespace FluentResults.Test
         }
 
         [Fact]
-        public void ToResult_ToAntotherValueTypeWithOkResultAndConverter_ReturnSuccessResult()
+        public void ToResult_ToAnotherValueTypeWithOkResultAndConverter_ReturnSuccessResult()
         {
             var valueResult = Result.Ok(4);
 
@@ -266,7 +294,7 @@ namespace FluentResults.Test
             var exception = new Exception("ex message");
             int Action() => throw exception;
 
-            var result = Result.Try(Action, e => new Error("xy"));
+            var result = Result.Try(Action, _ => new Error("xy"));
 
             result.IsSuccess.Should().BeFalse();
             result.Errors.Should().HaveCount(1);
@@ -308,7 +336,7 @@ namespace FluentResults.Test
             var exception = new Exception("ex message");
             Task<int> Action() => throw exception;
 
-            var result = await Result.Try(Action, e => new Error("xy"));
+            var result = await Result.Try(Action, _ => new Error("xy"));
 
             result.IsSuccess.Should().BeFalse();
             result.Errors.Should().HaveCount(1);
