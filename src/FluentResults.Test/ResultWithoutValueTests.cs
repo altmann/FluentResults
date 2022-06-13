@@ -35,6 +35,12 @@ namespace FluentResults.Test
             okResult.Reasons.Should().HaveCount(1);
             okResult.Reasons.First().Should().BeOfType<Success>();
             okResult.Reasons.First().Message.Should().Be("First success message");
+
+            okResult.Successes.Should().HaveCount(1);
+            okResult.Successes.First().Should().BeOfType<Success>();
+            okResult.Successes.First().Message.Should().Be("First success message");
+
+            okResult.Errors.Should().BeEmpty();
         }
 
         [Fact]
@@ -51,6 +57,8 @@ namespace FluentResults.Test
             okResult.Reasons[1].Should().BeOfType<Success>();
             okResult.Reasons[0].Message.Should().Be("First success message");
             okResult.Reasons[1].Message.Should().Be("Second success message");
+
+            okResult.Errors.Should().BeEmpty();
         }
 
         [Fact]

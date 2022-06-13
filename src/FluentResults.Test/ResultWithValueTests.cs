@@ -51,6 +51,43 @@ namespace FluentResults.Test
         }
 
         [Fact]
+        public void CreateOkResultWithSuccess_SuccessResultWithSuccess()
+        {
+            // Act
+            var okResult = Result.Ok<int>(default)
+                .WithSuccess("First success message");
+
+            // Assert
+            okResult.Reasons.Should().HaveCount(1);
+            okResult.Reasons.First().Should().BeOfType<Success>();
+            okResult.Reasons.First().Message.Should().Be("First success message");
+
+            okResult.Successes.Should().HaveCount(1);
+            okResult.Successes.First().Should().BeOfType<Success>();
+            okResult.Successes.First().Message.Should().Be("First success message");
+
+            okResult.Errors.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void CreateOkResultWith2Successes_SuccessResultWith2Successes()
+        {
+            // Act
+            var okResult = Result.Ok<int>(default)
+                .WithSuccess("First success message")
+                .WithSuccess("Second success message");
+
+            // Assert
+            okResult.Reasons.Should().HaveCount(2);
+            okResult.Reasons[0].Should().BeOfType<Success>();
+            okResult.Reasons[1].Should().BeOfType<Success>();
+            okResult.Reasons[0].Message.Should().Be("First success message");
+            okResult.Reasons[1].Message.Should().Be("Second success message");
+
+            okResult.Errors.Should().BeEmpty();
+        }
+
+        [Fact]
         public void Fail_WithValidErrorMessage_ShouldReturnFailedResult()
         {
             // Act
