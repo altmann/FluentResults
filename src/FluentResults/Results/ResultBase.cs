@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
@@ -230,19 +231,27 @@ namespace FluentResults
         /// <summary>
         /// Log the result. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult Log()
+        public TResult Log(LogLevel logLevel = LogLevel.Information)
         {
-            return Log(string.Empty);
+            return Log(string.Empty, null, logLevel);
+        }
+
+        /// <summary>
+        /// Log the result. Configure the logger via Result.Setup(..)
+        /// </summary>
+        public TResult Log(string context, LogLevel logLevel = LogLevel.Information)
+        {
+            return Log(context, null, logLevel);
         }
 
         /// <summary>
         /// Log the result with a specific logger context. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult Log(string context, string content = null)
+        public TResult Log(string context, string content, LogLevel logLevel = LogLevel.Information)
         {
             var logger = Result.Settings.Logger;
 
-            logger.Log(context, content, this);
+            logger.Log(context, content, this, logLevel);
 
             return (TResult)this;
         }
@@ -250,11 +259,19 @@ namespace FluentResults
         /// <summary>
         /// Log the result with a typed context. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult Log<TContext>(string content = null)
+        public TResult Log<TContext>(LogLevel logLevel = LogLevel.Information)
+        {
+            return Log<TContext>(null, logLevel);
+        }
+
+        /// <summary>
+        /// Log the result with a typed context. Configure the logger via Result.Setup(..)
+        /// </summary>
+        public TResult Log<TContext>(string content, LogLevel logLevel = LogLevel.Information)
         {
             var logger = Result.Settings.Logger;
 
-            logger.Log<TContext>(content, this);
+            logger.Log<TContext>(content, this, logLevel);
 
             return (TResult)this;
         }
@@ -262,10 +279,10 @@ namespace FluentResults
         /// <summary>
         /// Log the result only when it is successful. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult LogIfSuccess()
+        public TResult LogIfSuccess(LogLevel logLevel = LogLevel.Information)
         {
             if (IsSuccess)
-                return Log();
+                return Log(logLevel);
 
             return (TResult)this;
         }
@@ -273,10 +290,10 @@ namespace FluentResults
         /// <summary>
         /// Log the result with a specific logger context only when it is successful. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult LogIfSuccess(string context, string content = null)
+        public TResult LogIfSuccess(string context, string content = null, LogLevel logLevel = LogLevel.Information)
         {
             if (IsSuccess)
-                return Log(context, content);
+                return Log(context, content, logLevel);
 
             return (TResult)this;
         }
@@ -284,10 +301,10 @@ namespace FluentResults
         /// <summary>
         /// Log the result with a typed context only when it is successful. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult LogIfSuccess<TContext>(string content = null)
+        public TResult LogIfSuccess<TContext>(string content = null, LogLevel logLevel = LogLevel.Information)
         {
             if (IsSuccess)
-                return Log<TContext>(content);
+                return Log<TContext>(content, logLevel);
 
             return (TResult)this;
         }
@@ -295,10 +312,10 @@ namespace FluentResults
         /// <summary>
         /// Log the result only when it is failed. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult LogIfFailed()
+        public TResult LogIfFailed(LogLevel logLevel = LogLevel.Information)
         {
             if (IsFailed)
-                return Log();
+                return Log(logLevel);
 
             return (TResult)this;
         }
@@ -306,10 +323,10 @@ namespace FluentResults
         /// <summary>
         /// Log the result with a specific logger context only when it is failed. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult LogIfFailed(string context, string content = null)
+        public TResult LogIfFailed(string context, string content = null, LogLevel logLevel = LogLevel.Information)
         {
             if (IsFailed)
-                return Log(context, content);
+                return Log(context, content, logLevel);
 
             return (TResult)this;
         }
@@ -317,10 +334,10 @@ namespace FluentResults
         /// <summary>
         /// Log the result with a typed context only when it is failed. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult LogIfFailed<TContext>(string content = null)
+        public TResult LogIfFailed<TContext>(string content = null, LogLevel logLevel = LogLevel.Information)
         {
             if (IsFailed)
-                return Log<TContext>(content);
+                return Log<TContext>(content, logLevel);
 
             return (TResult)this;
         }
