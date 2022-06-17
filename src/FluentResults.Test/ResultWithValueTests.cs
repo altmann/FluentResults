@@ -372,5 +372,40 @@ namespace FluentResults.Test
             var error = result.Errors.First();
             error.Message.Should().Be("xy");
         }
+        
+        [Fact]
+        public void Implicit_conversion_T_is_converted_to_Success_result_of_T()
+        {
+            string value = "result";
+
+            Result<string> result = value;
+
+            result.IsSuccess.Should().BeTrue();
+            result.IsFailed.Should().BeFalse();
+            result.Reasons.Should().BeEmpty();
+            result.Errors.Should().BeEmpty();
+            
+            result.Value.Should().Be(value);
+            result.Value.Should().BeOfType<string>();
+            
+            result.ValueOrDefault.Should().Be(value);
+            result.ValueOrDefault.Should().BeOfType<string>();
+        }
+        
+        [Fact]
+        public void Implicit_conversion_Null_is_converted_to_Success_result_of_Null()
+        {
+
+            Result<object> result = (object)null;
+
+            result.IsSuccess.Should().BeTrue();
+            result.IsFailed.Should().BeFalse();
+            result.Reasons.Should().BeEmpty();
+            result.Errors.Should().BeEmpty();
+            
+            result.Value.Should().Be(null);
+            
+            result.ValueOrDefault.Should().Be(null);
+        }
     }
 }
