@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
@@ -107,7 +108,34 @@ namespace FluentResults
         {
             return Result.Ok(value);
         }
-
+        
+        /// <summary>
+        /// Deconstruct Result
+        /// </summary>
+        /// <param name="isSuccess"></param>
+        /// <param name="isFailed"></param>
+        /// <param name="value"></param>
+        public void Deconstruct(out bool isSuccess, out bool isFailed, out TValue value)
+        {
+            isSuccess = IsSuccess;
+            isFailed = IsFailed;
+            value = IsSuccess ? Value : default;
+        }
+        /// <summary>
+        /// Deconstruct Result
+        /// </summary>
+        /// <param name="isSuccess"></param>
+        /// <param name="isFailed"></param>
+        /// <param name="value"></param>
+        /// <param name="errors"></param>
+        public void Deconstruct(out bool isSuccess, out bool isFailed, out TValue value, out List<IError> errors)
+        {
+            isSuccess = IsSuccess;
+            isFailed = IsFailed;
+            value = IsSuccess ? Value : default;
+            errors = IsFailed ? Errors : default;
+        }
+        
         private void ThrowIfFailed()
         {
             if (IsFailed)

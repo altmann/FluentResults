@@ -15,7 +15,7 @@ namespace FluentResults.Test
         public void Simple()
         {
             var voidResult = Result.Ok();
-            
+
             voidResult = Result.Ok()
                 .WithSuccess("This is a success")
                 .WithSuccess("This is a second success");
@@ -48,6 +48,13 @@ namespace FluentResults.Test
 
             IEnumerable<Result<int>> results2 = new List<Result<int>>();
             Result<IEnumerable<int>> mergedResult2 = results.Merge();
+
+            var (isSuccess, isFailed) = Result.Ok();
+            var (isSuccess0, isFailed0, errors0) = Result.Ok();
+            var (isSuccess1, isFailed1, value1) = Result.Ok(500);
+            var (isSuccess2, _, value2) = Result.Ok(500);
+            var (isSuccess3, _, errors3) = Result.Fail("First error");
+            var (isSuccess4, _, value4, errors4) = Result.Fail<int>("First error");
         }
 
         public void TestExtensions()
