@@ -103,6 +103,11 @@ namespace FluentResults
             return result.ToResult<TValue>();
         }
 
+        public static implicit operator Result<TValue>(TValue value)
+        {
+            return Result.Ok(value);
+        }
+
         private void ThrowIfFailed()
         {
             if (IsFailed)
