@@ -304,6 +304,13 @@ Result.Fail<int>("Failed").ToResult<float>();
 Result.Ok<int>().ToResult(); 
 ```
 
+### Implicit conversion from T to success result ```Result<T>```
+
+```csharp
+string myString = "hello world";
+Result<T> result = myString;
+```
+
 ### Set global factories for ISuccess/IError/IExceptionalError
 
 Within the FluentResults library in some scenarios an ISuccess, IError or IExceptionalError object is created. For example if the method ```Result.Fail("My Error")``` is called then internally an IError object is created. If you need to overwrite this behavior and create in this scenario a custom error class then you can set the error factory via the settings. The same extension points are also available for ISuccess and IExceptionalError. 
