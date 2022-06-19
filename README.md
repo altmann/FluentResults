@@ -46,6 +46,8 @@ Result successResult1 = Result.Ok();
 Result errorResult1 = Result.Fail("My error message");
 Result errorResult2 = Result.Fail(new Error("My error message"));
 Result errorResult3 = Result.Fail(new StartDateIsAfterEndDateError(startDate, endDate));
+Result errorResult4 = Result.Fail(new List<string> { "Error 1", "Error 2" });
+Result errorResult5 = Result.Fail(new List<IError> { new Error("Error 1"), new Error("Error 2") });
 ```
     
 The class `Result` is typically used by void methods which have no return value.
@@ -350,7 +352,7 @@ result.HasSuccess<MyCustomSuccess>(success => success.MyField == 3);
 
 ### Handling/catching exceptions
 
-Same has the handling of errors, the checking and handling of exceptions within Result object is also supported using some methods: 
+Checking if a result object contains an error with an specific exception type can be done with the method `HasException()`
 
 ```csharp
 // check if the Result object contains an exception from a specific type
@@ -380,12 +382,12 @@ Sometimes it is necessary to log results. First create a logger:
 ```csharp
 public class MyConsoleLogger : IResultLogger
 {
-    public void Log(string context, string content, ResultBase result)
+    public void Log(string context, string content, ResultBase result, LogLevel logLevel)
     {
         Console.WriteLine("Result: {0} {1} <{2}>", result.Reasons.Select(reason => reason.Message), content, context);
     }
 
-    public void Log<TContext>(string content, ResultBase result)
+    public void Log<TContext>(string content, ResultBase result, LogLevel logLevel)
     {
         Console.WriteLine("Result: {0} {1} <{2}>", result.Reasons.Select(reason => reason.Message), content, typeof(TContext).FullName);
     }
