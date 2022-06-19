@@ -181,7 +181,7 @@ namespace FluentResults.Test
             var valueOrDefault = result.ValueOrDefault;
 
             // Assert
-            valueOrDefault.Should().Be(null);
+            valueOrDefault.Should().BeNull();
         }
 
         [Fact]
@@ -395,7 +395,6 @@ namespace FluentResults.Test
         [Fact]
         public void Implicit_conversion_Null_is_converted_to_Success_result_of_Null()
         {
-
             Result<object> result = (object)null;
 
             result.IsSuccess.Should().BeTrue();
@@ -403,9 +402,8 @@ namespace FluentResults.Test
             result.Reasons.Should().BeEmpty();
             result.Errors.Should().BeEmpty();
             
-            result.Value.Should().Be(null);
-            
-            result.ValueOrDefault.Should().Be(null);
+            result.Value.Should().BeNull();
+            result.ValueOrDefault.Should().BeNull();
         }
     }
 }
