@@ -405,5 +405,69 @@ namespace FluentResults.Test
             result.Value.Should().BeNull();
             result.ValueOrDefault.Should().BeNull();
         }
+        
+         [Fact]
+        public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed()
+        {
+            var (isSuccess, isFailed) = Result.Ok(true);
+
+            isSuccess.Should().Be(true);
+            isFailed.Should().Be(false);
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Fail_to_isSuccess_and_isFailed()
+        {
+            var (isSuccess, isFailed) = Result.Fail<bool>("fail");
+
+            isSuccess.Should().Be(false);
+            isFailed.Should().Be(true);
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed_and_value()
+        {
+            var (isSuccess, isFailed, value) = Result.Ok(100);
+
+            isSuccess.Should().Be(true);
+            isFailed.Should().Be(false);
+            value.Should().Be(100);
+        }
+        
+        [Fact]
+        public void Can_deconstruct_generic_Fail_to_isSuccess_and_isFailed_and_value()
+        {
+            var (isSuccess, isFailed, value) = Result.Fail<int>("fail");
+
+            isSuccess.Should().Be(false);
+            isFailed.Should().Be(true);
+            value.Should().Be(default);
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed_and_value_with_errors()
+        {
+            var (isSuccess, isFailed, value, errors) = Result.Ok(100);
+
+            isSuccess.Should().Be(true);
+            isFailed.Should().Be(false);
+            value.Should().Be(100);
+            errors.Should().BeNull();
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Fail_to_isSuccess_and_isFailed_and_errors_with_value()
+        {
+            var error = new Error("fail");
+
+            var (isSuccess, isFailed, value, errors) = Result.Fail<bool>(error);
+
+            isSuccess.Should().Be(false);
+            isFailed.Should().Be(true);
+            value.Should().Be(default);
+
+            errors.Count.Should().Be(1);
+            errors.FirstOrDefault().Should().Be(error);
+        }
     }
 }
