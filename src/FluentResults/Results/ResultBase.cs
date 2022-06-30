@@ -138,6 +138,31 @@ namespace FluentResults
         {
             return ResultHelper.HasSuccess(Successes, predicate);
         }
+
+        /// <summary>
+        /// Deconstruct Result 
+        /// </summary>
+        /// <param name="isSuccess"></param>
+        /// <param name="isFailed"></param>
+        public void Deconstruct(out bool isSuccess, out bool isFailed)
+        {
+            isSuccess = IsSuccess;
+            isFailed = IsFailed;
+        }
+        
+        /// <summary>
+        /// Deconstruct Result
+        /// </summary>
+        /// <param name="isSuccess"></param>
+        /// <param name="isFailed"></param>
+        /// <param name="errors"></param>
+        public void Deconstruct(out bool isSuccess, out bool isFailed, out List<IError> errors)
+        {
+            isSuccess = IsSuccess;
+            isFailed = IsFailed;
+            errors = IsFailed ? Errors : default;
+        }
+
     }
 
     public abstract class ResultBase<TResult> : ResultBase

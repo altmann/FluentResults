@@ -353,5 +353,46 @@ namespace FluentResults.Test
             var error = result.Errors.First();
             error.Message.Should().Be("xy");
         }
+        
+        [Fact]
+        public void Can_deconstruct_non_generic_Ok_to_isSuccess_and_isFailed()
+        {
+            var (isSuccess, isFailed) = Result.Ok();
+
+            isSuccess.Should().Be(true);
+            isFailed.Should().Be(false);
+        }
+
+        [Fact]
+        public void Can_deconstruct_non_generic_Fail_to_isSuccess_and_isFailed()
+        {
+            var (isSuccess, isFailed) = Result.Fail("fail");
+
+            isSuccess.Should().Be(false);
+            isFailed.Should().Be(true);
+        }
+
+        [Fact]
+        public void Can_deconstruct_non_generic_Ok_to_isSuccess_and_isFailed_and_errors()
+        {
+            var (isSuccess, isFailed, errors) = Result.Ok();
+
+            isSuccess.Should().Be(true);
+            isFailed.Should().Be(false);
+            errors.Should().BeNull();
+        }
+
+        [Fact]
+        public void Can_deconstruct_non_generic_Fail_to_isSuccess_and_isFailed_and_errors()
+        {
+            var error = new Error("fail");
+            var (isSuccess, isFailed, errors) = Result.Fail(error);
+
+            isSuccess.Should().Be(false);
+            isFailed.Should().Be(true);
+            
+            errors.Count.Should().Be(1);
+            errors.FirstOrDefault().Should().Be(error);
+        }
     }
 }
