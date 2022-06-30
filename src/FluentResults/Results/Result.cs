@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
@@ -7,6 +8,33 @@ namespace FluentResults
     {
         public Result()
         { }
+
+        /// <summary>
+        /// Map all errors of the result via errorMapper
+        /// </summary>
+        /// <param name="errorMapper"></param>
+        /// <returns></returns>
+        public Result MapErrors(Func<IError, IError> errorMapper)
+        {
+            if (IsSuccess)
+                return this;
+            
+            return new Result()
+                .WithErrors(Errors.Select(errorMapper))
+                .WithSuccesses(Successes);
+        }
+
+        /// <summary>
+        /// Map all successes of the result via successMapper
+        /// </summary>
+        /// <param name="successMapper"></param>
+        /// <returns></returns>
+        public Result MapSuccesses(Func<ISuccess, ISuccess> successMapper)
+        {
+            return new Result()
+                .WithErrors(Errors)
+                .WithSuccesses(Successes.Select(successMapper));
+        }
 
         public Result<TNewValue> ToResult<TNewValue>(TNewValue newValue = default)
         {
@@ -67,6 +95,34 @@ namespace FluentResults
         {
             Value = value;
             return this;
+        }
+
+        /// <summary>
+        /// Map all errors of the result via errorMapper
+        /// </summary>
+        /// <param name="errorMapper"></param>
+        /// <returns></returns>
+        public Result<TValue> MapErrors(Func<IError, IError> errorMapper)
+        {
+            if (IsSuccess)
+                return this;
+
+            return new Result<TValue>()
+                .WithErrors(Errors.Select(errorMapper))
+                .WithSuccesses(Successes);
+        }
+
+        /// <summary>
+        /// Map all successes of the result via successMapper
+        /// </summary>
+        /// <param name="successMapper"></param>
+        /// <returns></returns>
+        public Result<TValue> MapSuccesses(Func<ISuccess, ISuccess> successMapper)
+        {
+            return new Result<TValue>()
+                .WithValue(ValueOrDefault)
+                .WithErrors(Errors)
+                .WithSuccesses(Successes.Select(successMapper));
         }
 
         /// <summary>

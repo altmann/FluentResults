@@ -8,6 +8,10 @@ namespace FluentResults.Test
         public CustomError() : base("Custom message")
         {
         }
+
+        public CustomError(string message) : base(message)
+        {
+        }
     }
 
     public class Playground

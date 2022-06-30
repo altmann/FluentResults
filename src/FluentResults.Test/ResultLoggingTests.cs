@@ -290,5 +290,72 @@ namespace FluentResults.Test
             logger.LoggedContent.Should().BeNull();
             logger.LoggedResult.Should().BeNull();
         }
+
+        [Fact]
+        public void FailedResult_MapErrors()
+        {
+            var result = Result.Fail("Failure 1")
+                .WithSuccess("Success 1");
+
+            result = result.MapErrors(e => new CustomError("Prefix: " + e.Message));
+
+            result.Should().BeOfType<Result>();
+
+            result.Errors.Should().HaveCount(1);
+            result.Errors[0].Message.Should().Be("Prefix: Failure 1");
+
+            result.Successes.Should().HaveCount(1);
+            result.Successes[0].Message.Should().Be("Success 1");
+        }
+
+        [Fact]
+        public void FailedValueResult_MapErrors()
+        {
+            var result = Result.Fail<int>("Failure 1")
+                .WithSuccess("Success 1");
+
+            result = result.MapErrors(e => new CustomError("Prefix: " + e.Message));
+
+            result.Should().BeOfType<Result<int>>();
+
+            result.Errors.Should().HaveCount(1);
+            result.Errors[0].Message.Should().Be("Prefix: Failure 1");
+
+            result.Successes.Should().HaveCount(1);
+            result.Successes[0].Message.Should().Be("Success 1");
+        }
+
+        [Fact]
+        public void SuccessValueResult_MapSuccesses()
+        {
+            var result = Result.Ok(5)
+                .WithSuccess("Success 1");
+
+            result = result.MapSuccesses(e => new Success("Prefix: " + e.Message));
+
+            result.Should().BeOfType<Result<int>>();
+            result.Successes.Should().HaveCount(1);
+            result.Successes[0].Message.Should().Be("Prefix: Success 1");
+
+            result.Errors.Should().BeEmpty();
+
+            result.Value.Should().Be(5);
+        }
+
+        [Fact]
+        public void SuccessResult_MapSuccesses()
+        {
+            var result = Result.Ok()
+                .WithSuccess("Success 1");
+
+            result = result.MapSuccesses(e => new Success("Prefix: " + e.Message));
+
+            result.Should().BeOfType<Result>();
+
+            result.Successes.Should().HaveCount(1);
+            result.Successes[0].Message.Should().Be("Prefix: Success 1");
+
+            result.Errors.Should().BeEmpty();
+        }
     }
 }
