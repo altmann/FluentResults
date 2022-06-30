@@ -327,6 +327,22 @@ Result.Setup(cfg =>
 });
 ```
 
+### Mapping errors and successes
+
+If you want to add some information to all successes in a result you can use `MapSuccesses(...)` on a result object. 
+
+```csharp
+var result = Result.Ok().WithSuccess("Success 1");
+var result2 = result.MapSuccesses(e => new Success("Prefix: " + e.Message));
+```
+
+If you want to add some information to all errors in a result you can use `MapErrors(...)` on a result object. 
+
+```csharp
+var result = Result.Fail("Error 1");
+var result2 = result.MapErrors(e => new Error("Prefix: " + e.Message));
+```
+
 ### Handling/catching errors
 
 Similar to the catch block for exceptions, the checking and handling of errors within Result object is also supported using some methods: 
@@ -380,6 +396,14 @@ var outcome = result switch
      { IsSuccess: true } => $"Value is {result.Value}",
      _ => null
 };
+```
+
+### Deconstruct Operators
+
+```csharp
+var (isSuccess, isFailed, value, errors) = Result.Fail<bool>("Failure 1");
+
+var (isSuccess, isFailed, errors) = Result.Fail("Failure 1");
 ```
 
 ### Logging
