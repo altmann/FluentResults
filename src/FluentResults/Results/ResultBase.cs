@@ -253,6 +253,16 @@ namespace FluentResults
             return WithSuccess(new TSuccess());
         }
 
+        public TResult WithSuccesses(IEnumerable<ISuccess> successes)
+        {
+            foreach (var success in successes)
+            {
+                WithSuccess(success);
+            }
+
+            return (TResult)this;
+        }
+
         /// <summary>
         /// Log the result. Configure the logger via Result.Setup(..)
         /// </summary>
