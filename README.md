@@ -278,6 +278,18 @@ var result3 = Result.Ok<int>();
 var mergedResult = Result.Merge(result1, result2, result3);
 ```
 
+A list of results can be merged to one result with the extension method `Merge()`. 
+
+```csharp
+var result1 = Result.Ok();
+var result2 = Result.Fail("first error");
+var result3 = Result.Ok<int>();
+
+var results = new List<Result> { result1, result2, result3 };
+
+var mergedResult = results.Merge();
+```
+
 ### Converting
 
 A result object can be converted to another result object with methods `ToResult()` and `ToResult<TValue>()`.
