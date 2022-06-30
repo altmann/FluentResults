@@ -348,7 +348,7 @@ var result = Result.Ok().WithSuccess("Success 1");
 var result2 = result.MapSuccesses(e => new Success("Prefix: " + e.Message));
 ```
 
-If you want to add some information to all errors in a result you can use `MapErrors(...)` on a result object. 
+If you want to add some information to all errors in a result you can use `MapErrors(...)` on a result object. This method only iterate through the first level of errors, the root cause errors (in error.Reasons) are not changed. 
 
 ```csharp
 var result = Result.Fail("Error 1");
