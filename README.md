@@ -529,6 +529,10 @@ Here are some samples and best practices to be followed while using FluentResult
 - [Flexible Error Handling w/ the Result Class by Khalil Stemmler](https://khalilstemmler.com/articles/enterprise-typescript-nodejs/handling-errors-result-class/)
 - [Combining ASP.NET Core validation attributes with Value Objects by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/combining-asp-net-core-attributes-with-value-objects/)
 
+## Donate
+
+I love this project but implementing features, answering issues or maintaining ci/release pipelines takes time - this is my freetime. If you like FluentResult and you find it useful, consider making a donation. Click on the sponsor button on the top right side. 
+
 ## Contributors
 
 Thanks to all the contributers and to all the people who gave feedback!
