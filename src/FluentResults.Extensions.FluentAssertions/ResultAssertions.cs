@@ -6,6 +6,17 @@ using FluentAssertions.Primitives;
 
 namespace FluentResults.Extensions.FluentAssertions
 {
+    public static class ErrorMessageComparisonLogics
+    {
+        public static Func<string, string, bool> Equal = (actual, expected) => actual == expected;
+        public static Func<string, string, bool> ActualContainsExpected = (actual, expected) => actual.Contains(expected);
+    }
+
+    public static class FluentResultAssertionsConfig
+    {
+        public static Func<string, string, bool> ErrorMessageComparison { get; set; } = ErrorMessageComparisonLogics.Equal;
+    }
+
     public class ResultAssertions : ReferenceTypeAssertions<Result, ResultAssertions>
     {
         static ResultAssertions()
@@ -43,23 +54,27 @@ namespace FluentResults.Extensions.FluentAssertions
             return new AndWhichConstraint<ResultAssertions, Result>(this, Subject);
         }
 
-        public AndWhichConstraint<ResultAssertions, Result> HaveReason(string message, string because = "", params object[] becauseArgs)
+        public AndWhichConstraint<ResultAssertions, Result> HaveReason(string message, Func<string, string, bool> errorMessageComparison = null, string because = "", params object[] becauseArgs)
         {
+            errorMessageComparison = errorMessageComparison ?? FluentResultAssertionsConfig.ErrorMessageComparison;
+
             Execute.Assertion
                 .BecauseOf(because, becauseArgs)
                 .Given(() => Subject.Reasons)
-                .ForCondition(reasons => reasons.Any(reason => reason.Message.Contains(message)))
+                .ForCondition(reasons => reasons.Any(reason => errorMessageComparison(reason.Message, message)))
                 .FailWith("Expected result to contain reason with message containing {0}, but found reasons '{1}'", message, Subject.Reasons);
 
             return new AndWhichConstraint<ResultAssertions, Result>(this, Subject);
         }
 
-        public AndWhichConstraint<ResultAssertions, Result> HaveReason<TReason>(string message, string because = "", params object[] becauseArgs) where TReason : IReason
+        public AndWhichConstraint<ResultAssertions, Result> HaveReason<TReason>(string message, Func<string, string, bool> errorMessageComparison = null, string because = "", params object[] becauseArgs) where TReason : IReason
         {
+            errorMessageComparison = errorMessageComparison ?? FluentResultAssertionsConfig.ErrorMessageComparison;
+
             Execute.Assertion
                 .BecauseOf(because, becauseArgs)
                 .Given(() => Subject.Reasons.OfType<TReason>())
-                .ForCondition(reasons => reasons.Any(reason => reason.Message.Contains(message)))
+                .ForCondition(reasons => reasons.Any(reason => errorMessageComparison(reason.Message, message)))
                 .FailWith("Expected result to contain reason of type {0} with message containing {1}, but found reasons '{2}'", typeof(TReason).Name, message, Subject.Reasons);
 
             return new AndWhichConstraint<ResultAssertions, Result>(this, Subject);
@@ -116,23 +131,27 @@ namespace FluentResults.Extensions.FluentAssertions
             return new AndWhichConstraint<ResultAssertions<T>, Result<T>>(this, Subject);
         }
 
-        public AndWhichConstraint<ResultAssertions<T>, Result<T>> HaveReason(string message, string because = "", params object[] becauseArgs)
+        public AndWhichConstraint<ResultAssertions<T>, Result<T>> HaveReason(string message, Func<string, string, bool> errorMessageComparison = null, string because = "", params object[] becauseArgs)
         {
+            errorMessageComparison = errorMessageComparison ?? FluentResultAssertionsConfig.ErrorMessageComparison;
+
             Execute.Assertion
                 .BecauseOf(because, becauseArgs)
                 .Given(() => Subject.Reasons)
-                .ForCondition(reasons => reasons.Any(reason => reason.Message.Contains(message)))
+                .ForCondition(reasons => reasons.Any(reason => errorMessageComparison(reason.Message, message)))
                 .FailWith("Expected result to contain reason with message containing {0}, but found reasons '{1}'", message, Subject.Reasons);
 
             return new AndWhichConstraint<ResultAssertions<T>, Result<T>>(this, Subject);
         }
 
-        public AndWhichConstraint<ResultAssertions<T>, Result<T>> HaveReason<TReason>(string message, string because = "", params object[] becauseArgs) where TReason : IReason
+        public AndWhichConstraint<ResultAssertions<T>, Result<T>> HaveReason<TReason>(string message, Func<string, string, bool> errorMessageComparison = null, string because = "", params object[] becauseArgs) where TReason : IReason
         {
+            errorMessageComparison = errorMessageComparison ?? FluentResultAssertionsConfig.ErrorMessageComparison;
+
             Execute.Assertion
                 .BecauseOf(because, becauseArgs)
                 .Given(() => Subject.Reasons.OfType<TReason>())
-                .ForCondition(reasons => reasons.Any(reason => reason.Message.Contains(message)))
+                .ForCondition(reasons => reasons.Any(reason => errorMessageComparison(reason.Message, message)))
                 .FailWith("Expected result to contain reason of type {0} with message containing {1}, but found reasons '{2}'", typeof(TReason).Name, message, Subject.Reasons);
 
             return new AndWhichConstraint<ResultAssertions<T>, Result<T>>(this, Subject);

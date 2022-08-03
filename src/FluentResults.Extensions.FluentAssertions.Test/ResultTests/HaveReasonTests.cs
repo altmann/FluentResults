@@ -14,7 +14,7 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ResultTests
         {
             var failedResult = Result.Fail("Error 1");
 
-            Action action = () => failedResult.Should().BeFailure().And.HaveReason(expectedError);
+            Action action = () => failedResult.Should().BeFailure().And.HaveReason(expectedError, ErrorMessageComparisonLogics.ActualContainsExpected);
 
             action.Should().NotThrow();
         }
@@ -32,13 +32,24 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ResultTests
         }
 
         [Theory]
+        [InlineData("Error")]
+        public void A_result_with_expected_reason_of_type_throw_no_exception_equal(string expectedError)
+        {
+            var successResult = Result.Fail(new SomeReason("Error 1"));
+
+            Action action = () => successResult.Should().BeFailure().And.HaveReason<SomeReason>(expectedError);
+
+            action.Should().Throw<XunitException>();
+        }
+
+        [Theory]
         [InlineData("Error 1")]
         [InlineData("Error")]
         public void A_result_with_expected_reason_of_type_throw_no_exception(string expectedError)
         {
             var successResult = Result.Fail(new SomeReason("Error 1"));
 
-            Action action = () => successResult.Should().BeFailure().And.HaveReason<SomeReason>(expectedError);
+            Action action = () => successResult.Should().BeFailure().And.HaveReason<SomeReason>(expectedError, ErrorMessageComparisonLogics.ActualContainsExpected);
 
             action.Should().NotThrow();
         }

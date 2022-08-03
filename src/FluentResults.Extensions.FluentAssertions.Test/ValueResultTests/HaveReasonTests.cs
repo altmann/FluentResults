@@ -14,7 +14,7 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ValueResultTests
         {
             var failedResult = Result.Fail<int>("Error 1");
 
-            Action action = () => failedResult.Should().BeFailure().And.HaveReason(expectedError);
+            Action action = () => failedResult.Should().BeFailure().And.HaveReason(expectedError, ErrorMessageComparisonLogics.ActualContainsExpected);
 
             action.Should().NotThrow();
         }
@@ -38,7 +38,7 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ValueResultTests
         {
             var successResult = Result.Fail<int>(new SomeReason("Error 1"));
 
-            Action action = () => successResult.Should().BeFailure().And.HaveReason<SomeReason>(expectedError);
+            Action action = () => successResult.Should().BeFailure().And.HaveReason<SomeReason>(expectedError, ErrorMessageComparisonLogics.ActualContainsExpected);
 
             action.Should().NotThrow();
         }
