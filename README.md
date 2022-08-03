@@ -278,6 +278,18 @@ var result3 = Result.Ok<int>();
 var mergedResult = Result.Merge(result1, result2, result3);
 ```
 
+A list of results can be merged to one result with the extension method `Merge()`. 
+
+```csharp
+var result1 = Result.Ok();
+var result2 = Result.Fail("first error");
+var result3 = Result.Ok<int>();
+
+var results = new List<Result> { result1, result2, result3 };
+
+var mergedResult = results.Merge();
+```
+
 ### Converting
 
 A result object can be converted to another result object with methods `ToResult()` and `ToResult<TValue>()`.
@@ -325,6 +337,22 @@ Result.Setup(cfg =>
     cfg.ExceptionalErrorFactory = (errorMessage, exception) => new ExceptionalError(errorMessage ?? exception.Message, exception)
     .WithMetadata("Timestamp", DateTime.Now);
 });
+```
+
+### Mapping errors and successes
+
+If you want to add some information to all successes in a result you can use `MapSuccesses(...)` on a result object. 
+
+```csharp
+var result = Result.Ok().WithSuccess("Success 1");
+var result2 = result.MapSuccesses(e => new Success("Prefix: " + e.Message));
+```
+
+If you want to add some information to all errors in a result you can use `MapErrors(...)` on a result object. This method only iterate through the first level of errors, the root cause errors (in error.Reasons) are not changed. 
+
+```csharp
+var result = Result.Fail("Error 1");
+var result2 = result.MapErrors(e => new Error("Prefix: " + e.Message));
 ```
 
 ### Handling/catching errors
@@ -380,6 +408,14 @@ var outcome = result switch
      { IsSuccess: true } => $"Value is {result.Value}",
      _ => null
 };
+```
+
+### Deconstruct Operators
+
+```csharp
+var (isSuccess, isFailed, value, errors) = Result.Fail<bool>("Failure 1");
+
+var (isSuccess, isFailed, errors) = Result.Fail("Failure 1");
 ```
 
 ### Logging
@@ -492,6 +528,10 @@ Here are some samples and best practices to be followed while using FluentResult
 - [A Simple Guide by Isaac Cummings](https://medium.com/@cummingsi1993/the-operation-result-pattern-a-simple-guide-fe10ff959080)
 - [Flexible Error Handling w/ the Result Class by Khalil Stemmler](https://khalilstemmler.com/articles/enterprise-typescript-nodejs/handling-errors-result-class/)
 - [Combining ASP.NET Core validation attributes with Value Objects by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/combining-asp-net-core-attributes-with-value-objects/)
+
+## Donate
+
+I love this project but implementing features, answering issues or maintaining ci/release pipelines takes time - this is my freetime. If you like FluentResult and you find it useful, consider making a donation. Click on the sponsor button on the top right side. 
 
 ## Contributors
 
