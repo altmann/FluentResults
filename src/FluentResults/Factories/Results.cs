@@ -169,6 +169,28 @@ namespace FluentResults
         }
 
         /// <summary>
+        /// Create a success/failed result depending on the parameter isSuccess
+        /// </summary>
+        /// <remarks>
+        /// Error is lazily evaluated.
+        /// </remarks>
+        public static Result OkIf(bool isSuccess, Func<IError> errorFactory)
+        {
+            return isSuccess ? Ok() : Fail(errorFactory.Invoke());
+        }
+
+        /// <summary>
+        /// Create a success/failed result depending on the parameter isSuccess
+        /// </summary>
+        /// <remarks>
+        /// Error is lazily evaluated.
+        /// </remarks>
+        public static Result OkIf(bool isSuccess, Func<string> errorMessageFactory)
+        {
+            return isSuccess ? Ok() : Fail(errorMessageFactory.Invoke());
+        }
+
+        /// <summary>
         /// Create a success/failed result depending on the parameter isFailure
         /// </summary>
         public static Result FailIf(bool isFailure, IError error)
@@ -182,6 +204,28 @@ namespace FluentResults
         public static Result FailIf(bool isFailure, string error)
         {
             return isFailure ? Fail(error) : Ok();
+        }
+
+        /// <summary>
+        /// Create a success/failed result depending on the parameter isFailure
+        /// </summary>
+        /// <remarks>
+        /// Error is lazily evaluated.
+        /// </remarks>
+        public static Result FailIf(bool isFailure, Func<IError> errorFactory)
+        {
+            return isFailure ? Fail(errorFactory.Invoke()) : Ok();
+        }
+
+        /// <summary>
+        /// Create a success/failed result depending on the parameter isFailure
+        /// </summary>
+        /// <remarks>
+        /// Error is lazily evaluated.
+        /// </remarks>
+        public static Result FailIf(bool isFailure, Func<string> errorMessageFactory)
+        {
+            return isFailure ? Fail(errorMessageFactory.Invoke()) : Ok();
         }
 
         /// <summary>
