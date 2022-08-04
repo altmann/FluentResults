@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -6,15 +7,81 @@ using FluentAssertions.Primitives;
 
 namespace FluentResults.Extensions.FluentAssertions
 {
-    public static class ErrorMessageComparisonLogics
+    public class ResultReasonAndWhichConstraint : AndWhichConstraint<ResultAssertions, Result>
     {
-        public static Func<string, string, bool> Equal = (actual, expected) => actual == expected;
-        public static Func<string, string, bool> ActualContainsExpected = (actual, expected) => actual.Contains(expected);
+        private readonly ResultAssertions _parentConstraint;
+        private readonly Result _matchedConstraint;
+        private readonly IReason _reason;
+
+        public ResultReasonAndWhichConstraint(ResultAssertions parentConstraint, Result matchedConstraint, IReason reason) 
+            : base(parentConstraint, matchedConstraint)
+        {
+            _parentConstraint = parentConstraint;
+            _matchedConstraint = matchedConstraint;
+            _reason = reason;
+        }
+
+        public ResultReasonAndWhichConstraint(ResultAssertions parentConstraint, Result matchedConstraint, IEnumerable<IReason> reasons) 
+            : base(parentConstraint, matchedConstraint)
+        {
+        }
+
+        public ReasonAssertions That => new ReasonAssertions(_matchedConstraint, _reason);
     }
 
-    public static class FluentResultAssertionsConfig
+    public class ReasonAndWhichConstraint : AndWhichConstraint<ReasonAssertions, IReason>
     {
-        public static Func<string, string, bool> ErrorMessageComparison { get; set; } = ErrorMessageComparisonLogics.Equal;
+        private readonly ReasonAssertions _parentConstraint;
+        private readonly IReason _matchedConstraint;
+        private readonly Result _result;
+
+        public ReasonAndWhichConstraint(ReasonAssertions parentConstraint, IReason matchedConstraint, Result result)
+            : base(parentConstraint, matchedConstraint)
+        {
+            _parentConstraint = parentConstraint;
+            _matchedConstraint = matchedConstraint;
+            _result = result;
+        }
+
+        public ReasonAndWhichConstraint(ReasonAssertions parentConstraint, IReason matchedConstraint, IEnumerable<Result> result)
+            : base(parentConstraint, matchedConstraint)
+        {
+        }
+    }
+
+    public class ReasonAssertions : ReferenceTypeAssertions<IReason, ReasonAssertions>
+    {
+        private readonly Result _result;
+
+        public ReasonAssertions(Result result, IReason subject)
+            : base(subject)
+        {
+            _result = result;
+        }
+
+        protected override string Identifier => nameof(IReason);
+
+        public AndWhichConstraint<ReasonAssertions, IReason> HaveMetadata(string metadataKey, object metadataValue, string because = "", params object[] becauseArgs)
+        {
+            Execute.Assertion
+                   .BecauseOf(because, becauseArgs)
+                   .Given(() => Subject.Metadata)
+                   .ForCondition(metadata =>
+                                 {
+                                     metadata.TryGetValue(metadataKey, out var actualMetadataValue);
+                                     return actualMetadataValue == metadataValue;
+                                 })
+                   .FailWith($"Reason should contain '{metadataKey}' with '{metadataValue}', but not contain it");
+
+            return new AndWhichConstraint<ReasonAssertions, IReason>(this, Subject);
+        }
+
+        public AndWhichConstraint<ReasonAssertions, IReason> Satisfy<TReason>(Action<TReason> action) where TReason : class, IReason
+        {
+            action(Subject as TReason);
+
+            return new AndWhichConstraint<ReasonAssertions, IReason>(this, Subject);
+        }
     }
 
     public class ResultAssertions : ReferenceTypeAssertions<Result, ResultAssertions>
@@ -54,17 +121,18 @@ namespace FluentResults.Extensions.FluentAssertions
             return new AndWhichConstraint<ResultAssertions, Result>(this, Subject);
         }
 
-        public AndWhichConstraint<ResultAssertions, Result> HaveReason(string message, Func<string, string, bool> errorMessageComparison = null, string because = "", params object[] becauseArgs)
+        public ResultReasonAndWhichConstraint HaveReason(string message, Func<string, string, bool> errorMessageComparison = null, string because = "", params object[] becauseArgs)
         {
             errorMessageComparison = errorMessageComparison ?? FluentResultAssertionsConfig.ErrorMessageComparison;
+            var actualReason = Subject.Reasons.SingleOrDefault(reason => errorMessageComparison(reason.Message, message));
 
             Execute.Assertion
                 .BecauseOf(because, becauseArgs)
                 .Given(() => Subject.Reasons)
-                .ForCondition(reasons => reasons.Any(reason => errorMessageComparison(reason.Message, message)))
+                .ForCondition(reasons => actualReason != null)
                 .FailWith("Expected result to contain reason with message containing {0}, but found reasons '{1}'", message, Subject.Reasons);
 
-            return new AndWhichConstraint<ResultAssertions, Result>(this, Subject);
+            return new ResultReasonAndWhichConstraint(this, Subject, actualReason);
         }
 
         public AndWhichConstraint<ResultAssertions, Result> HaveReason<TReason>(string message, Func<string, string, bool> errorMessageComparison = null, string because = "", params object[] becauseArgs) where TReason : IReason
