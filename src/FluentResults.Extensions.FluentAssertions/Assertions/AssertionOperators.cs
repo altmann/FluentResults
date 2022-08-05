@@ -41,7 +41,7 @@ namespace FluentResults.Extensions.FluentAssertions
         public AndWhichThatConstraint<TResultAssertion, TResult, ReasonAssertions> Do<TResultAssertion, TResult>(TResult subject, TResultAssertion parentConstraint, string expectedMessage, Func<string, string, bool> messageComparison, string because, params object[] becauseArgs)
             where TResult : ResultBase
         {
-            messageComparison = messageComparison ?? FluentResultAssertionsConfig.ErrorMessageComparison;
+            messageComparison = messageComparison ?? FluentResultAssertionsConfig.MessageComparison;
 
             Execute.Assertion
                    .BecauseOf(because, becauseArgs)
@@ -58,7 +58,7 @@ namespace FluentResults.Extensions.FluentAssertions
         public AndWhichThatConstraint<TResultAssertion, TResult, ReasonAssertions> Do<TResultAssertion, TResult>(TResult subject, TResultAssertion parentConstraint, string expectedMessage, Func<string, string, bool> messageComparison, string because, params object[] becauseArgs)
             where TResult : ResultBase
         {
-            messageComparison = messageComparison ?? FluentResultAssertionsConfig.ErrorMessageComparison;
+            messageComparison = messageComparison ?? FluentResultAssertionsConfig.MessageComparison;
 
             Execute.Assertion
                    .BecauseOf(because, becauseArgs)
@@ -76,7 +76,7 @@ namespace FluentResults.Extensions.FluentAssertions
             where TResult : ResultBase
             where TReason : IReason
         {
-            messageComparison = messageComparison ?? FluentResultAssertionsConfig.ErrorMessageComparison;
+            messageComparison = messageComparison ?? FluentResultAssertionsConfig.MessageComparison;
 
             Execute.Assertion
                    .BecauseOf(because, becauseArgs)
