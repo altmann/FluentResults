@@ -229,6 +229,50 @@ namespace FluentResults.Test
         }
 
         [Fact]
+        public void FailIf_FailedConditionIsFalseAndWithObjectErrorFactory_CreateSuccessResult()
+        {
+            var result = Result.FailIf(false, LazyError);
+
+            result.IsFailed.Should().BeFalse();
+
+            Error LazyError()
+            {
+                throw new Exception("This should not be thrown!");
+            }
+        }
+
+        [Fact]
+        public void FailIf_FailedConditionIsFalseAndWithStringErrorMessageFactory_CreateSuccessResult()
+        {
+            var result = Result.FailIf(false, LazyError);
+
+            result.IsFailed.Should().BeFalse();
+
+            string LazyError()
+            {
+                throw new Exception("This should not be thrown!");
+            }
+        }
+
+        [Fact]
+        public void FailIf_FailedConditionIsTrueAndWithObjectErrorFactory_CreateFailedResult()
+        {
+            var result = Result.FailIf(true, () => "Error message");
+
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Single().Message.Should().Be("Error message");
+        }
+
+        [Fact]
+        public void FailIf_FailedConditionIsTrueAndWithStringErrorMessageFactory_CreateFailedResult()
+        {
+            var result = Result.FailIf(true, () => new Error("Error message"));
+
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Single().Message.Should().Be("Error message");
+        }
+
+        [Fact]
         public void OkIf_SuccessConditionIsTrueAndWithStringErrorMessage_CreateFailedResult()
         {
             var result = Result.OkIf(true, "Error message");
@@ -244,6 +288,32 @@ namespace FluentResults.Test
 
             // Assert
             result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public void OkIf_SuccessConditionIsTrueAndWithStringErrorMessageFactory_CreateSuccessResult()
+        {
+            var result = Result.OkIf(true, LazyError);
+
+            result.IsSuccess.Should().BeTrue();
+
+            string LazyError()
+            {
+                throw new Exception("This should not be thrown!");
+            }
+        }
+
+        [Fact]
+        public void OkIf_SuccessConditionIsTrueAnWithObjectErrorMessageFactory_CreateSuccessResult()
+        {
+            var result = Result.OkIf(true, LazyError);
+
+            result.IsSuccess.Should().BeTrue();
+
+            Error LazyError()
+            {
+                throw new Exception("This should not be thrown!");
+            }
         }
 
         [Fact]
@@ -266,6 +336,25 @@ namespace FluentResults.Test
             result.Errors.Single().Message.Should().Be("Error message");
         }
 
+        [Fact]
+        public void OkIf_SuccessConditionIsFalseAndWithStringErrorMessageFactory_CreateFailedResult()
+        {
+            const string errorMessage = "Error message";
+            var result = Result.OkIf(false, () => errorMessage);
+
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Single().Message.Should().Be(errorMessage);
+        }
+
+        [Fact]
+        public void OkIf_SuccessConditionIsFalseAndWithObjectErrorMessageFactory_CreateFailedResult()
+        {
+            const string errorMessage = "Error message";
+            var result = Result.OkIf(false, () => new Error(errorMessage));
+
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Single().Message.Should().Be(errorMessage);
+        }
 
         [Fact]
         public void Try_execute_successfully_action_return_success_result()

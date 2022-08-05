@@ -167,6 +167,20 @@ With the methods ```FailIf()``` and ```OkIf()``` you can also write in a more re
 var result = Result.FailIf(string.IsNullOrEmpty(firstName), "First Name is empty");
 ```
 
+If an error instance should be lazily initialized, overloads accepting ```Func<string>``` or ```Func<IError>``` can be used to that effect:
+
+```csharp
+var list = Enumerable.Range(1, 9).ToList();
+
+var result = Result.FailIf(
+    list.Any(IsDivisibleByTen),
+    () => new Error()$"Item {list.First(IsDivisibleByTen)}" should not be on the list));
+
+bool IsDivisibleByTen(int i) => i % 10 == 0;
+
+// rest of the code
+```
+
 ### Try
 
 In some scenarios you want to execute an action. If this action throws an exception then the exception should be catched and transformed to a result object. 
