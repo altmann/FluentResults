@@ -3,14 +3,13 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>FluentResults.Extensions.FluentAssertions</PackageId>
-    <Version>2.0.0.0</Version>
+    <Version>2.1.0.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>Asserting FluentResults objects with FluentAssertions</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		- ADDED ErrorMessageComparison paramter in methods HaveReason(...)
-        - ADDED Global setting FluentResultAssertionsConfig.ErrorMessageComparison
+		- ADDED That property to assert a reason That.HaveMetadata(...), That.Satisfy(...)
     </PackageReleaseNotes>
     <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling FluentResults</PackageTags>
