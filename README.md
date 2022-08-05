@@ -495,7 +495,7 @@ result.LogIfFailed();
 
 ### Asserting FluentResult objects
 
-Try it with the power of FluentAssertions and [FluentResults.Extensions.FluentAssertions](https://github.com/altmann/FluentResults/wiki#fluentresultsextensionsfluentassertions)
+Try it with the power of FluentAssertions and [FluentResults.Extensions.FluentAssertions](https://github.com/altmann/FluentResults/wiki#fluentresultsextensionsfluentassertions). Since v2.0 the assertion package is out of the experimental phase and its really a great enhancement to assert result objects in a fluent way. 
 
 ### .NET Targeting
 
