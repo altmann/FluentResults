@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentAssertions.Formatting;
 
+// ReSharper disable once CheckNamespace
 namespace FluentResults.Extensions.FluentAssertions
 {
     public class ErrorListValueFormatter : IValueFormatter
