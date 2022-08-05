@@ -5,7 +5,7 @@ using Xunit.Sdk;
 
 namespace FluentResults.Extensions.FluentAssertions.Test.ResultTests
 {
-    public class HaveReason2Tests
+    public class ReasonHaveMetadataTests
     {
         [Fact]
         public void A_result_with_reason_with_specific_metadata_throw_no_exception()

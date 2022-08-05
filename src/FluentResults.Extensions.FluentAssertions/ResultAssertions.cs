@@ -78,7 +78,14 @@ namespace FluentResults.Extensions.FluentAssertions
 
         public AndWhichConstraint<ReasonAssertions, IReason> Satisfy<TReason>(Action<TReason> action) where TReason : class, IReason
         {
-            action(Subject as TReason);
+            var specificReason =  Subject as TReason;
+
+            Execute.Assertion
+                   .Given(() => Subject)
+                   .ForCondition(reason => reason is TReason)
+                   .FailWith($"Reason should be of type '{typeof(TReason)}', but is of type '{Subject.GetType()}'");
+
+            action(specificReason);
 
             return new AndWhichConstraint<ReasonAssertions, IReason>(this, Subject);
         }
