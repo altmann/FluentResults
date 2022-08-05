@@ -9,4 +9,12 @@
 
         }
     }
+
+    internal class AnotherReason : Error
+    {
+        public AnotherReason(string message) : base(message)
+        {
+
+        }
+    }
 }
