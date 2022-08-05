@@ -10,7 +10,10 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
 		- ADDED That property to assert a reason That.HaveMetadata(...), That.Satisfy(...)
-    </PackageReleaseNotes>
+        - ADDED Should() method to assert reasons
+        - ADDED HaveError() method to assert errors
+		- CHANGED FluentResultAssertionsConfig.ErrorMessageComparison setting to FluentResultAssertionsConfig.MessageComparison because this is setting is used for messages in general (also reason)
+	</PackageReleaseNotes>
     <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling FluentResults</PackageTags>
     <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
