@@ -384,10 +384,10 @@ namespace FluentResults.Test
             result.IsFailed.Should().BeFalse();
             result.Reasons.Should().BeEmpty();
             result.Errors.Should().BeEmpty();
-            
+
             result.Value.Should().Be(value);
             result.Value.Should().BeOfType<string>();
-            
+
             result.ValueOrDefault.Should().Be(value);
             result.ValueOrDefault.Should().BeOfType<string>();
         }
@@ -401,7 +401,7 @@ namespace FluentResults.Test
             result.IsFailed.Should().BeFalse();
             result.Reasons.Should().BeEmpty();
             result.Errors.Should().BeEmpty();
-            
+
             result.Value.Should().BeNull();
             result.ValueOrDefault.Should().BeNull();
         }
@@ -468,6 +468,23 @@ namespace FluentResults.Test
 
             errors.Count.Should().Be(1);
             errors.FirstOrDefault().Should().Be(error);
+        }
+
+        [Fact]
+        public void Dynamic_value_is_implicit_converted_to_ValueResult()
+        {
+            var result = DynamicConvert("hello", typeof(string));
+
+            ((object)result.Value).Should().Be("hello");
+            ((object)result.Value).Should().BeOfType(typeof(string));
+        }
+
+        private static Result<dynamic> DynamicConvert(dynamic source, Type dest)
+        {
+            var result = new Result<dynamic>();
+            var converted = Convert.ChangeType(source, dest);
+            var x =  result.WithValue(converted);
+            return x;
         }
     }
 }
