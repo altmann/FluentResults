@@ -98,12 +98,12 @@ namespace FluentResults.Test
             result.IsFailed.Should().BeTrue();
             result.ValueOrDefault.Should().Be(0);
         }
-        
+
         [Fact]
         public void Fail_WithValidErrorMessages_ShouldReturnFailedResult()
         {
             // Act
-            var errors = new List<string> {"First error message", "Second error message"};
+            var errors = new List<string> { "First error message", "Second error message" };
             var result = Result.Fail<int>(errors);
 
             // Assert
@@ -115,7 +115,7 @@ namespace FluentResults.Test
             result.Reasons[1].Message.Should().Be("Second error message");
             result.ValueOrDefault.Should().Be(0);
         }
-        
+
         [Fact]
         public void Fail_WithNullEnumerableOfErrorMessages_ShouldThrow()
         {
@@ -331,9 +331,8 @@ namespace FluentResults.Test
             error.Message.Should().Be("xy");
         }
 
-
         [Fact]
-        public async Task Try_execute_successfully_async_action_return_success_result()
+        public async Task Try_execute_successfully_task_async_action_return_success_result()
         {
             Task<int> Action() => Task.FromResult(5);
             var result = await Result.Try(Action);
@@ -343,7 +342,17 @@ namespace FluentResults.Test
         }
 
         [Fact]
-        public async Task Try_execute_failed_async_action_return_failed_result()
+        public async Task Try_execute_successfully_valuetask_async_action_return_success_result()
+        {
+            ValueTask<int> Action() => new ValueTask<int>(5);
+            var result = await Result.Try(Action);
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(5);
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_task_async_action_return_failed_result()
         {
             var exception = new Exception("ex message");
             Task<int> Action() => throw exception;
@@ -359,7 +368,23 @@ namespace FluentResults.Test
         }
 
         [Fact]
-        public async Task Try_execute_failed_async_action_with_custom_catchHandler_return_failed_result()
+        public async Task Try_execute_failed_valuetask_async_action_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+            ValueTask<int> Action() => throw exception;
+
+            var result = await Result.Try(Action);
+
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Should().HaveCount(1);
+
+            var error = (ExceptionalError)result.Errors.First();
+            error.Message.Should().Be(exception.Message);
+            error.Exception.Should().Be(exception);
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_task_async_action_with_custom_catchHandler_return_failed_result()
         {
             var exception = new Exception("ex message");
             Task<int> Action() => throw exception;
@@ -372,7 +397,22 @@ namespace FluentResults.Test
             var error = result.Errors.First();
             error.Message.Should().Be("xy");
         }
-        
+
+        [Fact]
+        public async Task Try_execute_failed_valuetask_async_action_with_custom_catchHandler_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+            ValueTask<int> Action() => throw exception;
+
+            var result = await Result.Try(Action, _ => new Error("xy"));
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+
+            var error = result.Errors.First();
+            error.Message.Should().Be("xy");
+        }
+
         [Fact]
         public void Implicit_conversion_T_is_converted_to_Success_result_of_T()
         {
@@ -391,7 +431,7 @@ namespace FluentResults.Test
             result.ValueOrDefault.Should().Be(value);
             result.ValueOrDefault.Should().BeOfType<string>();
         }
-        
+
         [Fact]
         public void Implicit_conversion_Null_is_converted_to_Success_result_of_Null()
         {
@@ -405,8 +445,8 @@ namespace FluentResults.Test
             result.Value.Should().BeNull();
             result.ValueOrDefault.Should().BeNull();
         }
-        
-         [Fact]
+
+        [Fact]
         public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed()
         {
             var (isSuccess, isFailed) = Result.Ok(true);
@@ -433,7 +473,7 @@ namespace FluentResults.Test
             isFailed.Should().Be(false);
             value.Should().Be(100);
         }
-        
+
         [Fact]
         public void Can_deconstruct_generic_Fail_to_isSuccess_and_isFailed_and_value()
         {

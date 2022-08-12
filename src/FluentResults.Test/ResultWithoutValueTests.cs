@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using FluentAssertions;
 using System.Linq;
 using System.Threading.Tasks;
@@ -100,12 +99,12 @@ namespace FluentResults.Test
             // Assert
             valueResult.IsFailed.Should().BeTrue();
         }
-        
+
         [Fact]
         public void CreateFailedResultWithListOfErrors_FailedResultWithErrors()
         {
             // Act
-            var errors = new List<string> {"First error message", "Second error message"};
+            var errors = new List<string> { "First error message", "Second error message" };
             var result = Result.Fail(errors);
 
             // Assert
@@ -115,7 +114,7 @@ namespace FluentResults.Test
             result.Reasons[0].Message.Should().Be("First error message");
             result.Reasons[1].Message.Should().Be("Second error message");
         }
-        
+
         [Fact]
         public void Fail_WithNullEnumerableOfErrorMessages_ShouldThrow()
         {
@@ -379,7 +378,7 @@ namespace FluentResults.Test
             result.IsFailed.Should().BeTrue();
             result.Errors.Should().HaveCount(1);
 
-            var error = (ExceptionalError) result.Errors.First();
+            var error = (ExceptionalError)result.Errors.First();
             error.Message.Should().Be(exception.Message);
             error.Exception.Should().Be(exception);
         }
@@ -400,7 +399,7 @@ namespace FluentResults.Test
         }
 
         [Fact]
-        public async Task Try_execute_successfully_async_action_return_success_result()
+        public async Task Try_execute_successfully_task_async_action_return_success_result()
         {
             Task Action()
             {
@@ -413,7 +412,20 @@ namespace FluentResults.Test
         }
 
         [Fact]
-        public async Task Try_execute_failed_async_action_return_failed_result()
+        public async Task Try_execute_successfully_valuetask_async_action_return_success_result()
+        {
+            ValueTask<int> Action()
+            {
+                return new ValueTask<int>(0);
+            }
+
+            var result = await Result.Try(Action);
+
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_task_async_action_return_failed_result()
         {
             var exception = new Exception("ex message");
             Task Action() => throw exception;
@@ -423,13 +435,29 @@ namespace FluentResults.Test
             result.IsFailed.Should().BeTrue();
             result.Errors.Should().HaveCount(1);
 
-            var error = (ExceptionalError) result.Errors.First();
+            var error = (ExceptionalError)result.Errors.First();
             error.Message.Should().Be(exception.Message);
             error.Exception.Should().Be(exception);
         }
 
         [Fact]
-        public async Task Try_execute_failed_async_action_with_custom_catchHandler_return_failed_result()
+        public async Task Try_execute_failed_valuetask_async_action_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+            ValueTask Action() => throw exception;
+
+            var result = await Result.Try(Action);
+
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Should().HaveCount(1);
+
+            var error = (ExceptionalError)result.Errors.First();
+            error.Message.Should().Be(exception.Message);
+            error.Exception.Should().Be(exception);
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_task_async_action_with_custom_catchHandler_return_failed_result()
         {
             var exception = new Exception("ex message");
             Task Action() => throw exception;
@@ -442,7 +470,22 @@ namespace FluentResults.Test
             var error = result.Errors.First();
             error.Message.Should().Be("xy");
         }
-        
+
+        [Fact]
+        public async Task Try_execute_failed_valuetask_async_action_with_custom_catchHandler_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+            ValueTask Action() => throw exception;
+
+            var result = await Result.Try(Action, e => new Error("xy"));
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+
+            var error = result.Errors.First();
+            error.Message.Should().Be("xy");
+        }
+
         [Fact]
         public void Can_deconstruct_non_generic_Ok_to_isSuccess_and_isFailed()
         {
@@ -479,7 +522,7 @@ namespace FluentResults.Test
 
             isSuccess.Should().Be(false);
             isFailed.Should().Be(true);
-            
+
             errors.Count.Should().Be(1);
             errors.FirstOrDefault().Should().Be(error);
         }

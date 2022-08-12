@@ -174,7 +174,7 @@ var list = Enumerable.Range(1, 9).ToList();
 
 var result = Result.FailIf(
     list.Any(IsDivisibleByTen),
-    () => new Error()$"Item {list.First(IsDivisibleByTen)}" should not be on the list));
+    () => new Error($"Item {list.First(IsDivisibleByTen)} should not be on the list"));
 
 bool IsDivisibleByTen(int i) => i % 10 == 0;
 

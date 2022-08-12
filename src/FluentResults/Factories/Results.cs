@@ -267,6 +267,24 @@ namespace FluentResults
         /// <summary>
         /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
         /// </summary>
+        public static async ValueTask<Result> Try(Func<ValueTask> action, Func<Exception, IError> catchHandler = null)
+        {
+            catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
+
+            try
+            {
+                await action();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return Fail(catchHandler(e));
+            }
+        }
+
+        /// <summary>
+        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        /// </summary>
         public static Result<T> Try<T>(Func<T> action, Func<Exception, IError> catchHandler = null)
         {
             catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
@@ -285,6 +303,23 @@ namespace FluentResults
         /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
         /// </summary>
         public static async Task<Result<T>> Try<T>(Func<Task<T>> action, Func<Exception, IError> catchHandler = null)
+        {
+            catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
+
+            try
+            {
+                return Ok(await action());
+            }
+            catch (Exception e)
+            {
+                return Fail(catchHandler(e));
+            }
+        }
+
+        /// <summary>
+        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        /// </summary>
+        public static async ValueTask<Result<T>> Try<T>(Func<ValueTask<T>> action, Func<Exception, IError> catchHandler = null)
         {
             catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
 
