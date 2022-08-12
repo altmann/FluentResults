@@ -162,9 +162,12 @@ namespace FluentResults
 
         public static implicit operator Result<TValue>(TValue value)
         {
+            if (value is Result<TValue> r)
+                return r;
+
             return Result.Ok(value);
         }
-        
+
         /// <summary>
         /// Deconstruct Result
         /// </summary>
