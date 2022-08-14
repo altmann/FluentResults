@@ -52,5 +52,53 @@ namespace FluentResults.Extensions
             var result = await resultTask;
             return result.MapSuccesses(errorMapper);
         }
+
+        public static async Task<Result<TNew>> Bind<TOld, TNew>(this Task<Result<TOld>> resultTask, Func<TOld, Task<Result<TNew>>> bind)
+        {
+            var result = await resultTask;
+            return await result.Bind(bind);
+        }
+        
+        public static async ValueTask<Result<TNew>> Bind<TOld, TNew>(this ValueTask<Result<TOld>> resultTask, Func<TOld, ValueTask<Result<TNew>>> bind)
+        {
+            var result = await resultTask;
+            return await result.Bind(bind);
+        }
+        
+        public static async Task<Result> Bind<TOld>(this Task<Result<TOld>> resultTask, Func<TOld, Task<Result>> bind)
+        {
+            var result = await resultTask;
+            return await result.Bind(bind);
+        }
+        
+        public static async ValueTask<Result> Bind<TOld>(this ValueTask<Result<TOld>> resultTask, Func<TOld, ValueTask<Result>> bind)
+        {
+            var result = await resultTask;
+            return await result.Bind(bind);
+        }
+        
+        public static async Task<Result<TNew>> Bind<TNew>(this Task<Result> resultTask, Func<Task<Result<TNew>>> bind)
+        {
+            var result = await resultTask;
+            return await result.Bind(bind);
+        }
+        
+        public static async ValueTask<Result<TNew>> Bind<TNew>(this ValueTask<Result> resultTask, Func<ValueTask<Result<TNew>>> bind)
+        {
+            var result = await resultTask;
+            return await result.Bind(bind);
+        }
+        
+        public static async Task<Result> Bind(this Task<Result> resultTask, Func<Task<Result>> bind)
+        {
+            var result = await resultTask;
+            return await result.Bind(bind);
+        }
+        
+        public static async ValueTask<Result> Bind(this ValueTask<Result> resultTask, Func<ValueTask<Result>> bind)
+        {
+            var result = await resultTask;
+            return await result.Bind(bind);
+        }
     }
 }
