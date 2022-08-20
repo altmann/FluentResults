@@ -64,13 +64,37 @@ namespace FluentResults.Extensions
             var result = await resultTask;
             return await result.Bind(bind);
         }
-        
+
+        public static async Task<Result<TNew>> Bind<TOld, TNew>(this Task<Result<TOld>> resultTask, Func<TOld, Result<TNew>> bind)
+        {
+            var result = await resultTask;
+            return result.Bind(bind);
+        }
+
+        public static async ValueTask<Result<TNew>> Bind<TOld, TNew>(this ValueTask<Result<TOld>> resultTask, Func<TOld, Result<TNew>> bind)
+        {
+            var result = await resultTask;
+            return result.Bind(bind);
+        }
+
         public static async Task<Result> Bind<TOld>(this Task<Result<TOld>> resultTask, Func<TOld, Task<Result>> bind)
         {
             var result = await resultTask;
             return await result.Bind(bind);
         }
-        
+
+        public static async Task<Result> Bind<TOld>(this Task<Result<TOld>> resultTask, Func<TOld, Result> bind)
+        {
+            var result = await resultTask;
+            return result.Bind(bind);
+        }
+
+        public static async ValueTask<Result> Bind<TOld>(this ValueTask<Result<TOld>> resultTask, Func<TOld, Result> bind)
+        {
+            var result = await resultTask;
+            return result.Bind(bind);
+        }
+
         public static async ValueTask<Result> Bind<TOld>(this ValueTask<Result<TOld>> resultTask, Func<TOld, ValueTask<Result>> bind)
         {
             var result = await resultTask;
