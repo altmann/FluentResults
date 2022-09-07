@@ -526,5 +526,383 @@ namespace FluentResults.Test
             errors.Count.Should().Be(1);
             errors.FirstOrDefault().Should().Be(error);
         }
+
+        public class BindMethod
+        {
+            [Fact]
+            public void Bind_ToAnotherValueTypeWithFailedResult_ReturnFailedResult()
+            {
+                var valueResult = Result.Fail("First error message");
+
+                // Act
+                var result = valueResult.Bind(() => Result.Ok(1));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("First error message");
+            }
+            
+            [Fact]
+            public async Task Bind_ToAnotherValueTypeWithFailedResult_ReturnFailedResultTask()
+            {
+                var valueResult = Result.Fail("First error message");
+
+                // Act
+                var result = await valueResult.Bind(() => Task.FromResult(Result.Ok(1)));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("First error message");
+            }
+            
+            [Fact]
+            public async Task Bind_ToAnotherValueTypeWithFailedResult_ReturnFailedResultValueTask()
+            {
+                var valueResult = Result.Fail("First error message");
+
+                // Act
+                var result = await valueResult.Bind(() => new ValueTask<Result<int>>(Result.Ok(1)));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("First error message");
+            }
+            
+            [Fact]
+            public void Bind_ToResultWithFailedResult_ReturnFailedResult()
+            {
+                var valueResult = Result.Fail("First error message");
+
+                // Act
+                var result = valueResult.Bind(Result.Ok);
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("First error message");
+            }
+            
+            [Fact]
+            public async Task Bind_ToResultWithFailedResult_ReturnFailedResultTask()
+            {
+                var valueResult = Result.Fail("First error message");
+
+                // Act
+                var result = await valueResult.Bind(() => Task.FromResult(Result.Ok()));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("First error message");
+            }
+            
+            [Fact]
+            public async Task Bind_ToResultWithFailedResult_ReturnFailedResultValueTask()
+            {
+                var valueResult = Result.Fail("First error message");
+
+                // Act
+                var result = await valueResult.Bind(() => new ValueTask<Result>(Result.Ok()));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("First error message");
+            }
+            
+            [Fact]
+            public void Bind_ToAnotherValueTypeWithFailedResultAndFailedTransformation_ReturnFailedResult()
+            {
+                var valueResult = Result.Fail("Original error message");
+
+                // Act
+                var result = valueResult.Bind(() => Result.Fail<string>("Irrelevant error"));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("Original error message");
+            }
+            
+            [Fact]
+            public async Task Bind_ToAnotherValueTypeWithFailedResultAndFailedTransformation_ReturnFailedResultTask()
+            {
+                var valueResult = Result.Fail("Original error message");
+
+                // Act
+                var result = await valueResult.Bind(() => Task.FromResult(Result.Fail<string>("Irrelevant error")));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("Original error message");
+            }
+            
+            [Fact]
+            public async Task Bind_ToAnotherValueTypeWithFailedResultAndFailedTransformation_ReturnFailedResultValueTask()
+            {
+                var valueResult = Result.Fail("Original error message");
+
+                // Act
+                var result = await valueResult.Bind(() => Task.FromResult(Result.Fail<string>("Irrelevant error")));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("Original error message");
+            }
+            
+            [Fact]
+            public void Bind_ToResultWithFailedResultAndFailedTransformation_ReturnFailedResult()
+            {
+                var valueResult = Result.Fail("Original error message");
+
+                // Act
+                var result = valueResult.Bind(() => Result.Fail("Irrelevant error"));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("Original error message");
+            }
+            
+            [Fact]
+            public async Task Bind_ToResultWithFailedResultAndFailedTransformation_ReturnFailedResultTask()
+            {
+                var valueResult = Result.Fail("Original error message");
+
+                // Act
+                var result = await valueResult.Bind(() => Task.FromResult(Result.Fail("Irrelevant error")));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("Original error message");
+            }
+            
+            [Fact]
+            public async Task Bind_ToResultWithFailedResultAndFailedTransformation_ReturnFailedResultValueTask()
+            {
+                var valueResult = Result.Fail("Original error message");
+
+                // Act
+                var result = await valueResult.Bind(() => new ValueTask<Result>(Result.Fail("Irrelevant error")));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+                result.Errors.Select(e => e.Message)
+                    .Should()
+                    .BeEquivalentTo("Original error message");
+            }
+
+            [Fact]
+            public void Bind_ToAnotherValueTypeWhichIsSuccessful_ReturnsSuccessResult()
+            {
+                var valueResult = Result.Ok().WithSuccess("An int");
+
+                // Act
+                var result = valueResult.Bind(() => "One".ToResult().WithSuccess("It is one"));
+
+                // Assert
+                result.IsSuccess.Should().BeTrue();
+                result.Value.Should()
+                    .Be("One");
+
+                result.Successes.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("An int", "It is one");
+            }
+            
+            [Fact]
+            public async Task Bind_ToAnotherValueTypeWhichIsSuccessful_ReturnsSuccessResultTask()
+            {
+                var valueResult = Result.Ok().WithSuccess("An int");
+
+                // Act
+                var result = await valueResult.Bind(() => Task.FromResult("One".ToResult().WithSuccess("It is one")));
+
+                // Assert
+                result.IsSuccess.Should().BeTrue();
+                result.Value.Should()
+                    .Be("One");
+
+                result.Successes.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("An int", "It is one");
+            }
+            
+            [Fact]
+            public async Task Bind_ToAnotherValueTypeWhichIsSuccessful_ReturnsSuccessResultValueTask()
+            {
+                var valueResult = Result.Ok().WithSuccess("An int");
+
+                // Act
+                var result = await valueResult.Bind(() => new ValueTask<Result<string>>("One".ToResult().WithSuccess("It is one")));
+
+                // Assert
+                result.IsSuccess.Should().BeTrue();
+                result.Value.Should()
+                    .Be("One");
+
+                result.Successes.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("An int", "It is one");
+            }
+            
+            [Fact]
+            public void Bind_ToResultWhichIsSuccessful_ReturnsSuccessResult()
+            {
+                var valueResult = Result.Ok().WithSuccess("First number");
+
+                // Act
+                var result = valueResult.Bind(() => Result.Ok().WithSuccess("It is one"));
+
+                // Assert
+                result.IsSuccess.Should().BeTrue();
+                result.Successes.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("First number", "It is one");
+            }
+            
+            [Fact]
+            public async Task Bind_ToResultWhichIsSuccessful_ReturnsSuccessResultTask()
+            {
+                var valueResult = Result.Ok().WithSuccess("First number");
+
+                // Act
+                var result = await valueResult.Bind(() => Task.FromResult(Result.Ok().WithSuccess("It is one")));
+
+                // Assert
+                result.IsSuccess.Should().BeTrue();
+                result.Successes.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("First number", "It is one");
+            }
+            
+            [Fact]
+            public async Task Bind_ToResultWhichIsSuccessful_ReturnsSuccessResultValueTask()
+            {
+                var valueResult = Result.Ok().WithSuccess("First number");
+
+                // Act
+                var result = await valueResult.Bind(() => new ValueTask<Result<string>>(Result.Ok().WithSuccess("It is one")));
+
+                // Assert
+                result.IsSuccess.Should().BeTrue();
+                result.Successes.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("First number", "It is one");
+            }
+            
+            [Fact]
+            public void Bind_ToAnotherValueTypeWhichFailedTransformation_ReturnsFailedResult()
+            {
+                var valueResult = Result.Ok();
+
+                // Act
+                var result = valueResult.Bind(() => Result.Fail<string>("Only one accepted"));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+
+                result.Errors.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("Only one accepted");
+            }
+            
+            [Fact]
+            public async Task Bind_ToAnotherValueTypeWhichFailedTransformation_ReturnsFailedResultTask()
+            {
+                var valueResult = Result.Ok();
+
+                // Act
+                var result = await valueResult.Bind(() => Task.FromResult(Result.Fail<string>("Only one accepted")));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+
+                result.Errors.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("Only one accepted");
+            }
+            
+            [Fact]
+            public async Task Bind_ToAnotherValueTypeWhichFailedTransformation_ReturnsFailedResultValueTask()
+            {
+                var valueResult = Result.Ok();
+
+                // Act
+                var result = await valueResult.Bind(() => new ValueTask<Result<string>>(Result.Fail<string>("Only one accepted")));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+
+                result.Errors.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("Only one accepted");
+            }
+            
+            [Fact]
+            public void Bind_ToResultWhichFailedTransformation_ReturnsFailedResult()
+            {
+                var valueResult = Result.Ok();
+
+                // Act
+                var result = valueResult.Bind(() => Result.Fail("Only one accepted"));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+
+                result.Errors.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("Only one accepted");
+            }
+            
+            [Fact]
+            public async Task Bind_ToResultWhichFailedTransformation_ReturnsFailedResultTask()
+            {
+                var valueResult = Result.Ok();
+
+                // Act
+                var result = await valueResult.Bind(() => Task.FromResult(Result.Fail("Only one accepted")));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+
+                result.Errors.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("Only one accepted");
+            }
+            
+            [Fact]
+            public async Task Bind_ToResultWhichFailedTransformation_ReturnsFailedResultValueTask()
+            {
+                var valueResult = Result.Ok();
+
+                // Act
+                var result = await valueResult.Bind(() => new ValueTask<Result<string>>(Result.Fail("Only one accepted")));
+
+                // Assert
+                result.IsFailed.Should().BeTrue();
+
+                result.Errors.Select(s => s.Message)
+                    .Should()
+                    .BeEquivalentTo("Only one accepted");
+            }
+        }
     }
 }
