@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using FluentResults.Extensions;
 
 namespace FluentResults.Test
 {
@@ -21,31 +23,30 @@ namespace FluentResults.Test
             var voidResult = Result.Ok();
 
             voidResult = Result.Ok()
-                .WithSuccess("This is a success")
-                .WithSuccess("This is a second success");
+                               .WithSuccess("This is a success")
+                               .WithSuccess("This is a second success");
 
             voidResult = Result.Fail("First error");
 
             voidResult = Result.Fail(new Error("First error"));
 
             voidResult = Result.Fail("First error")
-                .WithError("second error")
-                .WithError(new CustomError().CausedBy(new InvalidCastException()));
-
+                               .WithError("second error")
+                               .WithError(new CustomError().CausedBy(new InvalidCastException()));
 
             var valueResult = Result.Ok<int>(default)
-                .WithSuccess("first success")
-                .WithValue(3);
+                                    .WithSuccess("first success")
+                                    .WithValue(3);
 
             valueResult = Result.Ok(3);
 
             valueResult = Result.Ok<int>(default)
-                .WithValue(3);
+                                .WithValue(3);
 
             valueResult = Result.Fail<int>("First error");
 
             valueResult = Result.Fail<int>(new Error("first error"))
-                .WithError("second error");
+                                .WithError("second error");
 
             IEnumerable<Result> results = new List<Result>();
             Result mergedResult = results.Merge();
@@ -89,5 +90,26 @@ namespace FluentResults.Test
             var result1 = Result.Ok();
             result1 = result1.Log();
         }
+
+        public async Task BindTests()
+        {
+            var r = Result.Ok(1);
+
+            var r1 = await r.Bind(v => GetVResult())
+                            .Bind(v => GetVResultAsync())
+                            .Bind(v => GetVResult())
+                            .Bind(v => GetVResultAsync())
+                ;
+
+            var r2 = await r.Bind(v => GetVResultAsync());
+        }
+
+        private Result GetResult() => Result.Ok();
+
+        private Result<int> GetVResult() => Result.Ok(1);
+
+        private Task<Result> GetResultAsync() => Task.FromResult(GetResult());
+
+        private Task<Result<int>> GetVResultAsync() => Task.FromResult(GetVResult());
     }
 }

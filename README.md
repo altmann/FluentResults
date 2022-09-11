@@ -327,7 +327,7 @@ Result.Ok<int>(5).ToResult<float>(v => v);
 Result.Fail<int>("Failed").ToResult<float>();
 
 // converting a result to a result from type Result
-Result.Ok<int>().ToResult(); 
+Result.Ok<int>().ToResult();
 ```
 
 ### Implicit conversion from T to success result ```Result<T>```
@@ -335,6 +335,41 @@ Result.Ok<int>().ToResult();
 ```csharp
 string myString = "hello world";
 Result<T> result = myString;
+```
+
+### Bind the result to another result
+
+Binding is a transformation that returns a `Result` | `Result<T>`.
+It only evaluates the transformation if the original result is successful.
+The reasons of both `Result` will be merged into a new flattened `Result`.
+
+```csharp
+// converting a result to a result which may fail
+Result<string> r = Result.Ok(8)
+    .Bind(v => v == 5 ? "five" : Result.Fail<string>("It is not five"));
+
+// converting a failed result to a result, which can also fail, 
+// returns a result with the errors of the first result only,
+// the transformation is not evaluated because the value of the first result is not available
+Result<string> r = Result.Fail<int>("Not available")
+    .Bind(v => v == 5 ? "five" : Result.Fail<string>("It is not five"));
+
+// converting a result with value to a Result via a transformation which may fail
+Result.Ok(5).Bind(x => Result.OkIf(x == 6, "Number is not 6"));
+
+// converting a result without value into a Result 
+Result.Ok().Bind(() => Result.Ok(5));
+
+// just running an action if the original result is sucessful. 
+Result r = Result.Ok().Bind(() => Result.Ok());
+```
+
+The `Bind` has asynchronous overloads.
+
+```csharp
+var result = await Result.Ok(5)
+    .Bind(int n => Task.FromResult(Result.Ok(n + 1).WithSuccess("Added one")))
+    .Bind(int n => /* next continuation */);
 ```
 
 ### Set global factories for ISuccess/IError/IExceptionalError

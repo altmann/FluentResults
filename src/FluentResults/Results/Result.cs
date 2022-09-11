@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
@@ -19,7 +20,7 @@ namespace FluentResults
         {
             if (IsSuccess)
                 return this;
-            
+
             return new Result()
                 .WithErrors(Errors.Select(errorMapper))
                 .WithSuccesses(Successes);
@@ -42,6 +43,147 @@ namespace FluentResults
             return new Result<TNewValue>()
                 .WithValue(IsFailed ? default : newValue)
                 .WithReasons(Reasons);
+        }
+
+        /// <summary>
+        /// Convert result to result with value that may fail.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var bakeryDtoResult = result.Bind(GetWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="bind">Transformation that may fail.</param>
+        public Result<TNewValue> Bind<TNewValue>(Func<Result<TNewValue>> bind)
+        {
+            var result = new Result<TNewValue>();
+            result.WithReasons(Reasons);
+            
+            if (IsSuccess)
+            {
+                var converted = bind();
+                result.WithValue(converted.ValueOrDefault);
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Convert result to result with value that may fail asynchronously.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var bakeryDtoResult = result.Bind(GetWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="bind">Transformation that may fail.</param>
+        public async Task<Result<TNewValue>> Bind<TNewValue>(Func<Task<Result<TNewValue>>> bind)
+        {
+            var result = new Result<TNewValue>();
+            result.WithReasons(Reasons);
+            
+            if (IsSuccess)
+            {
+                var converted = await bind();
+                result.WithValue(converted.ValueOrDefault);
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Convert result to result with value that may fail asynchronously.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var bakeryDtoResult = result.Bind(GetWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="bind">Transformation that may fail.</param>
+        public async ValueTask<Result<TNewValue>> Bind<TNewValue>(Func<ValueTask<Result<TNewValue>>> bind)
+        {
+            var result = new Result<TNewValue>();
+            result.WithReasons(Reasons);
+            
+            if (IsSuccess)
+            {
+                var converted = await bind();
+                result.WithValue(converted.ValueOrDefault);
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Execute an action which returns a <see cref="Result"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var done = result.Bind(ActionWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="action">Action that may fail.</param>
+        public Result Bind(Func<Result> action)
+        {
+            var result = new Result();
+            result.WithReasons(Reasons);
+            
+            if (IsSuccess)
+            {
+                var converted = action();
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Execute an action which returns a <see cref="Result"/> asynchronously.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var done = result.Bind(ActionWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="action">Action that may fail.</param>
+        public async Task<Result> Bind(Func<Task<Result>> action)
+        {
+            var result = new Result();
+            result.WithReasons(Reasons);
+            
+            if (IsSuccess)
+            {
+                var converted = await action();
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Execute an action which returns a <see cref="Result"/> asynchronously.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var done = result.Bind(ActionWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="action">Action that may fail.</param>
+        public async ValueTask<Result> Bind(Func<ValueTask<Result>> action)
+        {
+            var result = new Result();
+            result.WithReasons(Reasons);
+            
+            if (IsSuccess)
+            {
+                var converted = await action();
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
         }
     }
 
@@ -148,6 +290,150 @@ namespace FluentResults
                 .WithReasons(Reasons);
         }
 
+        /// <summary>
+        /// Convert result with value to result with another value that may fail.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var bakeryDtoResult = result
+        ///     .Bind(GetWhichMayFail)
+        ///     .Bind(ProcessWhichMayFail)
+        ///     .Bind(FormattingWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="bind">Transformation that may fail.</param>
+        public Result<TNewValue> Bind<TNewValue>(Func<TValue, Result<TNewValue>> bind)
+        {
+            var result = new Result<TNewValue>();
+            result.WithReasons(Reasons);
+            
+            if (IsSuccess)
+            {
+                var converted = bind(Value);
+                result.WithValue(converted.ValueOrDefault);
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Convert result with value to result with another value that may fail asynchronously.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var bakeryDtoResult = await result.Bind(GetWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="bind">Transformation that may fail.</param>
+        public async Task<Result<TNewValue>> Bind<TNewValue>(Func<TValue, Task<Result<TNewValue>>> bind)
+        {
+            var result = new Result<TNewValue>();
+            result.WithReasons(Reasons);
+            
+            if (IsSuccess)
+            {
+                var converted = await bind(Value);
+                result.WithValue(converted.ValueOrDefault);
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Convert result with value to result with another value that may fail asynchronously.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var bakeryDtoResult = await result.Bind(GetWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="bind">Transformation that may fail.</param>
+        public async ValueTask<Result<TNewValue>> Bind<TNewValue>(Func<TValue, ValueTask<Result<TNewValue>>> bind)
+        {
+            var result = new Result<TNewValue>();
+            result.WithReasons(Reasons);
+            
+            if (IsSuccess)
+            {
+                var converted = await bind(Value);
+                result.WithValue(converted.ValueOrDefault);
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Execute an action which returns a <see cref="Result"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var done = result.Bind(ActionWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="action">Action that may fail.</param>
+        public Result Bind(Func<TValue, Result> action)
+        {
+            var result = new Result();
+            result.WithReasons(Reasons);
+
+            if (IsSuccess)
+            {
+                var converted = action(Value);
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Execute an action which returns a <see cref="Result"/> asynchronously.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var done = await result.Bind(ActionWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="action">Action that may fail.</param>
+        public async Task<Result> Bind(Func<TValue, Task<Result>> action)
+        {
+            var result = new Result();
+            result.WithReasons(Reasons);
+
+            if (IsSuccess)
+            {
+                var converted = await action(Value);
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Execute an action which returns a <see cref="Result"/> asynchronously.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///  var done = await result.Bind(ActionWhichMayFail);
+        /// </code>
+        /// </example>
+        /// <param name="action">Action that may fail.</param>
+        public async ValueTask<Result> Bind(Func<TValue, ValueTask<Result>> action)
+        {
+            var result = new Result();
+            result.WithReasons(Reasons);
+
+            if (IsSuccess)
+            {
+                var converted = await action(Value);
+                result.WithReasons(converted.Reasons);
+            }
+
+            return result;
+        }
+
         public override string ToString()
         {
             var baseString = base.ToString();
@@ -180,6 +466,7 @@ namespace FluentResults
             isFailed = IsFailed;
             value = IsSuccess ? Value : default;
         }
+
         /// <summary>
         /// Deconstruct Result
         /// </summary>
@@ -194,7 +481,7 @@ namespace FluentResults
             value = IsSuccess ? Value : default;
             errors = IsFailed ? Errors : default;
         }
-        
+
         private void ThrowIfFailed()
         {
             if (IsFailed)
