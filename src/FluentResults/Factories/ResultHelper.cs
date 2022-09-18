@@ -14,11 +14,13 @@ namespace FluentResults
 
         public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(IEnumerable<Result<TValue>> results)
         {
+            var resultList = results.ToList();
+
             var finalResult = Result.Ok<IEnumerable<TValue>>(new List<TValue>())
-                .WithReasons(results.SelectMany(result => result.Reasons));
+                                    .WithReasons(resultList.SelectMany(result => result.Reasons));
 
             if (finalResult.IsSuccess)
-                finalResult.WithValue(results.Select(r => r.Value).ToList());
+                finalResult.WithValue(resultList.Select(r => r.Value).ToList());
 
             return finalResult;
         }
