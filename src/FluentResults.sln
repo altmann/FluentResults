@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29403.142
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentResults", "FluentResults\FluentResults.csproj", "{E8FF223C-41DD-4527-9A53-78F1B1889F74}"
 EndProject
@@ -20,7 +20,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentResults.Samples", "Fl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentResults.Extensions.FluentAssertions", "FluentResults.Extensions.FluentAssertions\FluentResults.Extensions.FluentAssertions.csproj", "{E6C27C0B-B918-4F8B-85DB-A40A6916019D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentResults.Extensions.FluentAssertions.Test", "FluentResults.Extensions.FluentAssertions.Test\FluentResults.Extensions.FluentAssertions.Test.csproj", "{49E1E17B-4943-492E-B444-57F8774B5DA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentResults.Extensions.FluentAssertions.Test", "FluentResults.Extensions.FluentAssertions.Test\FluentResults.Extensions.FluentAssertions.Test.csproj", "{49E1E17B-4943-492E-B444-57F8774B5DA3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentResults.Extensions.AspNetCore", "FluentResults.Extensions.AspNetCore\FluentResults.Extensions.AspNetCore.csproj", "{0680CB50-6A06-45D6-893B-2FF150B4F04D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentResults.Samples.WebHost", "FluentResults.Samples.WebHost\FluentResults.Samples.WebHost.csproj", "{47A242AF-DB1A-4E2C-A1BE-E3C2840BD9F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +56,14 @@ Global
 		{49E1E17B-4943-492E-B444-57F8774B5DA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49E1E17B-4943-492E-B444-57F8774B5DA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49E1E17B-4943-492E-B444-57F8774B5DA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0680CB50-6A06-45D6-893B-2FF150B4F04D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0680CB50-6A06-45D6-893B-2FF150B4F04D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0680CB50-6A06-45D6-893B-2FF150B4F04D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0680CB50-6A06-45D6-893B-2FF150B4F04D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47A242AF-DB1A-4E2C-A1BE-E3C2840BD9F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47A242AF-DB1A-4E2C-A1BE-E3C2840BD9F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47A242AF-DB1A-4E2C-A1BE-E3C2840BD9F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47A242AF-DB1A-4E2C-A1BE-E3C2840BD9F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +71,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9DFB66EF-0721-4A78-8DC7-798434D51F79} = {B5131451-22F9-47BB-919A-391FDDFC7806}
 		{D33EA32F-D248-4855-8EB5-99081EE17321} = {B5131451-22F9-47BB-919A-391FDDFC7806}
+		{47A242AF-DB1A-4E2C-A1BE-E3C2840BD9F5} = {B5131451-22F9-47BB-919A-391FDDFC7806}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E72B99C-F2F9-4E6C-BC97-82135CE39EB2}
