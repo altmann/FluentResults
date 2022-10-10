@@ -8,7 +8,7 @@ namespace FluentResults.Samples.WebHost.Controllers
     public class WeatherForecastWithOverwritenDefaultProfileController : ControllerBase
     {
         [HttpPost]
-        public ActionResult<SuccessResponse<WeatherForecastDto>> Query(RequestDto request)
+        public ActionResult<OkResponse<WeatherForecastDto>> Query(RequestDto request)
         {
             return Domain.DomainQuery(request.FailureType)
                          .ToResult(value => new WeatherForecastDto
@@ -21,7 +21,7 @@ namespace FluentResults.Samples.WebHost.Controllers
         }
 
         [HttpPost]
-        public ActionResult<SuccessResponse> Command(RequestDto request)
+        public ActionResult<OkResponse> Command(RequestDto request)
         {
             return Domain.DomainCommand(request.FailureType)
                          .ToActionResult();

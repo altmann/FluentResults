@@ -27,7 +27,7 @@ namespace FluentResults.Extensions.AspNetCore
 
         public virtual ActionResult TransformOkNoValueResultToActionResult(OkResultToActionResultTransformationContext<Result> context)
         {
-            return new OkObjectResult(new SuccessResponse
+            return new OkObjectResult(new OkResponse
                                       {
                                           Successes = context.GetSuccesses()
                                       });
@@ -35,7 +35,7 @@ namespace FluentResults.Extensions.AspNetCore
 
         public virtual ActionResult TransformOkValueResultToActionResult<T>(OkResultToActionResultTransformationContext<Result<T>> context)
         {
-            return new OkObjectResult(new SuccessResponse<T>
+            return new OkObjectResult(new OkResponse<T>
                                       {
                                           Value = context.Result.ValueOrDefault,
                                           Successes = context.GetSuccesses()
@@ -132,12 +132,12 @@ namespace FluentResults.Extensions.AspNetCore
         public string Message { get; set; }
     }
 
-    public class SuccessResponse
+    public class OkResponse
     {
         public IEnumerable<ISuccessDto> Successes { get; set; }
     }
 
-    public class SuccessResponse<T> : SuccessResponse
+    public class OkResponse<T> : OkResponse
     {
         public T Value { get; set; }
     }
