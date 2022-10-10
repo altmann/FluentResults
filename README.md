@@ -15,6 +15,8 @@ You can install [FluentResults with NuGet](https://www.nuget.org/packages/Fluent
 Install-Package FluentResults
 ```
 
+> :heart: The most needed community feature will be delivered in the next weeks: **[FluentResults with ASP.NET Core integration](https://github.com/altmann/FluentResults/issues/149)**
+
 ## Key Features
 
 - **Generalised container** which works in all contexts (ASP.NET MVC/WebApi, WPF, DDD Domain Model, etc)
