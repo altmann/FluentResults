@@ -3,6 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FluentResults.Samples.WebHost.Controllers
 {
+    public class CumstomAspNetCoreResultEndpointProfile : DefaultAspNetCoreResultEndpointProfile
+    {
+        public override ActionResult TransformFailedResultToActionResult(FailedResultToActionResultTransformationContext context)
+        {
+            var result = context.Result;
+
+            return switch
+
+            return base.TransformFailedResultToActionResult(context);
+        }
+    }
+
     [ApiController]
     [Route("[controller]/[action]")]
     public class WeatherForecastController : ControllerBase

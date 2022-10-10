@@ -25,7 +25,7 @@ namespace FluentResults.Extensions.AspNetCore
             return new BadRequestObjectResult(context.GetErrors());
         }
 
-        public ActionResult TransformSuccessResultToActionResult(SuccessResultToActionResultTransformationContext<Result> context)
+        public virtual ActionResult TransformSuccessResultToActionResult(SuccessResultToActionResultTransformationContext<Result> context)
         {
             return new OkObjectResult(new SuccessResponse
                                       {
@@ -33,11 +33,11 @@ namespace FluentResults.Extensions.AspNetCore
                                       });
         }
 
-        public ActionResult TransformSuccessValueResultToActionResult<T>(SuccessResultToActionResultTransformationContext<Result<T>> context)
+        public virtual ActionResult TransformSuccessValueResultToActionResult<T>(SuccessResultToActionResultTransformationContext<Result<T>> context)
         {
             return new OkObjectResult(new SuccessResponse<T>
                                       {
-                                          Value = (T)context.Result.ValueOrDefault,
+                                          Value = context.Result.ValueOrDefault,
                                           Successes = context.GetSuccesses()
                                       });
         }
@@ -61,11 +61,11 @@ namespace FluentResults.Extensions.AspNetCore
 
     public class FailedResultToActionResultTransformationContext
     {
-        public IResultBase Result { get; }
+        public ResultBase Result { get; }
 
         private Func<IEnumerable<IErrorDto>> GetErrorsLogic { get; }
 
-        public FailedResultToActionResultTransformationContext(IResultBase result, Func<IEnumerable<IErrorDto>> getErrors)
+        public FailedResultToActionResultTransformationContext(ResultBase result, Func<IEnumerable<IErrorDto>> getErrors)
         {
             Result = result;
             GetErrorsLogic = getErrors;
