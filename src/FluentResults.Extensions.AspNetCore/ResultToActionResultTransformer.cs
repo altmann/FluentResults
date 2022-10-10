@@ -9,9 +9,9 @@ namespace FluentResults.Extensions.AspNetCore
     {
         ActionResult TransformFailedResultToActionResult(FailedResultToActionResultTransformationContext context);
 
-        ActionResult TransformSuccessResultToActionResult(SuccessResultToActionResultTransformationContext<Result> context);
+        ActionResult TransformOkNoValueResultToActionResult(OkResultToActionResultTransformationContext<Result> context);
 
-        ActionResult TransformSuccessValueResultToActionResult<T>(SuccessResultToActionResultTransformationContext<Result<T>> context);
+        ActionResult TransformOkValueResultToActionResult<T>(OkResultToActionResultTransformationContext<Result<T>> context);
 
         IErrorDto TransformErrorToErrorDto(ErrorToErrorDtoTransformatonContext context);
 
@@ -25,7 +25,7 @@ namespace FluentResults.Extensions.AspNetCore
             return new BadRequestObjectResult(context.GetErrors());
         }
 
-        public virtual ActionResult TransformSuccessResultToActionResult(SuccessResultToActionResultTransformationContext<Result> context)
+        public virtual ActionResult TransformOkNoValueResultToActionResult(OkResultToActionResultTransformationContext<Result> context)
         {
             return new OkObjectResult(new SuccessResponse
                                       {
@@ -33,7 +33,7 @@ namespace FluentResults.Extensions.AspNetCore
                                       });
         }
 
-        public virtual ActionResult TransformSuccessValueResultToActionResult<T>(SuccessResultToActionResultTransformationContext<Result<T>> context)
+        public virtual ActionResult TransformOkValueResultToActionResult<T>(OkResultToActionResultTransformationContext<Result<T>> context)
         {
             return new OkObjectResult(new SuccessResponse<T>
                                       {
@@ -77,14 +77,14 @@ namespace FluentResults.Extensions.AspNetCore
         }
     }
 
-    public class SuccessResultToActionResultTransformationContext<TResult>
+    public class OkResultToActionResultTransformationContext<TResult>
         where TResult : ResultBase
     {
         public TResult Result { get; }
 
         private Func<IEnumerable<ISuccessDto>> Successes { get; }
 
-        public SuccessResultToActionResultTransformationContext(TResult result, Func<IEnumerable<ISuccessDto>> successes)
+        public OkResultToActionResultTransformationContext(TResult result, Func<IEnumerable<ISuccessDto>> successes)
         {
             Result = result;
             Successes = successes;
@@ -163,7 +163,7 @@ namespace FluentResults.Extensions.AspNetCore
             }
 
             Func<IEnumerable<ISuccessDto>> getSuccesses = () => result.Successes.Select(s => profile.TransformSuccessToSuccessDto(new SuccessToSuccessDtoTransformatonContext(s, result)));
-            return profile.TransformSuccessResultToActionResult(new SuccessResultToActionResultTransformationContext<Result>(result, getSuccesses));
+            return profile.TransformOkNoValueResultToActionResult(new OkResultToActionResultTransformationContext<Result>(result, getSuccesses));
         }
 
         public ActionResult Transform<T>(Result<T> result, IAspNetCoreResultEndpointProfile profile)
@@ -175,7 +175,7 @@ namespace FluentResults.Extensions.AspNetCore
             }
 
             Func<IEnumerable<ISuccessDto>> getSuccesses = () => result.Successes.Select(s => profile.TransformSuccessToSuccessDto(new SuccessToSuccessDtoTransformatonContext(s, result)));
-            return profile.TransformSuccessValueResultToActionResult(new SuccessResultToActionResultTransformationContext<Result<T>>(result, getSuccesses));
+            return profile.TransformOkValueResultToActionResult(new OkResultToActionResultTransformationContext<Result<T>>(result, getSuccesses));
         }
     }
 }

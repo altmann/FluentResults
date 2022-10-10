@@ -33,8 +33,4 @@
     <None Include="..\..\resources\icons\FluentResults-Icon-128.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FluentResults\FluentResults.csproj" />
-  </ItemGroup>
-
 </Project>

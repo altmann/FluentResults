@@ -1,9 +1,14 @@
+using FluentResults.Extensions.AspNetCore;
+using FluentResults.Samples.WebHost.Controllers;
+
 namespace FluentResults.Samples.WebHost
 {
     public class Program
     {
         public static void Main(string[] args)
         {
+            AspNetCoreResult.Setup(config => config.DefaultProfile = new CustomAspNetCoreResultEndpointProfile());
+                
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
