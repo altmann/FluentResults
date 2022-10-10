@@ -185,6 +185,11 @@ namespace FluentResults
 
             return result;
         }
+
+        public override ResultInfo GetResultInfo()
+        {
+            return new ResultInfo(IsFailed, Successes, Errors, null, false);
+        }
     }
 
     public interface IResult<out TValue> : IResultBase
@@ -486,6 +491,11 @@ namespace FluentResults
         {
             if (IsFailed)
                 throw new InvalidOperationException($"Result is in status failed. Value is not set. Having: {ReasonFormat.ErrorReasonsToString(Errors)}");
+        }
+
+        public override ResultInfo GetResultInfo()
+        {
+            return new ResultInfo(IsFailed, Successes, Errors, ValueOrDefault, true);
         }
     }
 }

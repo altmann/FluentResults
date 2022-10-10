@@ -6,6 +6,32 @@ using Microsoft.Extensions.Logging;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    public class ResultInfo
+    {
+        public bool IsFailed { get; }
+
+        public IEnumerable<ISuccess> Successes { get; }
+
+        public IEnumerable<IError> Errors { get; }
+
+        public object Value { get; }
+
+        public bool HasValue { get; }
+
+        public ResultInfo(bool isFailed,
+                          IEnumerable<ISuccess> successes,
+                          IEnumerable<IError> errors,
+                          object value,
+                          bool hasValue)
+        {
+            IsFailed = isFailed;
+            Successes = successes;
+            Errors = errors;
+            Value = value;
+            HasValue = hasValue;
+        }
+    }
+
     public interface IResultBase
     {
         /// <summary>
@@ -32,6 +58,8 @@ namespace FluentResults
         /// Get all successes
         /// </summary>
         List<ISuccess> Successes { get; }
+
+        ResultInfo GetResultInfo();
     }
 
     public abstract class ResultBase : IResultBase
@@ -60,6 +88,8 @@ namespace FluentResults
         /// <inheritdoc/>
         /// </summary>
         public List<ISuccess> Successes => Reasons.OfType<ISuccess>().ToList();
+
+        public abstract ResultInfo GetResultInfo();
 
         protected ResultBase()
         {
@@ -149,7 +179,7 @@ namespace FluentResults
             isSuccess = IsSuccess;
             isFailed = IsFailed;
         }
-        
+
         /// <summary>
         /// Deconstruct Result
         /// </summary>
@@ -162,7 +192,6 @@ namespace FluentResults
             isFailed = IsFailed;
             errors = IsFailed ? Errors : default;
         }
-
     }
 
     public abstract class ResultBase<TResult> : ResultBase
@@ -380,8 +409,8 @@ namespace FluentResults
         public override string ToString()
         {
             var reasonsString = Reasons.Any()
-                ? $", Reasons='{ReasonFormat.ReasonsToString(Reasons)}'"
-                : string.Empty;
+                                    ? $", Reasons='{ReasonFormat.ReasonsToString(Reasons)}'"
+                                    : string.Empty;
 
             return $"Result: IsSuccess='{IsSuccess}'{reasonsString}";
         }

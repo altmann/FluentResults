@@ -12,7 +12,7 @@ namespace FluentResults.Samples.WebHost.Controllers
         }
 
         [HttpPost]
-        public ActionResult<WeatherForecastDto> Query()
+        public ActionResult<SuccessResponse<WeatherForecastDto>> Query()
         {
             return DomainQuery(false)
                    .ToResult(value => new WeatherForecastDto

@@ -37,7 +37,7 @@ namespace FluentResults.Extensions.AspNetCore
         {
             return new OkObjectResult(new SuccessResponse<T>
                                       {
-                                          Value = context.Result.ValueOrDefault,
+                                          Value = (T)context.Result.ValueOrDefault,
                                           Successes = context.GetSuccesses()
                                       });
         }
