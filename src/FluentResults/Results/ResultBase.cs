@@ -347,7 +347,7 @@ namespace FluentResults
         /// <summary>
         /// Log the result only when it is failed. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult LogIfFailed(LogLevel logLevel = LogLevel.Information)
+        public TResult LogIfFailed(LogLevel logLevel = LogLevel.Error)
         {
             if (IsFailed)
                 return Log(logLevel);
@@ -358,7 +358,7 @@ namespace FluentResults
         /// <summary>
         /// Log the result with a specific logger context only when it is failed. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult LogIfFailed(string context, string content = null, LogLevel logLevel = LogLevel.Information)
+        public TResult LogIfFailed(string context, string content = null, LogLevel logLevel = LogLevel.Error)
         {
             if (IsFailed)
                 return Log(context, content, logLevel);
@@ -369,7 +369,7 @@ namespace FluentResults
         /// <summary>
         /// Log the result with a typed context only when it is failed. Configure the logger via Result.Setup(..)
         /// </summary>
-        public TResult LogIfFailed<TContext>(string content = null, LogLevel logLevel = LogLevel.Information)
+        public TResult LogIfFailed<TContext>(string content = null, LogLevel logLevel = LogLevel.Error)
         {
             if (IsFailed)
                 return Log<TContext>(content, logLevel);

@@ -523,7 +523,10 @@ You can also log results only on successes or failures:
 ```csharp
 Result<int> result = DoSomething();
 
+// log with default log level 'Information'
 result.LogIfSuccess();
+
+// log with default log level 'Error'
 result.LogIfFailed();
 ```
 
