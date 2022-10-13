@@ -25,19 +25,25 @@ namespace FluentResults
             return finalResult;
         }
 
-        public static bool HasError<TError>(List<IError> errors, Func<TError, bool> predicate) where TError : IError
+        public static bool HasError<TError>(List<IError> errors, Func<TError, bool> predicate, out IEnumerable<TError> result) where TError : IError
         {
-            var anyErrors = errors.Any(error => error is TError errorOfTError && predicate(errorOfTError));
-            if (anyErrors)
+            var foundErrors = errors.OfType<TError>().Where(predicate).ToList();
+            if (foundErrors.Any())
+            {
+                result = foundErrors;
                 return true;
+            }
 
             foreach (var error in errors)
             {
-                var anyError = HasError(error.Reasons, predicate);
-                if (anyError)
+                if (HasError(error.Reasons, predicate, out var fErrors))
+                {
+                    result = fErrors;
                     return true;
+                }
             }
 
+            result = Array.Empty<TError>();
             return false;
         }
 
