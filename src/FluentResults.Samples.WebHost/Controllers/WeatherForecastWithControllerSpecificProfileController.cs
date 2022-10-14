@@ -34,15 +34,15 @@ namespace FluentResults.Samples.WebHost.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<OkResponse<WeatherForecastDto>>> QueryAsync(RequestDto request)
+        public async Task<ActionResult<OkResponse<WeatherForecastDto>>> QueryWithTask(RequestDto request)
         {
             return await Domain.DomainQueryAsync(request.FailureType)
                                .ToResultX(value => new WeatherForecastDto
-                                                   {
-                                                       Date = DateTime.Now,
-                                                       Summary = "Hello World",
-                                                       TemperatureC = value
-                                                   })
+                               {
+                                   Date = DateTime.Now,
+                                   Summary = "Hello World",
+                                   TemperatureC = value
+                               })
                                .ToActionResult(_profile);
         }
 
@@ -54,7 +54,7 @@ namespace FluentResults.Samples.WebHost.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<OkResponse>> CommandAsync(RequestDto request)
+        public async Task<ActionResult<OkResponse>> CommandWithTask(RequestDto request)
         {
             return await Domain.DomainCommandAsync(request.FailureType)
                                .ToActionResult(_profile);
