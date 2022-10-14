@@ -38,9 +38,11 @@ namespace FluentResults.Test
         [Fact]
         public void HasException_WithRootError()
         {
-            var result = Result.Fail(new ExceptionalError(new CustomException(1)));
+            var error = new ExceptionalError(new CustomException(1));
+            var result = Result.Fail(error);
 
-            result.HasException<CustomException>().Should().BeTrue();
+            result.HasException<CustomException>(out var errors).Should().BeTrue();
+            errors.Should().HaveCount(1).And.Contain(error);
         }
 
         [Fact]
@@ -137,9 +139,21 @@ namespace FluentResults.Test
         [Fact]
         public void HasError_WithSearchedError()
         {
-            var result = Result.Fail(new NotFoundError(3));
+            var error = new NotFoundError(3);
+            var result = Result.Fail(error);
 
-            result.HasError<NotFoundError>().Should().BeTrue();
+            result.HasError<NotFoundError>(out var errors).Should().BeTrue();
+            errors.Should().HaveCount(1).And.Contain(error);
+        }
+
+        [Fact]
+        public void HasError_WithBaseError()
+        {
+            var error = new NotFoundError(3);
+            var result = Result.Fail(error);
+
+            result.HasError<IError>(out var errors).Should().BeTrue();
+            errors.Should().HaveCount(1).And.Contain(error);
         }
 
         [Fact]
@@ -234,10 +248,13 @@ namespace FluentResults.Test
         [Fact]
         public void HasSuccess_WithSearchedSuccess()
         {
-            var result = Result.Ok()
-                .WithSuccess(new FoundSuccess(3));
+            var success = new FoundSuccess(3);
 
-            result.HasSuccess<FoundSuccess>().Should().BeTrue();
+            var result = Result.Ok()
+                .WithSuccess(success);
+
+            result.HasSuccess<FoundSuccess>(out var successes).Should().BeTrue();
+            successes.Should().HaveCount(1).And.Contain(success);
         }
 
         [Fact]

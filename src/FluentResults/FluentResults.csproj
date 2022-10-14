@@ -9,7 +9,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
 		CHANGED - The default logging level in LogIfFailed() changed from Information to Error #151
-	</PackageReleaseNotes>
+        ADDED - HasError(), HasException() and HasSuccess() return now via out parameter optional a list of found errors or successes
+    </PackageReleaseNotes>
     <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
     <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
