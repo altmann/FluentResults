@@ -12,7 +12,8 @@ namespace FluentResults
             return Result.Ok().WithReasons(results.SelectMany(result => result.Reasons));
         }
 
-        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(IEnumerable<Result<TValue>> results)
+        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(
+            IEnumerable<Result<TValue>> results)
         {
             var resultList = results.ToList();
 
@@ -25,38 +26,60 @@ namespace FluentResults
             return finalResult;
         }
 
-        public static bool HasError<TError>(List<IError> errors, Func<TError, bool> predicate) where TError : IError
+        public static bool HasError<TError>(
+            List<IError> errors,
+            Func<TError, bool> predicate,
+            out IEnumerable<TError> result)
+            where TError : IError
         {
-            var anyErrors = errors.Any(error => error is TError errorOfTError && predicate(errorOfTError));
-            if (anyErrors)
+            var foundErrors = errors.OfType<TError>().Where(predicate).ToList();
+            if (foundErrors.Any())
+            {
+                result = foundErrors;
                 return true;
+            }
 
             foreach (var error in errors)
             {
-                var anyError = HasError(error.Reasons, predicate);
-                if (anyError)
+                if (HasError(error.Reasons, predicate, out var fErrors))
+                {
+                    result = fErrors;
                     return true;
+                }
             }
 
+            result = Array.Empty<TError>();
             return false;
         }
 
-        public static bool HasException<TException>(List<IError> errors, Func<TException, bool> predicate) where TException : Exception
+        public static bool HasException<TException>(
+            List<IError> errors,
+            Func<TException, bool> predicate//,
+            //out IEnumerable<IError> result
+            )
+            where TException : Exception
         {
-            var anyErrors = errors.Any(e =>
-                e is ExceptionalError && ((ExceptionalError)e).Exception is TException rootExceptionOfTException 
-                                      && predicate(rootExceptionOfTException));
-          
-            if (anyErrors)
+            var foundErrors = errors.OfType<ExceptionalError>()
+                                    .Where(e => e.Exception is TException rootExceptionOfTException
+                                                && predicate(rootExceptionOfTException))
+                                    .ToList();
+
+            if (foundErrors.Any())
+            {
+                //result = foundErrors;
                 return true;
+            }
 
             foreach (var error in errors)
             {
-                var anyError = HasException(error.Reasons, predicate);
-                if (anyError)
+                if (HasException(error.Reasons, predicate/*, out var fErrors*/))
+                {
+                    //result = fErrors;
                     return true;
+                }
             }
 
+            //result = Array.Empty<IError>();
             return false;
         }
 

@@ -137,9 +137,11 @@ namespace FluentResults.Test
         [Fact]
         public void HasError_WithSearchedError()
         {
-            var result = Result.Fail(new NotFoundError(3));
+            var error = new NotFoundError(3);
+            var result = Result.Fail(error);
 
-            result.HasError<NotFoundError>().Should().BeTrue();
+            result.HasError<NotFoundError>(out var errors).Should().BeTrue();
+            errors.Should().HaveCount(1).And.Contain(error);
         }
 
         [Fact]
