@@ -54,8 +54,9 @@ namespace FluentResults
 
         public static bool HasException<TException>(
             List<IError> errors,
-            Func<TException, bool> predicate,
-            out IEnumerable<IError> result)
+            Func<TException, bool> predicate//,
+            //out IEnumerable<IError> result
+            )
             where TException : Exception
         {
             var foundErrors = errors.OfType<ExceptionalError>()
@@ -65,20 +66,20 @@ namespace FluentResults
 
             if (foundErrors.Any())
             {
-                result = foundErrors;
+                //result = foundErrors;
                 return true;
             }
 
             foreach (var error in errors)
             {
-                if (HasException(error.Reasons, predicate, out var fErrors))
+                if (HasException(error.Reasons, predicate/*, out var fErrors*/))
                 {
-                    result = fErrors;
+                    //result = fErrors;
                     return true;
                 }
             }
 
-            result = Array.Empty<IError>();
+            //result = Array.Empty<IError>();
             return false;
         }
 
