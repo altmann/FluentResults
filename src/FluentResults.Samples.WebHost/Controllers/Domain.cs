@@ -2,6 +2,11 @@ namespace FluentResults.Samples.WebHost.Controllers;
 
 public static class Domain
 {
+    public static Task<Result> DomainCommandAsync(string failureType)
+    {
+        return Task.FromResult(DomainCommand(failureType));
+    }
+
     public static Result DomainCommand(string failureType)
     {
         if (failureType.ToLower() == "maxlength")
@@ -10,7 +15,7 @@ public static class Domain
         }
         if (failureType.ToLower() == "unauthorized")
         {
-            return Result.Fail(new UnauthorizedError());
+            return Result.Fail(new UnauthorizedError("altmann", "usermgmt"));
         }
         if (failureType.ToLower() == "notfound")
         {
@@ -18,6 +23,11 @@ public static class Domain
         }
 
         return Result.Ok();
+    }
+
+    public static Task<Result<int>> DomainQueryAsync(string failureType)
+    {
+        return Task.FromResult(DomainQuery(failureType));
     }
 
     public static Result<int> DomainQuery(string failureType)
@@ -28,7 +38,7 @@ public static class Domain
         }
         if (failureType.ToLower() == "unauthorized")
         {
-            return Result.Fail<int>(new UnauthorizedError());
+            return Result.Fail<int>(new UnauthorizedError("altmann", "usermgmt"));
         }
         if (failureType.ToLower() == "notfound")
         {

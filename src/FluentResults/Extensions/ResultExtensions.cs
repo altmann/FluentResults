@@ -124,5 +124,11 @@ namespace FluentResults.Extensions
             var result = await resultTask;
             return await result.Bind(bind);
         }
+
+        public static async Task<Result<TNewValue>> ToResultX<TOldValue, TNewValue>(this Task<Result<TOldValue>> resultTask, Func<TOldValue, TNewValue> valueConverter)
+        {
+            var result = await resultTask;
+            return result.ToResult(valueConverter);
+        }
     }
 }

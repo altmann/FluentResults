@@ -1,79 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FluentResults.Extensions.AspNetCore
 {
-    public interface IAspNetCoreResultEndpointProfile
-    {
-        ActionResult TransformFailedResultToActionResult(FailedResultToActionResultTransformationContext context);
-
-        ActionResult TransformOkNoValueResultToActionResult(OkResultToActionResultTransformationContext<Result> context);
-
-        ActionResult TransformOkValueResultToActionResult<T>(OkResultToActionResultTransformationContext<Result<T>> context);
-
-        IErrorDto TransformErrorToErrorDto(ErrorToErrorDtoTransformatonContext context);
-
-        ISuccessDto TransformSuccessToSuccessDto(SuccessToSuccessDtoTransformatonContext context);
-    }
-
-    public class DefaultAspNetCoreResultEndpointProfile : IAspNetCoreResultEndpointProfile
-    {
-        public virtual ActionResult TransformFailedResultToActionResult(FailedResultToActionResultTransformationContext context)
-        {
-            return new BadRequestObjectResult(context.GetErrors());
-        }
-
-        public virtual ActionResult TransformOkNoValueResultToActionResult(OkResultToActionResultTransformationContext<Result> context)
-        {
-            return new OkObjectResult(new OkResponse
-                                      {
-                                          Successes = context.GetSuccesses()
-                                      });
-        }
-
-        public virtual ActionResult TransformOkValueResultToActionResult<T>(OkResultToActionResultTransformationContext<Result<T>> context)
-        {
-            return new OkObjectResult(new OkResponse<T>
-                                      {
-                                          Value = context.Result.ValueOrDefault,
-                                          Successes = context.GetSuccesses()
-                                      });
-        }
-
-        public virtual IErrorDto TransformErrorToErrorDto(ErrorToErrorDtoTransformatonContext context)
-        {
-            return new ErrorDto
-                   {
-                       Message = context.Error.Message
-                   };
-        }
-
-        public ISuccessDto TransformSuccessToSuccessDto(SuccessToSuccessDtoTransformatonContext context)
-        {
-            return new SuccessDto
-                   {
-                       Message = context.Success.Message
-                   };
-        }
-    }
-
     public class FailedResultToActionResultTransformationContext
     {
         public ResultBase Result { get; }
 
-        private Func<IEnumerable<IErrorDto>> GetErrorsLogic { get; }
-
-        public FailedResultToActionResultTransformationContext(ResultBase result, Func<IEnumerable<IErrorDto>> getErrors)
+        public FailedResultToActionResultTransformationContext(ResultBase result)
         {
             Result = result;
-            GetErrorsLogic = getErrors;
-        }
-
-        public IEnumerable<IErrorDto> GetErrors()
-        {
-            return GetErrorsLogic();
         }
     }
 
@@ -82,42 +18,8 @@ namespace FluentResults.Extensions.AspNetCore
     {
         public TResult Result { get; }
 
-        private Func<IEnumerable<ISuccessDto>> Successes { get; }
-
-        public OkResultToActionResultTransformationContext(TResult result, Func<IEnumerable<ISuccessDto>> successes)
+        public OkResultToActionResultTransformationContext(TResult result)
         {
-            Result = result;
-            Successes = successes;
-        }
-
-        public IEnumerable<ISuccessDto> GetSuccesses()
-        {
-            return Successes();
-        }
-    }
-
-    public class SuccessToSuccessDtoTransformatonContext
-    {
-        public IResultBase Result { get; }
-
-        public ISuccess Success { get; }
-
-        public SuccessToSuccessDtoTransformatonContext(ISuccess success, IResultBase result)
-        {
-            Success = success;
-            Result = result;
-        }
-    }
-
-    public class ErrorToErrorDtoTransformatonContext
-    {
-        public IResultBase Result { get; }
-
-        public IError Error { get; }
-
-        public ErrorToErrorDtoTransformatonContext(IError error, IResultBase result)
-        {
-            Error = error;
             Result = result;
         }
     }
@@ -158,24 +60,20 @@ namespace FluentResults.Extensions.AspNetCore
         {
             if (result.IsFailed)
             {
-                Func<IEnumerable<IErrorDto>> getErrors = () => result.Errors.Select(e => profile.TransformErrorToErrorDto(new ErrorToErrorDtoTransformatonContext(e, result)));
-                return profile.TransformFailedResultToActionResult(new FailedResultToActionResultTransformationContext(result, getErrors));
+                return profile.TransformFailedResultToActionResult(new FailedResultToActionResultTransformationContext(result));
             }
 
-            Func<IEnumerable<ISuccessDto>> getSuccesses = () => result.Successes.Select(s => profile.TransformSuccessToSuccessDto(new SuccessToSuccessDtoTransformatonContext(s, result)));
-            return profile.TransformOkNoValueResultToActionResult(new OkResultToActionResultTransformationContext<Result>(result, getSuccesses));
+            return profile.TransformOkNoValueResultToActionResult(new OkResultToActionResultTransformationContext<Result>(result));
         }
 
         public ActionResult Transform<T>(Result<T> result, IAspNetCoreResultEndpointProfile profile)
         {
             if (result.IsFailed)
             {
-                Func<IEnumerable<IErrorDto>> getErrors = () => result.Errors.Select(e => profile.TransformErrorToErrorDto(new ErrorToErrorDtoTransformatonContext(e, result)));
-                return profile.TransformFailedResultToActionResult(new FailedResultToActionResultTransformationContext(result, getErrors));
+                return profile.TransformFailedResultToActionResult(new FailedResultToActionResultTransformationContext(result));
             }
 
-            Func<IEnumerable<ISuccessDto>> getSuccesses = () => result.Successes.Select(s => profile.TransformSuccessToSuccessDto(new SuccessToSuccessDtoTransformatonContext(s, result)));
-            return profile.TransformOkValueResultToActionResult(new OkResultToActionResultTransformationContext<Result<T>>(result, getSuccesses));
+            return profile.TransformOkValueResultToActionResult(new OkResultToActionResultTransformationContext<Result<T>>(result));
         }
     }
 }
