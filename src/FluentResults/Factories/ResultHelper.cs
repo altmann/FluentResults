@@ -54,9 +54,8 @@ namespace FluentResults
 
         public static bool HasException<TException>(
             List<IError> errors,
-            Func<TException, bool> predicate//,
-            //out IEnumerable<IError> result
-            )
+            Func<TException, bool> predicate,
+            out IEnumerable<IError> result)
             where TException : Exception
         {
             var foundErrors = errors.OfType<ExceptionalError>()
@@ -66,26 +65,39 @@ namespace FluentResults
 
             if (foundErrors.Any())
             {
-                //result = foundErrors;
+                result = foundErrors;
                 return true;
             }
 
             foreach (var error in errors)
             {
-                if (HasException(error.Reasons, predicate/*, out var fErrors*/))
+                if (HasException(error.Reasons, predicate, out var fErrors))
                 {
-                    //result = fErrors;
+                    result = fErrors;
                     return true;
                 }
             }
 
-            //result = Array.Empty<IError>();
+            result = Array.Empty<IError>();
             return false;
         }
 
-        public static bool HasSuccess<TSuccess>(List<ISuccess> successes, Func<TSuccess, bool> predicate) where TSuccess : ISuccess
+        public static bool HasSuccess<TSuccess>(
+            List<ISuccess> successes, 
+            Func<TSuccess, bool> predicate,
+            out IEnumerable<TSuccess> result) where TSuccess : ISuccess
         {
-            return successes.Any(success => success is TSuccess successOfTSuccess && predicate(successOfTSuccess));
+            var foundSuccesses = successes.OfType<TSuccess>()
+                                          .Where(predicate)
+                                          .ToList();
+            if (foundSuccesses.Any())
+            {
+                result = foundSuccesses;
+                return true;
+            }
+
+            result = Array.Empty<TSuccess>();
+            return false;
         }
     }
 }
