@@ -424,6 +424,8 @@ result.HasError(error => error.HasMetadataKey("MyKey"));
 result.HasError(error => error.HasMetadata("MyKey", metadataValue => (string)metadataValue == "MyValue")); 
 ```
 
+All ```HasError()``` methods have an optional out parameter result to access the found errorors. 
+
 ### Handling successes
 
 Checking if a result object contains a specific success object can be done with the method `HasSuccess()`
@@ -436,6 +438,8 @@ result.HasSuccess<MyCustomSuccess>();
 result.HasSuccess<MyCustomSuccess>(success => success.MyField == 3);
 ```
 
+All ```HasSuccess()``` methods have an optional out parameter result to access the found successes. 
+
 ### Handling/catching exceptions
 
 Checking if a result object contains an error with an specific exception type can be done with the method `HasException()`
@@ -447,6 +451,8 @@ result.HasException<MyCustomException>();
 // check if the Result object contains an exception from a specific type and with a specific condition
 result.HasException<MyCustomException>(MyCustomException => MyCustomException.MyField == 1);
 ```
+
+All ```HasException()``` methods have an optional out parameter result to access the found error. 
 
 ### Pattern Matching
 
