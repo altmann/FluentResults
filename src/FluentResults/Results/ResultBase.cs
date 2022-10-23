@@ -215,7 +215,7 @@ namespace FluentResults
             isSuccess = IsSuccess;
             isFailed = IsFailed;
         }
-        
+
         /// <summary>
         /// Deconstruct Result
         /// </summary>
@@ -228,7 +228,6 @@ namespace FluentResults
             isFailed = IsFailed;
             errors = IsFailed ? Errors : default;
         }
-
     }
 
     public abstract class ResultBase<TResult> : ResultBase
@@ -446,8 +445,8 @@ namespace FluentResults
         public override string ToString()
         {
             var reasonsString = Reasons.Any()
-                ? $", Reasons='{ReasonFormat.ReasonsToString(Reasons)}'"
-                : string.Empty;
+                                    ? $", Reasons='{ReasonFormat.ReasonsToString(Reasons)}'"
+                                    : string.Empty;
 
             return $"Result: IsSuccess='{IsSuccess}'{reasonsString}";
         }
