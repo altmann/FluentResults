@@ -3,7 +3,7 @@
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
-    public partial class ResultSettings
+    public class ResultSettingsBuilder
     {
         /// <summary>
         /// Set the ResultLogger
@@ -28,7 +28,7 @@ namespace FluentResults
         public Func<string, Exception, IExceptionalError> ExceptionalErrorFactory { get; set; }
 
 
-        public ResultSettings()
+        public ResultSettingsBuilder()
         {
             // set defaults
             Logger = new DefaultLogger();
@@ -38,16 +38,16 @@ namespace FluentResults
             ExceptionalErrorFactory = (errorMessage, exception) => new ExceptionalError(errorMessage ?? exception.Message, exception);
         }
 
-        //public ResultSettings Build()
-        //{
-        //    return new ResultSettings
-        //    {
-        //        Logger = Logger,
-        //        DefaultTryCatchHandler = DefaultTryCatchHandler,
-        //        SuccessFactory = SuccessFactory,
-        //        ErrorFactory = ErrorFactory,
-        //        ExceptionalErrorFactory = ExceptionalErrorFactory
-        //    };
-        //}
+        public ResultSettings Build()
+        {
+            return new ResultSettings
+            {
+                Logger = Logger,
+                DefaultTryCatchHandler = DefaultTryCatchHandler,
+                SuccessFactory = SuccessFactory,
+                ErrorFactory = ErrorFactory,
+                ExceptionalErrorFactory = ExceptionalErrorFactory
+            };
+        }
     }
 }

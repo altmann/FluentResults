@@ -12,18 +12,18 @@ namespace FluentResults
 
         static Result()
         {
-            Settings = new ResultSettings();
+            Settings = new ResultSettingsBuilder().Build();
         }
 
         /// <summary>
         /// Setup global settings like logging
         /// </summary>
-        public static void Setup(Action<ResultSettings> setupFunc)
+        public static void Setup(Action<ResultSettingsBuilder> setupFunc)
         {
-            var settingsBuilder = new ResultSettings();
+            var settingsBuilder = new ResultSettingsBuilder();
             setupFunc(settingsBuilder);
 
-            Settings = settingsBuilder;
+            Settings = settingsBuilder.Build();
         }
 
         /// <summary>
