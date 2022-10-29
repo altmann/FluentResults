@@ -339,6 +339,26 @@ string myString = "hello world";
 Result<T> result = myString;
 ```
 
+### Implicit conversion from Error to fail result ```Result``` or ```Result<T>```
+
+from a single error
+
+```csharp
+error myError = new Error("error msg");
+Result result = myError;
+```
+or from a list of errors
+
+```csharp
+List<Error> myErrors = new List<Error>() 
+    { 
+        new Error("error 1"), 
+        new Error("error 2") 
+    };
+    
+Result result = myErrors;
+```
+
 ### Bind the result to another result
 
 Binding is a transformation that returns a `Result` | `Result<T>`.
