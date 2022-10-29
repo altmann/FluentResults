@@ -8,7 +8,8 @@ namespace FluentResults
 {
     public partial class Result : ResultBase<Result>
     {
-        public Result() { }
+        public Result()
+        { }
 
         /// <summary>
         /// Map all errors of the result via errorMapper
@@ -57,8 +58,9 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-
-            if (IsSuccess) {
+            
+            if (IsSuccess)
+            {
                 var converted = bind();
                 result.WithValue(converted.ValueOrDefault);
                 result.WithReasons(converted.Reasons);
@@ -66,7 +68,7 @@ namespace FluentResults
 
             return result;
         }
-
+        
         /// <summary>
         /// Convert result to result with value that may fail asynchronously.
         /// </summary>
@@ -80,8 +82,9 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-
-            if (IsSuccess) {
+            
+            if (IsSuccess)
+            {
                 var converted = await bind();
                 result.WithValue(converted.ValueOrDefault);
                 result.WithReasons(converted.Reasons);
@@ -89,7 +92,7 @@ namespace FluentResults
 
             return result;
         }
-
+        
         /// <summary>
         /// Convert result to result with value that may fail asynchronously.
         /// </summary>
@@ -103,8 +106,9 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-
-            if (IsSuccess) {
+            
+            if (IsSuccess)
+            {
                 var converted = await bind();
                 result.WithValue(converted.ValueOrDefault);
                 result.WithReasons(converted.Reasons);
@@ -112,7 +116,7 @@ namespace FluentResults
 
             return result;
         }
-
+        
         /// <summary>
         /// Execute an action which returns a <see cref="Result"/>.
         /// </summary>
@@ -126,15 +130,16 @@ namespace FluentResults
         {
             var result = new Result();
             result.WithReasons(Reasons);
-
-            if (IsSuccess) {
+            
+            if (IsSuccess)
+            {
                 var converted = action();
                 result.WithReasons(converted.Reasons);
             }
 
             return result;
         }
-
+        
         /// <summary>
         /// Execute an action which returns a <see cref="Result"/> asynchronously.
         /// </summary>
@@ -148,15 +153,16 @@ namespace FluentResults
         {
             var result = new Result();
             result.WithReasons(Reasons);
-
-            if (IsSuccess) {
+            
+            if (IsSuccess)
+            {
                 var converted = await action();
                 result.WithReasons(converted.Reasons);
             }
 
             return result;
         }
-
+        
         /// <summary>
         /// Execute an action which returns a <see cref="Result"/> asynchronously.
         /// </summary>
@@ -170,15 +176,16 @@ namespace FluentResults
         {
             var result = new Result();
             result.WithReasons(Reasons);
-
-            if (IsSuccess) {
+            
+            if (IsSuccess)
+            {
                 var converted = await action();
                 result.WithReasons(converted.Reasons);
             }
 
             return result;
         }
-
+        
         public static implicit operator Result(Error error)
         {
             return Fail(error);
@@ -205,7 +212,8 @@ namespace FluentResults
 
     public class Result<TValue> : ResultBase<Result<TValue>>, IResult<TValue>
     {
-        public Result() { }
+        public Result()
+        { }
 
         private TValue _value;
 
@@ -284,7 +292,7 @@ namespace FluentResults
         /// </summary>
         public Result<TNewValue> ToResult<TNewValue>(Func<TValue, TNewValue> valueConverter = null)
         {
-            if (IsSuccess && valueConverter == null)
+            if(IsSuccess && valueConverter == null)
                 throw new ArgumentException("If result is success then valueConverter should not be null");
 
             return new Result<TNewValue>()
@@ -308,8 +316,9 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-
-            if (IsSuccess) {
+            
+            if (IsSuccess)
+            {
                 var converted = bind(Value);
                 result.WithValue(converted.ValueOrDefault);
                 result.WithReasons(converted.Reasons);
@@ -317,7 +326,7 @@ namespace FluentResults
 
             return result;
         }
-
+        
         /// <summary>
         /// Convert result with value to result with another value that may fail asynchronously.
         /// </summary>
@@ -331,8 +340,9 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-
-            if (IsSuccess) {
+            
+            if (IsSuccess)
+            {
                 var converted = await bind(Value);
                 result.WithValue(converted.ValueOrDefault);
                 result.WithReasons(converted.Reasons);
@@ -340,7 +350,7 @@ namespace FluentResults
 
             return result;
         }
-
+        
         /// <summary>
         /// Convert result with value to result with another value that may fail asynchronously.
         /// </summary>
@@ -354,8 +364,9 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-
-            if (IsSuccess) {
+            
+            if (IsSuccess)
+            {
                 var converted = await bind(Value);
                 result.WithValue(converted.ValueOrDefault);
                 result.WithReasons(converted.Reasons);
@@ -378,14 +389,15 @@ namespace FluentResults
             var result = new Result();
             result.WithReasons(Reasons);
 
-            if (IsSuccess) {
+            if (IsSuccess)
+            {
                 var converted = action(Value);
                 result.WithReasons(converted.Reasons);
             }
 
             return result;
         }
-
+        
         /// <summary>
         /// Execute an action which returns a <see cref="Result"/> asynchronously.
         /// </summary>
@@ -400,14 +412,15 @@ namespace FluentResults
             var result = new Result();
             result.WithReasons(Reasons);
 
-            if (IsSuccess) {
+            if (IsSuccess)
+            {
                 var converted = await action(Value);
                 result.WithReasons(converted.Reasons);
             }
 
             return result;
         }
-
+        
         /// <summary>
         /// Execute an action which returns a <see cref="Result"/> asynchronously.
         /// </summary>
@@ -422,7 +435,8 @@ namespace FluentResults
             var result = new Result();
             result.WithReasons(Reasons);
 
-            if (IsSuccess) {
+            if (IsSuccess)
+            {
                 var converted = await action(Value);
                 result.WithReasons(converted.Reasons);
             }
@@ -448,16 +462,6 @@ namespace FluentResults
                 return r;
 
             return Result.Ok(value);
-        }
-
-        public static implicit operator Result<TValue>(Error error)
-        {
-            return Result.Fail(error);
-        }
-
-        public static implicit operator Result<TValue>(List<Error> errors)
-        {
-            return Result.Fail(errors);
         }
 
         /// <summary>
@@ -491,8 +495,7 @@ namespace FluentResults
         private void ThrowIfFailed()
         {
             if (IsFailed)
-                throw new InvalidOperationException(
-                    $"Result is in status failed. Value is not set. Having: {ReasonFormat.ErrorReasonsToString(Errors)}");
+                throw new InvalidOperationException($"Result is in status failed. Value is not set. Having: {ReasonFormat.ErrorReasonsToString(Errors)}");
         }
     }
 }
