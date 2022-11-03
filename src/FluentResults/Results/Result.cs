@@ -38,11 +38,22 @@ namespace FluentResults
                 .WithSuccesses(Successes.Select(successMapper));
         }
 
+        [Obsolete("Use Map(mapLogic)")]
         public Result<TNewValue> ToResult<TNewValue>(TNewValue newValue = default)
         {
             return new Result<TNewValue>()
                 .WithValue(IsFailed ? default : newValue)
                 .WithReasons(Reasons);
+        }
+
+        /// <summary>
+        /// Convert result without value to result with value. 
+        /// </summary>
+        public Result<TNewValue> Map<TNewValue>(TNewValue newValue = default)
+        {
+            return new Result<TNewValue>()
+                   .WithValue(IsFailed ? default : newValue)
+                   .WithReasons(Reasons);
         }
 
         /// <summary>
@@ -280,14 +291,23 @@ namespace FluentResults
         /// <summary>
         /// Convert result with value to result with another value. Use valueConverter parameter to specify the value transformation logic.
         /// </summary>
+        [Obsolete("Use Map(mapLogic)")]
         public Result<TNewValue> ToResult<TNewValue>(Func<TValue, TNewValue> valueConverter = null)
         {
-            if(IsSuccess && valueConverter == null)
+            return Map(valueConverter);
+        }
+
+        /// <summary>
+        /// Convert result with value to result with another value. Use valueConverter parameter to specify the value transformation logic.
+        /// </summary>
+        public Result<TNewValue> Map<TNewValue>(Func<TValue, TNewValue> mapLogic = null)
+        {
+            if (IsSuccess && mapLogic == null)
                 throw new ArgumentException("If result is success then valueConverter should not be null");
 
             return new Result<TNewValue>()
-                .WithValue(IsFailed ? default : valueConverter(Value))
-                .WithReasons(Reasons);
+                   .WithValue(IsFailed ? default : mapLogic(Value))
+                   .WithReasons(Reasons);
         }
 
         /// <summary>

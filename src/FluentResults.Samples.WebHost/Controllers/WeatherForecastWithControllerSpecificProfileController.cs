@@ -24,12 +24,12 @@ namespace FluentResults.Samples.WebHost.Controllers
         public ActionResult<OkResponse<WeatherForecastDto>> Query(RequestDto request)
         {
             return Domain.DomainQuery(request.FailureType)
-                         .ToResult(value => new WeatherForecastDto
-                                            {
-                                                Date = DateTime.Now,
-                                                Summary = "Hello World",
-                                                TemperatureC = value
-                                            })
+                         .Map(value => new WeatherForecastDto
+                                       {
+                                           Date = DateTime.Now,
+                                           Summary = "Hello World",
+                                           TemperatureC = value
+                                       })
                          .ToActionResult(_profile);
         }
 
@@ -37,12 +37,12 @@ namespace FluentResults.Samples.WebHost.Controllers
         public async Task<ActionResult<OkResponse<WeatherForecastDto>>> QueryWithTask(RequestDto request)
         {
             return await Domain.DomainQueryAsync(request.FailureType)
-                               .ToResultX(value => new WeatherForecastDto
-                               {
-                                   Date = DateTime.Now,
-                                   Summary = "Hello World",
-                                   TemperatureC = value
-                               })
+                               .Map(value => new WeatherForecastDto
+                                             {
+                                                 Date = DateTime.Now,
+                                                 Summary = "Hello World",
+                                                 TemperatureC = value
+                                             })
                                .ToActionResult(_profile);
         }
 
@@ -59,5 +59,26 @@ namespace FluentResults.Samples.WebHost.Controllers
             return await Domain.DomainCommandAsync(request.FailureType)
                                .ToActionResult(_profile);
         }
+
+        //[HttpPost]
+        //public async Task<ActionResult<PersonDto>> CreatePerson(CreatePersonCommand request)
+        //{
+        //    var result = await Domain.CreatePerson(request);
+
+        //    return ????;
+        //}
+
+        //[HttpPost]
+        //public async Task<ActionResult<PersonDto>> CreatePerson(CreatePersonCommand request)
+        //{
+        //    return await Domain.CreatePerson(request)
+        //                                        .ToResultX(person => new PersonDto
+        //                                                             {
+        //                                                                 Id = person.Id,
+        //                                                                 Vorname = person.Vorname,
+        //                                                                 Nachname = person.Nachname
+        //                                                             })
+        //                                        .ToActionResult();
+        //}
     }
 }

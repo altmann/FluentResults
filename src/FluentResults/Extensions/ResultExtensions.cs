@@ -125,10 +125,22 @@ namespace FluentResults.Extensions
             return await result.Bind(bind);
         }
 
-        public static async Task<Result<TNewValue>> ToResultX<TOldValue, TNewValue>(this Task<Result<TOldValue>> resultTask, Func<TOldValue, TNewValue> valueConverter)
+        public static async Task<Result<TNewValue>> Map<TOldValue, TNewValue>(this Task<Result<TOldValue>> resultTask, Func<TOldValue, TNewValue> valueConverter)
         {
             var result = await resultTask;
-            return result.ToResult(valueConverter);
+            return result.Map(valueConverter);
+        }
+
+        public static async Task<Result<TNewValue>> Map<TOldValue, TNewValue>(this ValueTask<Result<TOldValue>> resultTask, Func<TOldValue, TNewValue> valueConverter)
+        {
+            var result = await resultTask;
+            return result.Map(valueConverter);
+        }
+
+        public static async Task<Result<TValue>> Map<TValue>(this Task<Result> resultTask, TValue value = default)
+        {
+            var result = await resultTask;
+            return result.Map(value);
         }
     }
 }
