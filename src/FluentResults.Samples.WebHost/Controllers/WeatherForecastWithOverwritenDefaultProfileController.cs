@@ -11,7 +11,7 @@ namespace FluentResults.Samples.WebHost.Controllers
         public ActionResult<OkResponse<WeatherForecastDto>> Query(RequestDto request)
         {
             return Domain.DomainQuery(request.FailureType)
-                         .ToResult(value => new WeatherForecastDto
+                         .Map(value => new WeatherForecastDto
                                             {
                                                 Date = DateTime.Now,
                                                 Summary = "Hello World",
