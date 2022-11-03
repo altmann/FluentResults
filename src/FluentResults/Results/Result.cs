@@ -463,7 +463,7 @@ namespace FluentResults
 
         public static implicit operator Result<TValue>(Result result)
         {
-            return result.ToResult<TValue>();
+            return result.Map<TValue>();
         }
 
         public static implicit operator Result<TValue>(TValue value)
