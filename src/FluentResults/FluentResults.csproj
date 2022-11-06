@@ -8,7 +8,8 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		ADDED - Map() methods to convert the value to another value
+		ADDED - Implicit operators for Error and List of Error to Result or Result of T #159
+        ADDED - Map() methods to convert the value of the result to another value (preparation for AspNetCore package)
         DEPRECATED - Mark ToResult() methods as obsolete. Use Map() methods instead.
     </PackageReleaseNotes>
     <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
