@@ -137,10 +137,16 @@ namespace FluentResults.Extensions
             return result.Map(valueConverter);
         }
 
-        public static async Task<Result<TValue>> Map<TValue>(this Task<Result> resultTask, TValue value = default)
+        public static async Task<Result<TValue>> ToResult<TValue>(this Task<Result> resultTask, TValue value)
         {
             var result = await resultTask;
-            return result.Map(value);
+            return result.ToResult(value);
+        }
+
+        public static async Task<Result<TValue>> ToResult<TValue>(this ValueTask<Result> resultTask, TValue value)
+        {
+            var result = await resultTask;
+            return result.ToResult(value);
         }
     }
 }

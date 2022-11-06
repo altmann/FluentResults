@@ -18,8 +18,14 @@ namespace FluentResults.Test
 
     public class Playground
     {
-        public void Simple()
+        public async Task Simple()
         {
+            Result.Ok().ToResult(23);
+            await Task.FromResult(Result.Ok()).ToResult(23);
+
+            Result.Ok(4).Map(v => 5);
+            await Task.FromResult(Result.Ok(23)).Map(v => 34);
+
             var voidResult = Result.Ok();
 
             voidResult = Result.Ok()

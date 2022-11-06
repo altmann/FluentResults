@@ -38,22 +38,11 @@ namespace FluentResults
                 .WithSuccesses(Successes.Select(successMapper));
         }
 
-        [Obsolete("Use Map(mapLogic)")]
-        public Result<TNewValue> ToResult<TNewValue>(TNewValue newValue = default)
+        public Result<TNewValue> ToResult<TNewValue>(TNewValue newValue)
         {
             return new Result<TNewValue>()
                 .WithValue(IsFailed ? default : newValue)
                 .WithReasons(Reasons);
-        }
-
-        /// <summary>
-        /// Convert result without value to result with value. 
-        /// </summary>
-        public Result<TNewValue> Map<TNewValue>(TNewValue newValue = default)
-        {
-            return new Result<TNewValue>()
-                   .WithValue(IsFailed ? default : newValue)
-                   .WithReasons(Reasons);
         }
 
         /// <summary>
