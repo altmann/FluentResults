@@ -40,8 +40,7 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ValueResultTests
                                   .That.Satisfy<SomeReason>(r => r.Prop.Should().Be("Prop2"));
 
             action.Should()
-                  .Throw<XunitException>()
-                  .WithMessage($"Expected r.Prop to be \"Prop2\", but \"Prop1\" differs near \"1\" (index 4).");
+                  .Throw<XunitException>();
         }
 
         [Fact]
@@ -59,8 +58,7 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ValueResultTests
                                   .That.Satisfy<AnotherReason>(r => {});
 
             action.Should()
-                  .Throw<XunitException>()
-                  .WithMessage($"Reason should be of type 'FluentResults.Extensions.FluentAssertions.Test.AnotherReason', but is of type 'FluentResults.Extensions.FluentAssertions.Test.SomeReason'");
+                  .Throw<XunitException>();
         }
     }
 }
