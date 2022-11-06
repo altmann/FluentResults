@@ -196,6 +196,16 @@ namespace FluentResults
 
             return result;
         }
+        
+        public static implicit operator Result(Error error)
+        {
+            return Fail(error);
+        }
+
+        public static implicit operator Result(List<Error> errors)
+        {
+            return Fail(errors);
+        }
     }
 
     public interface IResult<out TValue> : IResultBase

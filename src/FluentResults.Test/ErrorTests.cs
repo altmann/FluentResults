@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -123,7 +124,37 @@ namespace FluentResults.Test
 
         public class CustomError : Error
         {
+            
+        }
 
+        [Fact]
+        public void CreateError_FromErrorImplicitConversion()
+        {
+            var error = new Error("")
+                .CausedBy("First error message");
+
+            Result result = error;
+
+            result.IsFailed.Should().Be(true);
+            result.Reasons.Should().HaveCount(1);
+            error.Reasons.First().Message.Should().Be("First error message");
+        }
+
+        [Fact]
+        public void CreateErrors_FromListOfErrorsImplicitConversion()
+        {
+            var errors = new List<Error>
+            {
+                new Error("First error message"),
+                new Error("Second error message"),
+            };
+
+            Result result = errors;
+
+            result.IsFailed.Should().Be(true);
+            result.Reasons.Should().HaveCount(2);
+            result.Reasons[0].Message.Should().Be("First error message");
+            result.Reasons[1].Message.Should().Be("Second error message");
         }
     }
 }
