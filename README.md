@@ -306,7 +306,7 @@ var results = new List<Result> { result1, result2, result3 };
 var mergedResult = results.Merge();
 ```
 
-### Converting
+### Converting and Transformation
 
 A result object can be converted to another result object with methods `ToResult()` and `ToResult<TValue>()`.
 
@@ -330,6 +330,13 @@ Result.Fail<int>("Failed").ToResult<float>();
 
 // converting a result to a result from type Result
 Result.Ok<int>().ToResult();
+```
+
+A value of a result object to another value can be transformed via method ``Map(..)`
+
+```csharp
+// converting a result to a result from type Result<float>
+Result.Ok<int>(5).Map(v => new Dto(5));
 ```
 
 ### Implicit conversion from T to success result ```Result<T>```
