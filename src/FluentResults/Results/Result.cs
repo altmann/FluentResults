@@ -38,7 +38,7 @@ namespace FluentResults
                 .WithSuccesses(Successes.Select(successMapper));
         }
 
-        public Result<TNewValue> ToResult<TNewValue>(TNewValue newValue)
+        public Result<TNewValue> ToResult<TNewValue>(TNewValue newValue = default)
         {
             return new Result<TNewValue>()
                 .WithValue(IsFailed ? default : newValue)
@@ -290,7 +290,6 @@ namespace FluentResults
         /// <summary>
         /// Convert result with value to result with another value. Use valueConverter parameter to specify the value transformation logic.
         /// </summary>
-        [Obsolete("Use Map(mapLogic)")]
         public Result<TNewValue> ToResult<TNewValue>(Func<TValue, TNewValue> valueConverter = null)
         {
             return Map(valueConverter);
@@ -299,7 +298,7 @@ namespace FluentResults
         /// <summary>
         /// Convert result with value to result with another value. Use valueConverter parameter to specify the value transformation logic.
         /// </summary>
-        public Result<TNewValue> Map<TNewValue>(Func<TValue, TNewValue> mapLogic = null)
+        public Result<TNewValue> Map<TNewValue>(Func<TValue, TNewValue> mapLogic)
         {
             if (IsSuccess && mapLogic == null)
                 throw new ArgumentException("If result is success then valueConverter should not be null");
@@ -462,7 +461,7 @@ namespace FluentResults
 
         public static implicit operator Result<TValue>(Result result)
         {
-            return result.Map<TValue>();
+            return result.ToResult<TValue>(default);
         }
 
         public static implicit operator Result<TValue>(TValue value)
