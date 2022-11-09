@@ -471,6 +471,16 @@ namespace FluentResults
 
             return Result.Ok(value);
         }
+        
+        public static implicit operator Result<TValue>(Error error)
+        {
+            return Result.Fail(error);
+        }
+
+        public static implicit operator Result<TValue>(List<Error> errors)
+        {
+            return Result.Fail(errors);
+        }
 
         /// <summary>
         /// Deconstruct Result
