@@ -2,14 +2,13 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <Version>3.15.0.0</Version>
+    <Version>3.15.1.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		ADDED - Implicit operators for Error and List of Error to Result or Result of T #159
-        ADDED - Map() methods to convert the value of the result to another value (preparation for AspNetCore package)
+		FIXED - Implicit operators for Error and List of Error to Result or Result of T #159
     </PackageReleaseNotes>
     <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
