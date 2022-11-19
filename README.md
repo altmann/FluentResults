@@ -15,7 +15,7 @@ You can install [FluentResults with NuGet](https://www.nuget.org/packages/Fluent
 Install-Package FluentResults
 ```
 
-> :heart: The most needed community feature is pushed at nuget: **[FluentResults.Extensions.AspNetCore](https://www.nuget.org/packages/FluentResults.Extensions.AspNetCore/)** Read [documentation](https://github.com/altmann/FluentResults/wiki/Returning-Result-Objects-from-ASP.NET-Core-Controller). Try it, test it, [give feedback](https://github.com/altmann/FluentResults/issues/149).
+> :heart: The most needed community feature is pushed to nuget: **[FluentResults.Extensions.AspNetCore](https://www.nuget.org/packages/FluentResults.Extensions.AspNetCore/)** Read [documentation](https://github.com/altmann/FluentResults/wiki/Returning-Result-Objects-from-ASP.NET-Core-Controller). Try it, test it, [give feedback](https://github.com/altmann/FluentResults/issues/149).
 
 ## Key Features
 
