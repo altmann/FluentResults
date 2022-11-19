@@ -28,7 +28,8 @@ Install-Package FluentResults
   - .NET Standard, .NET Core, .NET 5+ and .NET Full Framework support (details see [.NET Targeting](https://github.com/altmann/FluentResults#net-targeting))
   - SourceLink support
   - powerful [code samples](https://github.com/altmann/FluentResults#samplesbest-practices) which show the integration with famous or common frameworks/libraries
-- **NEW** Enhanced [FluentAssertions Extension](https://github.com/altmann/FluentResults/wiki) to assert FluentResult objects in an elegant way
+- **NEW** Enhanced [FluentAssertions Extension](https://github.com/altmann/FluentResults/wiki/Asserting-Result-Objects) to assert FluentResult objects in an elegant way
+- **IN PREVIEW** [Returning Result Objects from ASP.NET Controller](https://github.com/altmann/FluentResults/wiki/Returning-Result-Objects-from-ASP.NET-Core-Controller)
 
 ## Why Results instead of exceptions
 
