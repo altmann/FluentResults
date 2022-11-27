@@ -294,7 +294,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("First error message");
             }
-            
+
             [Fact]
             public async Task Bind_ToAnotherValueTypeWithFailedResult_ReturnFailedResultTask()
             {
@@ -309,7 +309,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("First error message");
             }
-            
+
             [Fact]
             public async Task Bind_ToAnotherValueTypeWithFailedResult_ReturnFailedResultValueTask()
             {
@@ -324,7 +324,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("First error message");
             }
-            
+
             [Fact]
             public void Bind_ToResultWithFailedResult_ReturnFailedResult()
             {
@@ -339,7 +339,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("First error message");
             }
-            
+
             [Fact]
             public async Task Bind_ToResultWithFailedResult_ReturnFailedResultTask()
             {
@@ -354,7 +354,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("First error message");
             }
-            
+
             [Fact]
             public async Task Bind_ToResultWithFailedResult_ReturnFailedResultValueTask()
             {
@@ -369,7 +369,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("First error message");
             }
-            
+
             [Fact]
             public void Bind_ToAnotherValueTypeWithFailedResultAndFailedTransformation_ReturnFailedResult()
             {
@@ -384,7 +384,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("Original error message");
             }
-            
+
             [Fact]
             public async Task Bind_ToAnotherValueTypeWithFailedResultAndFailedTransformation_ReturnFailedResultTask()
             {
@@ -399,7 +399,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("Original error message");
             }
-            
+
             [Fact]
             public async Task Bind_ToAnotherValueTypeWithFailedResultAndFailedTransformation_ReturnFailedResultValueTask()
             {
@@ -414,7 +414,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("Original error message");
             }
-            
+
             [Fact]
             public void Bind_ToResultWithFailedResultAndFailedTransformation_ReturnFailedResult()
             {
@@ -429,7 +429,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("Original error message");
             }
-            
+
             [Fact]
             public async Task Bind_ToResultWithFailedResultAndFailedTransformation_ReturnFailedResultTask()
             {
@@ -444,7 +444,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("Original error message");
             }
-            
+
             [Fact]
             public async Task Bind_ToResultWithFailedResultAndFailedTransformation_ReturnFailedResultValueTask()
             {
@@ -466,8 +466,8 @@ namespace FluentResults.Test
                 var valueResult = Result.Ok(1).WithSuccess("An int");
 
                 // Act
-                var result = valueResult.Bind(n => n == 1 
-                    ? "One".ToResult().WithSuccess("It is one") 
+                var result = valueResult.Bind(n => n == 1
+                    ? "One".ToResult().WithSuccess("It is one")
                     : Result.Fail<string>("Only one accepted"));
 
                 // Assert
@@ -479,15 +479,15 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("An int", "It is one");
             }
-            
+
             [Fact]
             public async Task Bind_ToAnotherValueTypeWhichIsSuccessful_ReturnsSuccessResultTask()
             {
                 var valueResult = Result.Ok(1).WithSuccess("An int");
 
                 // Act
-                var result = await valueResult.Bind(n => Task.FromResult(n == 1 
-                    ? "One".ToResult().WithSuccess("It is one") 
+                var result = await valueResult.Bind(n => Task.FromResult(n == 1
+                    ? "One".ToResult().WithSuccess("It is one")
                     : Result.Fail<string>("Only one accepted")));
 
                 // Assert
@@ -499,15 +499,15 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("An int", "It is one");
             }
-            
+
             [Fact]
             public async Task Bind_ToAnotherValueTypeWhichIsSuccessful_ReturnsSuccessResultValueTask()
             {
                 var valueResult = Result.Ok(1).WithSuccess("An int");
 
                 // Act
-                var result = await valueResult.Bind(n => new ValueTask<Result<string>>(n == 1 
-                    ? "One".ToResult().WithSuccess("It is one") 
+                var result = await valueResult.Bind(n => new ValueTask<Result<string>>(n == 1
+                    ? "One".ToResult().WithSuccess("It is one")
                     : Result.Fail<string>("Only one accepted")));
 
                 // Assert
@@ -519,7 +519,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("An int", "It is one");
             }
-            
+
             [Fact]
             public void Bind_ToResultWhichIsSuccessful_ReturnsSuccessResult()
             {
@@ -534,7 +534,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("First number", "It is one");
             }
-            
+
             [Fact]
             public async Task Bind_ToResultWhichIsSuccessful_ReturnsSuccessResultTask()
             {
@@ -549,7 +549,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("First number", "It is one");
             }
-            
+
             [Fact]
             public async Task Bind_ToResultWhichIsSuccessful_ReturnsSuccessResultValueTask()
             {
@@ -564,7 +564,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("First number", "It is one");
             }
-            
+
             [Fact]
             public void Bind_ToAnotherValueTypeWhichFailedTransformation_ReturnsFailedResult()
             {
@@ -580,7 +580,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("Only one accepted");
             }
-            
+
             [Fact]
             public async Task Bind_ToAnotherValueTypeWhichFailedTransformation_ReturnsFailedResultTask()
             {
@@ -596,7 +596,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("Only one accepted");
             }
-            
+
             [Fact]
             public async Task Bind_ToAnotherValueTypeWhichFailedTransformation_ReturnsFailedResultValueTask()
             {
@@ -612,7 +612,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("Only one accepted");
             }
-            
+
             [Fact]
             public void Bind_ToResultWhichFailedTransformation_ReturnsFailedResult()
             {
@@ -628,7 +628,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("Only one accepted");
             }
-            
+
             [Fact]
             public async Task Bind_ToResultWhichFailedTransformation_ReturnsFailedResultTask()
             {
@@ -644,7 +644,7 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("Only one accepted");
             }
-            
+
             [Fact]
             public async Task Bind_ToResultWhichFailedTransformation_ReturnsFailedResultValueTask()
             {
@@ -828,6 +828,53 @@ namespace FluentResults.Test
 
             result.Value.Should().BeNull();
             result.ValueOrDefault.Should().BeNull();
+        }
+
+        [Fact]
+        public void Implicit_conversion_Result_Value_is_converted_to_Result_object()
+        {
+            Result<object> result = new Result<int>().WithValue(42);
+
+            result.IsSuccess.Should().BeTrue();
+            result.IsFailed.Should().BeFalse();
+            result.Reasons.Should().BeEmpty();
+            result.Errors.Should().BeEmpty();
+
+            result.Value.Should().NotBeNull();
+            result.ValueOrDefault.Should().NotBeNull();
+            result.Value.Should().Be(42);
+        }
+
+        [Fact]
+        public void Implicit_conversion_Result_Value_is_converted_to_Result_object_with_Reasons()
+        {
+            Result<object> result = new Result<int>().WithValue(42).WithReason(new SuccessTests.CustomSuccess());
+
+            result.IsSuccess.Should().BeTrue();
+            result.IsFailed.Should().BeFalse();
+            result.Errors.Should().BeEmpty();
+
+            result.Value.Should().NotBeNull();
+            result.ValueOrDefault.Should().NotBeNull();
+            result.Value.Should().Be(42);
+
+            result.Reasons.Should().ContainSingle();
+            result.Reasons.Should().AllBeEquivalentTo(new SuccessTests.CustomSuccess());
+        }
+
+        [Fact]
+        public void Implicit_conversion_Result_Value_is_converted_to_Result_object_with_Errors()
+        {
+            Result<object> result = new Result<int>().WithValue(42).WithError("foo");
+
+            result.IsSuccess.Should().BeFalse();
+            result.IsFailed.Should().BeTrue();
+
+            result.Reasons.Should().ContainSingle();
+            result.Reasons.Should().AllBeEquivalentTo(new Error("foo"));
+
+            result.Errors.Should().ContainSingle();
+            result.Errors.Should().AllBeEquivalentTo(new Error("foo"));
         }
 
         [Fact]

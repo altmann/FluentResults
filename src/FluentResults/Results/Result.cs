@@ -464,6 +464,11 @@ namespace FluentResults
             return result.ToResult<TValue>(default);
         }
 
+        public static implicit operator Result<object>(Result<TValue> result)
+        {
+            return result.ToResult<object>(value => value);
+        }
+
         public static implicit operator Result<TValue>(TValue value)
         {
             if (value is Result<TValue> r)
