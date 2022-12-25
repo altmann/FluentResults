@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace FluentResults.Immutable.Results.Metadata;
+﻿namespace FluentResults.Immutable.Metadata;
 
 public record Error(
     string Message,

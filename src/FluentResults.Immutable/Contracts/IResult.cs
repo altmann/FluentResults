@@ -1,7 +1,6 @@
-﻿using System.Collections.Immutable;
-using FluentResults.Immutable.Results.Metadata;
+﻿using FluentResults.Immutable.Metadata;
 
-namespace FluentResults.Immutable.Results.Contracts;
+namespace FluentResults.Immutable.Contracts;
 
 public interface IResult
 {

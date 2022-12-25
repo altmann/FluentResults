@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
-using FluentResults.Immutable.Results;
-using FluentResults.Immutable.Results.Metadata;
+
+using FluentResults.Immutable.Metadata;
 
 namespace FluentResults.Immutable.Tests;
 
@@ -16,8 +16,11 @@ public class ResultWithoutValueTests
         initialResult.WithReason(reason)
             .Should()
             .NotBe(initialResult)
-            .And.Match<Result>(
-                r => r.Reasons.ToArray().Single() == reason);
+            .And.Match<Result>(static r => r.IsSuccess)
+            .And.BeOfType<Result>()
+            .Which.Reasons.Single()
+            .Should()
+            .Be(reason);
     }
 
     [Fact(DisplayName = "Should create a new result with provided reasons")]
@@ -50,9 +53,9 @@ public class ResultWithoutValueTests
             .Should()
             .NotBe(initialResult)
             .And.BeOfType<Result>()
-            .Which.Errors.Single()
-            .Message.Should()
-            .Be(message);
+            .Which.HasError((Error e) => e.Message == message)
+            .Should()
+            .BeTrue();
     }
 
     [Fact(DisplayName = "Should create a new result with errors based on provided messages")]
@@ -84,9 +87,9 @@ public class ResultWithoutValueTests
             .Should()
             .NotBe(initialResult)
             .And.BeOfType<Result>()
-            .Which.Errors.Single()
+            .Which.HasError((Error e) => e.Equals(error))
             .Should()
-            .Be(error);
+            .BeTrue();
     }
 
     [Fact(DisplayName = "Should create a new failed result with provided errors")]
@@ -104,5 +107,40 @@ public class ResultWithoutValueTests
             .And.BeOfType<Result>()
             .Which.Errors.Should()
             .BeEquivalentTo(errors.ToImmutableList());
+    }
+
+    [Fact(DisplayName = "Should create a new successful result with provided success")]
+    public void ShouldCreateASuccessfulResultWithProvidedSuccess()
+    {
+        var initialResult = Result.Ok();
+
+        var success = new Success("A success");
+
+        initialResult.WithSuccess(success)
+            .Should()
+            .NotBe(initialResult)
+            .And.Match<Result>(static r => r.IsSuccess)
+            .And.BeOfType<Result>()
+            .Which.HasSuccess((Success s) => s.Equals(success))
+            .Should()
+            .BeTrue();
+    }
+
+    [Fact(DisplayName = "Should create a new successful result with provided successes")]
+    public void ShouldCreateANewSuccessfulResultWithProvidedSuccesses()
+    {
+        var initialResult = Result.Ok();
+
+        var successes = Enumerable.Range(1, 10)
+            .Select(static i => new Success($"A success number {i}"))
+            .ToList();
+
+        initialResult.WithSuccesses(successes)
+            .Should()
+            .NotBe(initialResult)
+            .And.Match<Result>(static r => r.IsSuccess)
+            .And.BeOfType<Result>()
+            .Which.Successes.Should()
+            .BeEquivalentTo(successes.ToImmutableList());
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using FluentResults.Immutable.Results.Metadata;
+﻿using FluentResults.Immutable.Metadata;
 
 namespace FluentResults.Immutable.Extensions;
 

@@ -1,5 +1,4 @@
-using FluentResults.Immutable.Results;
-using FluentResults.Immutable.Results.Metadata;
+using FluentResults.Immutable.Metadata;
 
 namespace FluentResults.Immutable.Tests;
 
@@ -28,6 +27,6 @@ public class ResultFactoriesTests
         Result.Fail(error)
             .Should()
             .Match<Result>(
-                r => r.IsFailed && r.Errors.ToArray().Contains(error));
+                r => r.IsFailed && r.Errors.Single().Equals(error));
     }
 }
