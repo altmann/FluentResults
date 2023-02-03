@@ -40,5 +40,41 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ValueResultTests
                 .Throw<XunitException>()
                 .WithMessage("Value can not be asserted because result is failed because of 'Error 1'");
         }
+
+        [Fact]
+        public void Asserting_null_should_not_throw_exceptions_when_type_is_a_primitive()
+        {
+            var successResult = Result.Ok(null as int?);
+
+            Action action = () => successResult.Should().HaveValue(null);
+
+            action.Should().NotThrow();
+        }
+
+        [Fact]
+        public void Asserting_null_should_not_throw_exceptions_when_type_is_a_struct()
+        {
+            var successResult = Result.Ok(null as SomeStruct?);
+
+            Action action = () => successResult.Should().HaveValue(null);
+
+            action.Should().NotThrow();
+        }
+
+        [Fact]
+        public void Asserting_null_should_not_throw_exceptions_when_type_is_a_class()
+        {
+            var successResult = Result.Ok(null as SomeClass);
+
+            Action action = () => successResult.Should().HaveValue(null);
+
+            action.Should().NotThrow();
+        }
+
+        internal struct SomeStruct
+        { }
+
+        internal class SomeClass
+        { }
     }
 }
