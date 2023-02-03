@@ -6,9 +6,9 @@ public record Error(
     ImmutableDictionary<string, object> Metadata)
     : Reason(Message, Metadata)
 {
-    public Error(string errorMessage)
+    public Error(string message)
         : this(
-              errorMessage,
+              message,
               ImmutableList<Error>.Empty,
               ImmutableDictionary<string, object>.Empty)
     {

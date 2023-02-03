@@ -6,18 +6,27 @@ namespace FluentResults.Immutable.Tests;
 
 public class ResultWithoutValueTests
 {
+    public static readonly TheoryData<Error> Errors = new()
+    {
+        new("Sample flat error"),
+        new(
+            "Complex error",
+            ImmutableList.Create(new Error("Cause of the original error")),
+            ImmutableDictionary<string, object>.Empty),
+    };
+
+    private static readonly Result<Unit> InitialResult = Result.Ok();
+
     [Fact(DisplayName = "Should create a new result with provided reason")]
     public void ShouldCreateANewResultWithProvidedReason()
     {
-        var initialResult = Result.Ok();
-
         var reason = new Reason("A new and totally justifiable reason");
 
-        initialResult.WithReason(reason)
+        InitialResult.WithReason(reason)
             .Should()
-            .NotBe(initialResult)
-            .And.Match<Result>(static r => r.IsSuccess)
-            .And.BeOfType<Result>()
+            .NotBe(InitialResult)
+            .And.Match<Result<Unit>>(static r => r.IsSuccess)
+            .And.BeOfType<Result<Unit>>()
             .Which.Reasons.Single()
             .Should()
             .Be(reason);
@@ -26,18 +35,16 @@ public class ResultWithoutValueTests
     [Fact(DisplayName = "Should create a new result with provided reasons")]
     public void ShouldCreateANewResultWithProvidedReasons()
     {
-        var initialResult = Result.Ok();
-
         const string message = "A new reason";
 
         var reasons = Enumerable.Range(1, 5)
             .Select(static i => new Reason($"{message} number {i}"))
             .ToList();
 
-        initialResult.WithReasons(reasons)
+        InitialResult.WithReasons(reasons)
             .Should()
-            .NotBe(initialResult)
-            .And.BeOfType<Result>()
+            .NotBe(InitialResult)
+            .And.BeOfType<Result<Unit>>()
             .Which.Reasons.Should()
             .BeEquivalentTo(reasons.ToImmutableList());
     }
@@ -52,8 +59,8 @@ public class ResultWithoutValueTests
         initialResult.WithError(message)
             .Should()
             .NotBe(initialResult)
-            .And.BeOfType<Result>()
-            .Which.HasError((Error e) => e.Message == message)
+            .And.BeOfType<Result<Unit>>()
+            .Which.HasError(static (Error e) => e.Message == message)
             .Should()
             .BeTrue();
     }
@@ -70,7 +77,7 @@ public class ResultWithoutValueTests
         initialResult.WithErrors(errors)
             .Should()
             .NotBe(initialResult)
-            .And.BeOfType<Result>()
+            .And.BeOfType<Result<Unit>>()
             .Which.Errors.Select(static e => e.Message)
             .Should()
             .BeEquivalentTo(errors);
@@ -86,7 +93,7 @@ public class ResultWithoutValueTests
         initialResult.WithError(error)
             .Should()
             .NotBe(initialResult)
-            .And.BeOfType<Result>()
+            .And.BeOfType<Result<Unit>>()
             .Which.HasError((Error e) => e.Equals(error))
             .Should()
             .BeTrue();
@@ -104,7 +111,7 @@ public class ResultWithoutValueTests
         initialResult.WithErrors(errors)
             .Should()
             .NotBe(initialResult)
-            .And.BeOfType<Result>()
+            .And.BeOfType<Result<Unit>>()
             .Which.Errors.Should()
             .BeEquivalentTo(errors.ToImmutableList());
     }
@@ -119,8 +126,8 @@ public class ResultWithoutValueTests
         initialResult.WithSuccess(success)
             .Should()
             .NotBe(initialResult)
-            .And.Match<Result>(static r => r.IsSuccess)
-            .And.BeOfType<Result>()
+            .And.Match<Result<Unit>>(static r => r.IsSuccess)
+            .And.BeOfType<Result<Unit>>()
             .Which.HasSuccess((Success s) => s.Equals(success))
             .Should()
             .BeTrue();
@@ -138,9 +145,108 @@ public class ResultWithoutValueTests
         initialResult.WithSuccesses(successes)
             .Should()
             .NotBe(initialResult)
-            .And.Match<Result>(static r => r.IsSuccess)
-            .And.BeOfType<Result>()
+            .And.Match<Result<Unit>>(static r => r.IsSuccess)
+            .And.BeOfType<Result<Unit>>()
             .Which.Successes.Should()
             .BeEquivalentTo(successes.ToImmutableList());
+    }
+
+    [Fact(DisplayName = "Should create a new result containing a generic error with provided error message")]
+    public void ShouldCreateANewResultWithAGenericErrorWithProvidedMessage()
+    {
+        const string message = "An error";
+
+        InitialResult.WithError(message)
+            .Should()
+            .NotBe(InitialResult)
+            .And.BeOfType<Result<Unit>>()
+            .Which.Errors.Single()
+            .Should()
+            .Match<Error>(static e => e.Message == message);
+    }
+
+    [Theory(DisplayName = "Should create a new result containing provided error and its underlying causes")]
+    [MemberData(nameof(Errors))]
+    public void ShouldCreateANewResultContainingProvidedErrorAndItsCauses(Error error)
+    {
+        InitialResult.WithError(error)
+            .Should()
+            .NotBe(InitialResult)
+            .And.BeOfType<Result<Unit>>()
+            .Which.Errors
+            .Should()
+            .BeEquivalentTo(Flatten(error));
+
+        static IEnumerable<Error> Flatten(Error e) =>
+            new[]
+            {
+                e,
+            }.Concat(e.Errors.SelectMany(Flatten));
+    }
+
+    [Fact(DisplayName = "Should create a new result with generic errors containing provided messages")]
+    public void ShouldCreateANewResultWithGenericErrorsContainingProvidedMessages()
+    {
+        var errorMessages = Enumerable.Repeat("Error message no", 10)
+            .Select(static (messageTemplate, index) => $"{messageTemplate} {index + 1}")
+            .ToList();
+
+        InitialResult.WithErrors(errorMessages)
+            .Should()
+            .NotBe(InitialResult)
+            .And.BeOfType<Result<Unit>>()
+            .Which.Errors
+            .Select(static e => e.Message)
+            .Should()
+            .BeEquivalentTo(errorMessages);
+    }
+
+    [Fact(DisplayName = "HasError should return false for successful result")]
+    public void ShouldReturnFalseForSuccessfulResult() =>
+        InitialResult.HasError<Error>()
+            .Should()
+            .BeFalse();
+
+    [Fact(DisplayName = "HasError should return true for a failed result with generic error")]
+    public void ShouldReturnTrueForFailedResult()
+    {
+        var error = new Error("A failure");
+
+        Result.Fail(error)
+            .HasError<Error>()
+            .Should()
+            .BeTrue();
+    }
+
+    [Fact(DisplayName = "HasError should return true for a defined, nested error")]
+    public void ShouldReturnTrueForANestedError()
+    {
+        var complexError = new Error(
+            "Some complex failure",
+            ImmutableList.Create<Error>(new RootError("Root cause of a failure")),
+            ImmutableDictionary<string, object>.Empty);
+
+        Result.Fail(complexError)
+            .HasError<RootError>()
+            .Should()
+            .BeTrue();
+    }
+
+    private sealed record RootError(
+            string Message,
+            ImmutableList<Error> Errors,
+            ImmutableDictionary<string, object> Metadata)
+        : Error(
+            Message,
+            Errors,
+            Metadata)
+    {
+        public RootError(string message)
+            : this(
+                message,
+                ImmutableList<Error>.Empty,
+                ImmutableDictionary<string, object>.Empty)
+        {
+        }
     }
 }

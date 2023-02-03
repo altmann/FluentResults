@@ -3,13 +3,13 @@ using FluentResults.Immutable.Metadata;
 
 namespace FluentResults.Immutable;
 
-public partial record Result
+public static class Result
 {
-    public static Result Ok() => new();
+    public static Result<Unit> Ok() => new(Unit.Value);
 
-    public static Result Fail(string errorMessage) => Fail(new Error(errorMessage));
+    public static Result<Unit> Fail(string errorMessage) => Fail(new Error(errorMessage));
 
-    public static Result Fail(Error error) => new(error.Yield().ToList());
+    public static Result<Unit> Fail(Error error) => new(error.Yield().ToList());
 
     public static Result<T> Ok<T>(T value) => new(value);
 
