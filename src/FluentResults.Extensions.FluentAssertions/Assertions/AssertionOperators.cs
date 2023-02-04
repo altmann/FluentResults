@@ -98,7 +98,7 @@ namespace FluentResults.Extensions.FluentAssertions
                    .FailWith("Value can not be asserted because result is failed because of '{0}'", subject.Errors)
                    .Then
                    .Given(() => subject.Value)
-                   .ForCondition(actualValue => actualValue.Equals(expectedValue))
+                   .ForCondition(actualValue => (actualValue == null && expectedValue == null) || actualValue.Equals(expectedValue))
                    .FailWith("Expected value is '{0}', but is '{1}'", expectedValue, subject.Value);
 
             return new AndConstraint<TResultAssertion>(parentConstraint);
