@@ -3,16 +3,13 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>FluentResults.Extensions.FluentAssertions</PackageId>
-    <Version>2.1.0.0</Version>
+    <Version>2.1.1.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>Asserting FluentResults objects with FluentAssertions</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		- ADDED That property to assert a reason That.HaveMetadata(...), That.Satisfy(...)
-        - ADDED Should() method to assert reasons
-        - ADDED HaveError() method to assert errors
-		- CHANGED FluentResultAssertionsConfig.ErrorMessageComparison setting to FluentResultAssertionsConfig.MessageComparison because this is setting is used for messages in general (also reason)
+		- FIXED - Assertions method HaveValue(...) can now handle null #172
 	</PackageReleaseNotes>
     <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling FluentResults</PackageTags>
