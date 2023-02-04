@@ -831,6 +831,53 @@ namespace FluentResults.Test
         }
 
         [Fact]
+        public void Implicit_conversion_Result_Value_is_converted_to_Result_object()
+        {
+            Result<object> result = new Result<int>().WithValue(42);
+
+            result.IsSuccess.Should().BeTrue();
+            result.IsFailed.Should().BeFalse();
+            result.Reasons.Should().BeEmpty();
+            result.Errors.Should().BeEmpty();
+
+            result.Value.Should().NotBeNull();
+            result.ValueOrDefault.Should().NotBeNull();
+            result.Value.Should().Be(42);
+        }
+
+        [Fact]
+        public void Implicit_conversion_Result_Value_is_converted_to_Result_object_with_Reasons()
+        {
+            Result<object> result = new Result<int>().WithValue(42).WithReason(new SuccessTests.CustomSuccess());
+
+            result.IsSuccess.Should().BeTrue();
+            result.IsFailed.Should().BeFalse();
+            result.Errors.Should().BeEmpty();
+
+            result.Value.Should().NotBeNull();
+            result.ValueOrDefault.Should().NotBeNull();
+            result.Value.Should().Be(42);
+
+            result.Reasons.Should().ContainSingle();
+            result.Reasons.Should().AllBeEquivalentTo(new SuccessTests.CustomSuccess());
+        }
+
+        [Fact]
+        public void Implicit_conversion_Result_Value_is_converted_to_Result_object_with_Errors()
+        {
+            Result<object> result = new Result<int>().WithValue(42).WithError("foo");
+
+            result.IsSuccess.Should().BeFalse();
+            result.IsFailed.Should().BeTrue();
+
+            result.Reasons.Should().ContainSingle();
+            result.Reasons.Should().AllBeEquivalentTo(new Error("foo"));
+
+            result.Errors.Should().ContainSingle();
+            result.Errors.Should().AllBeEquivalentTo(new Error("foo"));
+        }
+
+        [Fact]
         public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed()
         {
             var (isSuccess, isFailed) = Result.Ok(true);
