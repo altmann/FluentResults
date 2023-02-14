@@ -5,24 +5,24 @@ using static FluentResults.Immutable.Maybe;
 
 namespace FluentResults.Immutable;
 
-public record Result<T> : IResult
+public readonly record struct Result<T> : IImmutableResult
 {
-    protected internal Result()
+    public Result()
         : this(None<T>(), ImmutableList<Reason>.Empty)
     {
     }
 
-    protected internal Result(IReadOnlyCollection<Reason> reasons)
+    internal Result(IEnumerable<Reason> reasons)
         : this(None<T>(), reasons)
     {
     }
 
-    protected internal Result(T value)
+    internal Result(T value)
         : this(value, ImmutableList<Reason>.Empty)
     {
     }
 
-    protected internal Result(
+    internal Result(
         T value,
         IEnumerable<Reason> reasons)
         : this(Some(value), reasons)
@@ -94,90 +94,48 @@ public record Result<T> : IResult
         where TSuccess : Success =>
         HasReason(predicate ?? (static _ => true));
 
-    public TResult Bind<TResult>(Func<TResult> bindingFunction)
-        where TResult : Result<T>, new() =>
-        IsSuccess && bindingFunction() is { } bind
-            ? bind with
-            {
-                Reasons = Reasons.AddRange(bind.Reasons),
-            }
-            : new()
-            {
-                Reasons = Reasons,
-            };
-
-    public async Task<TResult> Bind<TResult>(Func<Task<TResult>> bindingAsyncFunction)
-        where TResult : Result<T>, new() =>
-        IsSuccess && await bindingAsyncFunction() is { } bind
-            ? bind with
-            {
-                Reasons = Reasons.AddRange(bind.Reasons),
-            }
-            : new()
-            {
-                Reasons = Reasons,
-            };
-
-    public async ValueTask<TResult> Bind<TResult>(Func<ValueTask<TResult>> bindingAsyncFunction)
-        where TResult : Result<T>, new() =>
-        IsSuccess && await bindingAsyncFunction() is { } bind
-            ? bind with
-            {
-                Reasons = Reasons.AddRange(bind.Reasons),
-            }
-            : new()
-            {
-                Reasons = Reasons,
-            };
-
-    public TResult Bind<TResult, TNewValue>(Func<T, TResult> bindingFunction)
-        where TResult : Result<TNewValue>, new()
+    public Result<TNewValue> Bind<TNewValue>(Func<T, Result<TNewValue>> bindingFunction)
     {
+        Result<TNewValue> fallback = new()
+        {
+            Reasons = Reasons,
+        };
+
         return IsSuccess
             ? Value.Match(
                 bindingFunction,
-                FallbackResult)
-            : FallbackResult();
+                () => fallback)
+            : fallback;
+    }
 
-        TResult FallbackResult() =>
+    public Task<Result<TNewValue>> Bind<TNewValue>(Func<T, Task<Result<TNewValue>>> asyncBindingFunction)
+    {
+        var fallback = Task.FromResult<Result<TNewValue>>(
             new()
             {
                 Reasons = Reasons,
-            };
-    }
+            });
 
-    public Task<TResult> Bind<TResult, TNewValue>(Func<T, Task<TResult>> asyncBindingFunction)
-        where TResult : Result<TNewValue>, new()
-    {
         return IsSuccess
             ? Value.Match(
                 asyncBindingFunction,
-                FallbackResult)
-            : FallbackResult();
-
-        Task<TResult> FallbackResult() =>
-            Task.FromResult(
-                new TResult
-                {
-                    Reasons = Reasons,
-                });
+                () => fallback)
+            : fallback;
     }
 
-    public ValueTask<TResult> Bind<TResult, TNewValue>(Func<T, ValueTask<TResult>> asyncBindingFunction)
-        where TResult : Result<TNewValue>, new()
+    public ValueTask<Result<TNewValue>> Bind<TNewValue>(Func<T, ValueTask<Result<TNewValue>>> asyncBindingFunction)
     {
+        var fallback = new ValueTask<Result<TNewValue>>(
+            new Result<TNewValue>
+            {
+                Reasons = Reasons,
+            });
+
         return IsSuccess
             ? Value.Match(
                 asyncBindingFunction,
-                FallbackResult)
-            : FallbackResult();
-
-        ValueTask<TResult> FallbackResult() =>
-            ValueTask.FromResult(
-                new TResult
-                {
-                    Reasons = Reasons,
-                });
+                () => fallback)
+            : fallback;
     }
 
     private ImmutableList<TReason> GetReasonsOfType<TReason>()

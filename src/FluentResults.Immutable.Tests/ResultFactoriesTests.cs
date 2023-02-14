@@ -6,7 +6,7 @@ public class ResultFactoriesTests
 {
     private const string ErrorMessage = "An error message";
 
-    [Fact(DisplayName = "Should create succesful result with no reasons")]
+    [Fact(DisplayName = "Should create successful result with no reasons")]
     public void ShouldCreateSuccessfulResultWithoutReasons() =>
         Result.Ok()
             .Should()

@@ -2,7 +2,7 @@
 
 namespace FluentResults.Immutable.Contracts;
 
-public interface IResult
+public interface IImmutableResult
 {
     bool IsFailed { get; }
 
