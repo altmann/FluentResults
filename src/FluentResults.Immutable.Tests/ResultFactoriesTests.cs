@@ -1,5 +1,7 @@
 using FluentResults.Immutable.Metadata;
 
+using System.Collections.Immutable;
+
 namespace FluentResults.Immutable.Tests;
 
 public class ResultFactoriesTests
@@ -28,5 +30,48 @@ public class ResultFactoriesTests
             .Should()
             .Match<Result<Unit>>(
                 r => r.IsFailed && r.Errors.Single().Equals(error));
+    }
+
+    [Fact(DisplayName = "HasError should return true for a failed result with generic error")]
+    public void ShouldReturnTrueForFailedResult()
+    {
+        var error = new Error("A failure");
+
+        Result.Fail(error)
+            .HasError<Error>()
+            .Should()
+            .BeTrue();
+    }
+
+    [Fact(DisplayName = "HasError should return true for a defined, nested error")]
+    public void ShouldReturnTrueForANestedError()
+    {
+        var complexError = new Error(
+            "Some complex failure",
+            ImmutableList.Create<Error>(new RootError("Root cause of a failure")),
+            ImmutableDictionary<string, object>.Empty);
+
+        Result.Fail(complexError)
+            .HasError<RootError>()
+            .Should()
+            .BeTrue();
+    }
+
+    private sealed record RootError(
+            string Message,
+            ImmutableList<Error> Errors,
+            ImmutableDictionary<string, object> Metadata)
+        : Error(
+            Message,
+            Errors,
+            Metadata)
+    {
+        public RootError(string message)
+            : this(
+                message,
+                ImmutableList<Error>.Empty,
+                ImmutableDictionary<string, object>.Empty)
+        {
+        }
     }
 }

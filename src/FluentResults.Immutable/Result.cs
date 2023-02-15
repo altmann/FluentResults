@@ -37,16 +37,18 @@ public readonly record struct Result<T> : IImmutableResult
         Reasons = reasons.Flatten(
                 static r => r switch
                 {
-                    Success { Successes.Count: > 0, } s => s.Successes.Cast<Reason>()
-                        .ToImmutableList(),
-                    Error { Errors.Count: > 0, } e => e.Errors.Cast<Reason>()
-                        .ToImmutableList(),
-                    _ => ImmutableList<Reason>.Empty,
+                    Success { Successes.Count: > 0, } s => s.Successes,
+                    Error { Errors.Count: > 0, } e => e.Errors,
+                    _ => Enumerable.Empty<Reason>(),
                 })
             .ToImmutableList();
     }
 
-    public bool IsFailed => Errors.Count > 0;
+    /// <summary>
+    ///     Gets the boolean indicator whether this <see cref="Result{T}" />
+    ///     represents a failed operation.
+    /// </summary>
+    public bool IsFailed => Errors.Any();
 
     public bool IsSuccess => !IsFailed;
 
@@ -93,6 +95,30 @@ public readonly record struct Result<T> : IImmutableResult
     public bool HasSuccess<TSuccess>(Func<TSuccess, bool>? predicate = null)
         where TSuccess : Success =>
         HasReason(predicate ?? (static _ => true));
+
+    public Result<TNew> Bind<TNew>(Func<Result<TNew>> bindingFunction) =>
+        IsSuccess && bindingFunction() is var bind
+            ? bind with
+            {
+                Reasons = Reasons.AddRange(bind.Reasons),
+            }
+            : new(Reasons);
+
+    public async Task<Result<TNew>> Bind<TNew>(Func<Task<Result<TNew>>> bindingAsyncFunction) =>
+        IsSuccess && await bindingAsyncFunction() is var bind
+            ? bind with
+            {
+                Reasons = Reasons.AddRange(bind.Reasons),
+            }
+            : new(Reasons);
+
+    public async ValueTask<Result<TNew>> Bind<TNew>(Func<ValueTask<Result<TNew>>> bindingAsyncFunction) =>
+        IsSuccess && await bindingAsyncFunction() is var bind
+            ? bind with
+            {
+                Reasons = Reasons.AddRange(bind.Reasons),
+            }
+            : new(Reasons);
 
     public Result<TNewValue> Bind<TNewValue>(Func<T, Result<TNewValue>> bindingFunction)
     {
