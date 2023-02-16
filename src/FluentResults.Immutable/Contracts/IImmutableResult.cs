@@ -2,11 +2,13 @@
 
 namespace FluentResults.Immutable.Contracts;
 
-public interface IImmutableResult
+public interface IImmutableResult<T>
 {
-    bool IsFailed { get; }
+    bool IsAFailure { get; }
 
-    bool IsSuccess { get; }
+    bool IsSuccessful { get; }
+
+    Option<T> Value { get; }
 
     ImmutableList<Reason> Reasons { get; }
 

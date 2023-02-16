@@ -12,14 +12,14 @@ public class ResultFactoriesTests
     public void ShouldCreateSuccessfulResultWithoutReasons() =>
         Result.Ok()
             .Should()
-            .Match<Result<Unit>>(static r => r.IsSuccess && !r.Reasons.Any());
+            .Match<Result<Unit>>(static r => r.IsSuccessful && !r.Reasons.Any() && ValueIsAUnit(r));
 
     [Fact(DisplayName = "Should create a failed result with one error from error message")]
     public void ShouldCreateFailedResultFromErrorMessage() => 
         Result.Fail(ErrorMessage)
             .Should()
             .Match<Result<Unit>>(
-                static r => r.IsFailed && r.Errors.ToArray().Single().Message == ErrorMessage);
+                static r => r.IsAFailure && r.Errors.ToArray().Single().Message == ErrorMessage);
 
     [Fact(DisplayName = "Should create a failed result with one error from error record")]
     public void ShouldCreateFailedResultFromAnErrorRecord()
@@ -29,7 +29,7 @@ public class ResultFactoriesTests
         Result.Fail(error)
             .Should()
             .Match<Result<Unit>>(
-                r => r.IsFailed && r.Errors.Single().Equals(error));
+                r => r.IsAFailure && r.Errors.Single().Equals(error));
     }
 
     [Fact(DisplayName = "HasError should return true for a failed result with generic error")]
@@ -56,6 +56,22 @@ public class ResultFactoriesTests
             .Should()
             .BeTrue();
     }
+
+    [Fact(DisplayName = "Should create successful result with a provided value without any reasons")]
+    public void ShouldCreateSuccessfulResultWithProvidedValue() =>
+        Result.Ok(0)
+            .Should()
+            .Match<Result<int>>(static r => r.IsSuccessful && !r.Reasons.Any() && ValueMatches(r, static i => i == 0));
+
+    private static bool ValueIsAUnit(Result<Unit> result) =>
+        ValueMatches(
+            result,
+            static u => u == Unit.Value);
+
+    private static bool ValueMatches<T>(
+        Result<T> result,
+        Predicate<T> predicate) =>
+        result is { Value: Some<T> { Value: var value, }, } && predicate(value);
 
     private sealed record RootError(
             string Message,
