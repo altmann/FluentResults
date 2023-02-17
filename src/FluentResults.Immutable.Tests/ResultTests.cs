@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using FluentResults.Immutable.Metadata;
-using static FluentAssertions.FluentActions;
 
 namespace FluentResults.Immutable.Tests;
 
@@ -17,7 +16,11 @@ public class ResultTests
 
     private static readonly Result<Unit> SuccessfulResult = Result.Ok();
 
-
+    [Fact(DisplayName = "Creating new result via ctor returns successful result without a value")]
+    public void ShouldCreateSuccessfulResultWithoutAValue() =>
+        new Result<Unit>()
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsSuccessful && r.Value is None<Unit>);
 
     [Fact(DisplayName = "Should create a new result with provided reason")]
     public void ShouldCreateANewResultWithProvidedReason()
@@ -208,121 +211,4 @@ public class ResultTests
             .HasSuccess<Success>()
             .Should()
             .BeFalse();
-
-    [Fact(DisplayName = "No-op bind on a successful result of unit should return a result of unit")]
-    public void NoOpBindOnSuccessfulResultShouldReturnAUnit() =>
-        SuccessfulResult.Select(static () => Result.Ok())
-            .Should()
-            .Be(SuccessfulResult);
-
-    [Fact(DisplayName = "No-op Task bind on a successful result of unit should return a result of unit")]
-    public async Task NoOpAsynchronousBindOnSuccessfulResultShouldReturnAUnit()
-    {
-        var resultOfANoOpBind = await SuccessfulResult.Select(static () => Task.FromResult(Result.Ok()));
-
-        resultOfANoOpBind.Should()
-            .Be(SuccessfulResult);
-    }
-
-    [Fact(DisplayName = "No-op ValueTask bind on a successful result of unit should return a result of unit")]
-    public async Task NoOpAsynchronousValueTaskBindOnSuccessfulResultShouldReturnAUnit()
-    {
-        var resultOfANoOpBind = await SuccessfulResult.Select(static () => new ValueTask<Result<Unit>>(Result.Ok()));
-
-        resultOfANoOpBind.Should()
-            .Be(SuccessfulResult);
-    }
-
-    [Fact(DisplayName = "Bind on a failed result should return a new, equivalent result without executing the bind")]
-    public void BindOnFailedResultShouldReturnANewEquivalentFailedResult()
-    {
-        const string errorMessage = "An error";
-        var fail = Result.Fail(errorMessage);
-
-        Invoking(() => fail.Select(ThrowException))
-            .Should()
-            .NotThrow()
-            .Which
-            .Should()
-            .Match<Result<Unit>>(
-                static r => r.IsAFailure &&
-                    r.Value is None<Unit> &&
-                    r.Errors.Single().Message == errorMessage);
-
-        static Result<Unit> ThrowException() =>
-            throw new InvalidOperationException("Synchronous bind on a failed result was executed");
-    }
-
-    [Fact(DisplayName = "Asynchronous Task bind on a failed result should return a new, equivalent result without executing the bind")]
-    public async Task AsynchronousTaskBindOnFailedResultShouldReturnANewEquivalentFailedResult()
-    {
-        const string errorMessage = "An error";
-        var fail = Result.Fail(errorMessage);
-
-        (await Awaiting(() => fail.Select(ThrowException))
-            .Should()
-            .NotThrowAsync())
-            .Which
-            .Should()
-            .Match<Result<Unit>>(
-                static r => r.IsAFailure &&
-                    r.Value is None<Unit> &&
-                    r.Errors.Single().Message == errorMessage);
-
-        static Task<Result<Unit>> ThrowException() =>
-            throw new InvalidOperationException("Asynchronous Task bind on a failed result was executed");
-    }
-
-    [Fact(DisplayName = "Asynchronous ValueTask bind on a failed result should return a new, equivalent result without executing the bind")]
-    public async Task AsynchronousValueTaskBindOnFailedResultShouldReturnANewEquivalentFailedResult()
-    {
-        const string errorMessage = "An error";
-        var fail = Result.Fail(errorMessage);
-
-        (await fail.Select(ThrowException))
-            .Should()
-            .Match<Result<Unit>>(
-                static r => r.IsAFailure &&
-                    r.Value is None<Unit> &&
-                    r.Errors.Single().Message == errorMessage);
-
-        static ValueTask<Result<Unit>> ThrowException() =>
-            throw new InvalidOperationException("Asynchronous ValueTask bind on a failed result was executed");
-    }
-
-    [Fact(DisplayName = "Bind on a successful result with value converts it")]
-    public void BindOnSuccessfulResultWithValueConvertsIt() =>
-        Result.Ok(1)
-            .Select(static i => Result.Ok(i + 1))
-            .Should()
-            .Match<Result<int>>(
-                static r => r.IsSuccessful &&
-                    ValueMatches(r, static i => i == 2));
-
-    [Fact(DisplayName = "Asynchronously binding on a successful result with a value converts it")]
-    public async Task AsynchronouslyBindingWithATaskOnASuccessfulResultWithValueConvertsIt()
-    {
-        (await Result.Ok(1)
-                .Select(Increment))
-            .Should()
-            .Match<Result<int>>(static r => ValueMatches(r, static i => i == 2));
-
-        static Task<Result<int>> Increment(int i) => Task.FromResult(Result.Ok(i + 1));
-    }
-
-    [Fact(DisplayName = "Asynchronously binding on a successful result with a value converts it")]
-    public async Task AsynchronouslyBindingWithAValueTaskOnASuccessfulResultWithValueConvertsIt()
-    {
-        (await Result.Ok(1)
-                .Select(Increment))
-            .Should()
-            .Match<Result<int>>(static r => ValueMatches(r, static i => i == 2));
-
-        static ValueTask<Result<int>> Increment(int i) => new(Result.Ok(i + 1));
-    }
-
-    private static bool ValueMatches<T>(
-        Result<T> result,
-        Predicate<T> predicate) =>
-        result is { Value: Some<T> { Value: var value, }, } && predicate(value);
 }

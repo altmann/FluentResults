@@ -6,8 +6,8 @@ public record Reason(
 {
     public Reason(string message)
         : this(
-              message,
-              ImmutableDictionary<string, object>.Empty)
+            message,
+            ImmutableDictionary<string, object>.Empty)
     {
     }
 }

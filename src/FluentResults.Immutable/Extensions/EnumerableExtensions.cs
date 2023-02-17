@@ -15,8 +15,9 @@ internal static class EnumerableExtensions
         while (queue.TryDequeue(out var reason) && visited.Add(reason))
         {
             yield return reason;
-            
-            childrenFunc(reason).ForEach(queue.Enqueue);
+
+            childrenFunc(reason)
+                .ForEach(queue.Enqueue);
         }
     }
 

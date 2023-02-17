@@ -9,7 +9,7 @@ namespace FluentResults.Immutable;
 ///     A structure representing the result of an operation.
 /// </summary>
 /// <typeparam name="T">Type of the value associated with this <see cref="Result{T}" />.</typeparam>
-public readonly record struct Result<T> : IImmutableResult<T>
+public readonly partial record struct Result<T> : IImmutableResult<T>
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="Result{T}" /> structure.
@@ -80,57 +80,22 @@ public readonly record struct Result<T> : IImmutableResult<T>
         Reasons = reasons.ToImmutableList();
     }
 
-    /// <summary>
-    ///     Gets the boolean indicator whether this <see cref="Result{T}" />
-    ///     represents a failed operation.
-    /// </summary>
+    /// <inheritdoc />
     public bool IsAFailure => Errors.Any();
 
-    /// <summary>
-    ///     Gets the boolean indicator whether this <see cref="Result{T}" />
-    ///     represents a successful operation.
-    /// </summary>
+    /// <inheritdoc />
     public bool IsSuccessful => !IsAFailure;
 
-    /// <summary>
-    ///     Gets an <see cref="ImmutableList{T}" /> of <see cref="Error" />s
-    ///     associated with this <see cref="Result{T}" />.
-    /// </summary>
-    /// <remarks>
-    ///     This list will be empty for successful results.
-    /// </remarks>
+    /// <inheritdoc />
     public ImmutableList<Error> Errors => GetReasonsOfType<Error>();
 
-    /// <summary>
-    ///     Gets an <see cref="ImmutableList{T}" /> of
-    ///     <see cref="Success" />es associated with this
-    ///     <see cref="Result{T}" />.
-    /// </summary>
+    /// <inheritdoc />
     public ImmutableList<Success> Successes => GetReasonsOfType<Success>();
 
-    /// <summary>
-    ///     Gets an <see cref="ImmutableList{T}" /> of all
-    ///     <see cref="Reason" />s associated with this
-    ///     <see cref="Result{T}" />.
-    /// </summary>
-    /// <remarks>
-    ///     A <see cref="Reason" /> is either a <see cref="Success" />,
-    ///     <see cref="Error" />, or any other inheritor.
-    /// </remarks>
+    /// <inheritdoc />
     public ImmutableList<Reason> Reasons { get; internal init; }
 
-    /// <summary>
-    ///     Gets the value of the performed operation,
-    ///     represented as <see cref="Option{T}" />.
-    /// </summary>
-    /// <remarks>
-    ///     Failed results will have <see cref="None{T}" />, while successful ones
-    ///     will return <see cref="Some{T}" />.
-    ///     To safely access the result value of an operation,
-    ///     <see cref="Option{T}.Match" /> overloads should be used.
-    ///     Keep in mind that custom implementations of <see cref="Option" />
-    ///     record and its inheritors are currently not supported.
-    /// </remarks>
+    /// <inheritdoc />
     public Option<T> Value { get; internal init; }
 
     /// <summary>
@@ -241,7 +206,7 @@ public readonly record struct Result<T> : IImmutableResult<T>
     /// <summary>
     ///     Returns a <see cref="bool" /> value indicating whether
     ///     this <see cref="Result{T}" /> instance contains a <typeparamref name="TError" />
-    ///     matching provided <paramref name="predicate"/>
+    ///     matching provided <paramref name="predicate" />
     /// </summary>
     /// <typeparam name="TError">
     ///     Generic type of the error.
@@ -261,7 +226,7 @@ public readonly record struct Result<T> : IImmutableResult<T>
     /// <summary>
     ///     Returns a <see cref="bool" /> value indicating whether
     ///     this <see cref="Result{T}" /> instance contains a <typeparamref name="TSuccess" />
-    ///     matching provided <paramref name="predicate"/>
+    ///     matching provided <paramref name="predicate" />
     /// </summary>
     /// <typeparam name="TSuccess">
     ///     Generic type of the success.
@@ -281,7 +246,7 @@ public readonly record struct Result<T> : IImmutableResult<T>
     /// <summary>
     ///     Returns a <see cref="bool" /> value indicating whether
     ///     this <see cref="Result{T}" /> instance contains a <typeparamref name="TReason" />
-    ///     matching provided <paramref name="predicate"/>
+    ///     matching provided <paramref name="predicate" />
     /// </summary>
     /// <typeparam name="TReason">
     ///     Generic type of the reason.
@@ -309,163 +274,6 @@ public readonly record struct Result<T> : IImmutableResult<T>
                 })
             .OfType<TReason>()
             .Any(r => predicate?.Invoke(r) ?? true);
-
-    /// <summary>
-    ///     Projects this <see cref="Result{T}" />
-    ///     to a <see cref="Result{T}" /> of <typeparamref name="TNew" />
-    ///     by executing <paramref name="selector" />
-    ///     if this <see cref="Result{T}" /> is successful.
-    /// </summary>
-    /// <typeparam name="TNew">
-    ///     Generic parameter of the new <see cref="Result{T}" />.
-    /// </typeparam>
-    /// <param name="selector">Bind delegate to execute.</param>
-    /// <returns>
-    ///     A <see cref="Result{T}" />, wrapping <typeparamref name="TNew" />
-    ///     instance.
-    /// </returns>
-    /// <remarks>
-    ///     This overload disregards the <see cref="Value" /> of this
-    ///     <see cref="Result{T}" />.
-    /// </remarks>
-    public Result<TNew> Select<TNew>(Func<Result<TNew>> selector) =>
-        IsSuccessful && selector() is var bind
-            ? bind with
-            {
-                Reasons = Reasons.AddRange(bind.Reasons),
-            }
-            : new(Reasons);
-
-    /// <summary>
-    ///     Projects this <see cref="Result{T}" />
-    ///     to a <see cref="Result{T}" /> of <typeparamref name="TNew" />
-    ///     by executing <paramref name="bindingFunction" />
-    ///     if this <see cref="Result{T}" /> is successful.
-    /// </summary>
-    /// <typeparam name="TNew">
-    ///     Generic parameter of the new <see cref="Result{T}" />.
-    /// </typeparam>
-    /// <param name="bindingFunction">Bind delegate to execute.</param>
-    /// <returns>
-    ///     A <see cref="Result{T}" />, wrapping <typeparamref name="TNew" />
-    ///     instance.
-    /// </returns>
-    public Result<TNew> Select<TNew>(Func<T, Result<TNew>> bindingFunction)
-    {
-        Result<TNew> fallback = new(Reasons);
-
-        return IsSuccessful
-            ? Value.Match(
-                bindingFunction,
-                () => fallback)
-            : fallback;
-    }
-
-    /// <summary>
-    ///     Projects this <see cref="Result{T}" />
-    ///     to a <see cref="Result{T}" /> of <typeparamref name="TNew" />
-    ///     by executing <paramref name="asyncSelector" /> asynchronously
-    ///     if this <see cref="Result{T}" /> is successful.
-    /// </summary>
-    /// <typeparam name="TNew">
-    ///     Generic parameter of the new <see cref="Result{T}" />.
-    /// </typeparam>
-    /// <param name="asyncSelector">Asynchronous delegate to execute.</param>
-    /// <returns>
-    ///     A <see cref="Task{T}" />, representing the result of an asynchronous
-    ///     operation, wrapping a <see cref="Result{T}" />, which contains
-    ///     <typeparamref name="TNew" /> instance.
-    /// </returns>
-    /// <remarks>
-    ///     This overload disregards the <see cref="Value" /> of this
-    ///     <see cref="Result{T}" />.
-    /// </remarks>
-    public async Task<Result<TNew>> Select<TNew>(Func<Task<Result<TNew>>> asyncSelector) =>
-        IsSuccessful && await asyncSelector() is var bind
-            ? bind with
-            {
-                Reasons = Reasons.AddRange(bind.Reasons),
-            }
-            : new(Reasons);
-
-    /// <summary>
-    ///     Projects this <see cref="Result{T}" />
-    ///     to a <see cref="Result{T}" /> of <typeparamref name="TNew" />
-    ///     by executing <paramref name="asyncBindingFunction" /> asynchronously
-    ///     if this <see cref="Result{T}" /> is successful.
-    /// </summary>
-    /// <typeparam name="TNew">
-    ///     Generic parameter of the new <see cref="Result{T}" />.
-    /// </typeparam>
-    /// <param name="asyncBindingFunction">Asynchronous delegate to execute.</param>
-    /// <returns>
-    ///     A <see cref="Task{T}" />, representing the result of an asynchronous
-    ///     operation, wrapping a <see cref="Result{T}" />, which contains
-    ///     <typeparamref name="TNew" /> instance.
-    /// </returns>
-    public Task<Result<TNew>> Select<TNew>(Func<T, Task<Result<TNew>>> asyncBindingFunction)
-    {
-        var fallback = Task.FromResult<Result<TNew>>(new(Reasons));
-
-        return IsSuccessful
-            ? Value.Match(
-                asyncBindingFunction,
-                () => fallback)
-            : fallback;
-    }
-
-    /// <summary>
-    ///     Projects this <see cref="Result{T}" />
-    ///     to a <see cref="Result{T}" /> of <typeparamref name="TNew" />
-    ///     by executing <paramref name="asyncSelector" /> asynchronously
-    ///     if this <see cref="Result{T}" /> is successful.
-    /// </summary>
-    /// <typeparam name="TNew">
-    ///     Generic parameter of the new <see cref="Result{T}" />.
-    /// </typeparam>
-    /// <param name="asyncSelector">Asynchronous delegate to execute.</param>
-    /// <returns>
-    ///     A <see cref="ValueTask{T}" />, representing the result of an asynchronous
-    ///     operation, wrapping a <see cref="Result{T}" />, which contains
-    ///     <typeparamref name="TNew" /> instance.
-    /// </returns>
-    /// <remarks>
-    ///     This overload disregards the <see cref="Value" /> of this
-    ///     <see cref="Result{T}" />.
-    /// </remarks>
-    public async ValueTask<Result<TNew>> Select<TNew>(Func<ValueTask<Result<TNew>>> asyncSelector) =>
-        IsSuccessful && await asyncSelector() is var bind
-            ? bind with
-            {
-                Reasons = Reasons.AddRange(bind.Reasons),
-            }
-            : new(Reasons);
-
-    /// <summary>
-    ///     Projects this <see cref="Result{T}" />
-    ///     to a <see cref="Result{T}" /> of <typeparamref name="TNew" />
-    ///     by executing <paramref name="asyncBindingFunction" /> asynchronously
-    ///     if this <see cref="Result{T}" /> is successful.
-    /// </summary>
-    /// <typeparam name="TNew">
-    ///     Generic parameter of the new <see cref="Result{T}" />.
-    /// </typeparam>
-    /// <param name="asyncBindingFunction">Asynchronous delegate to execute.</param>
-    /// <returns>
-    ///     A <see cref="Task{T}" />, representing the result of an asynchronous
-    ///     operation, wrapping a <see cref="Result{T}" />, which contains
-    ///     <typeparamref name="TNew" /> instance.
-    /// </returns>
-    public ValueTask<Result<TNew>> Select<TNew>(Func<T, ValueTask<Result<TNew>>> asyncBindingFunction)
-    {
-        var fallback = new ValueTask<Result<TNew>>(new Result<TNew>(Reasons));
-
-        return IsSuccessful
-            ? Value.Match(
-                asyncBindingFunction,
-                () => fallback)
-            : fallback;
-    }
 
     private ImmutableList<TReason> GetReasonsOfType<TReason>()
         where TReason : Reason, IEquatable<TReason> =>

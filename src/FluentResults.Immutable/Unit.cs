@@ -30,5 +30,5 @@ public readonly struct Unit : IEquatable<Unit>, IComparable<Unit>, IComparable
 
     public static bool operator ==(Unit _1, Unit _2) => true;
 
-    public static bool operator !=(Unit _2, Unit _) => false;
+    public static bool operator !=(Unit _1, Unit _2) => false;
 }

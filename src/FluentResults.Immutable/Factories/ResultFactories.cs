@@ -6,11 +6,16 @@ namespace FluentResults.Immutable;
 
 public readonly record struct Result
 {
+    private static Func<Exception, Error> DefaultCatchHandler => static e => new ExceptionalError(e);
+
     public static Result<Unit> Ok() => new(Unit.Value);
 
     public static Result<Unit> Fail(string errorMessage) => Fail(new Error(errorMessage));
 
-    public static Result<Unit> Fail(Error error) => new(error.Yield().ToList());
+    public static Result<Unit> Fail(Error error) =>
+        new(
+            error.Yield()
+                .ToList());
 
     public static Result<Unit> Fail(IEnumerable<Error> errors) => new(errors);
 
@@ -23,20 +28,74 @@ public readonly record struct Result
 
     public static Result<T> Fail<T>(string errorMessage) => Fail<T>(new Error(errorMessage));
 
-    public static Result<T> Fail<T>(Error error) => new(error.Yield().ToList());
+    public static Result<T> Fail<T>(Error error) =>
+        new(
+            error.Yield()
+                .ToList());
 
-    public static Result<IEnumerable<T>> Merge<T>(params IImmutableResult<T>[] results) =>
-        Merge(results.AsEnumerable());
+    public static Result<IEnumerable<T>> Merge<T>(params Result<T>[] results) =>
+        Merge<T, IImmutableResult<T>>(
+            results.Cast<IImmutableResult<T>>()
+                .ToList());
 
-    public static Result<IEnumerable<T>> Merge<T>(IEnumerable<IImmutableResult<T>> results)
+    public static Result<IEnumerable<T>> Merge<T, TResult>(IReadOnlyCollection<TResult> results)
+        where TResult : IImmutableResult<T>
     {
-        var resultList = results.ToList();
-
         return new(
-            resultList.Where(static r => r is { IsSuccessful: true, Value: Some<T>, })
+            results.Where(static r => r is { IsSuccessful: true, Value: Some<T>, })
                 .Select(static r => r.Value)
                 .Cast<Some<T>>()
                 .Select(static s => s.Value),
-            resultList.SelectMany(static r => r.Reasons));
+            results.SelectMany(static r => r.Reasons));
+    }
+
+    public static Result<T> Try<T>(
+        Func<T> func,
+        Func<Exception, Error>? catchHandler = null)
+    {
+        catchHandler ??= DefaultCatchHandler;
+
+        try
+        {
+            return Ok(func());
+        }
+        catch (Exception e)
+        {
+            return Fail<T>(catchHandler(e));
+        }
+    }
+
+    public static async Task<Result<T>> Try<T>(
+        Func<Task<T>> asyncFunc,
+        Func<Exception, Error>? catchHandler = null)
+    {
+        catchHandler ??= DefaultCatchHandler;
+
+        try
+        {
+            var result = await asyncFunc();
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return Fail<T>(catchHandler(e));
+        }
+    }
+
+    public static async ValueTask<Result<T>> Try<T>(
+        Func<ValueTask<T>> asyncFunc,
+        Func<Exception, Error>? catchHandler = null)
+    {
+        catchHandler ??= DefaultCatchHandler;
+
+        try
+        {
+            var result = await asyncFunc();
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return Fail<T>(catchHandler(e));
+        }
     }
 }
