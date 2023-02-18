@@ -161,6 +161,208 @@ public class ResultFactoriesTests
                     .IsAFailure.ToProperty();
             });
 
+    [Fact(DisplayName = "OkIf returns successful result if the condition is true")]
+    public void OKIfRetursSuccessfulResultIfTheConditionIsTrue() =>
+        Result.OkIf(true, string.Empty)
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsSuccessful && ValueIsAUnit(r));
+
+    [Fact(DisplayName = "OkIf returns a failed result with a matching error if the condition is false")]
+    public void OkIfReturnsSuccessfulResultIfTheConditionIsFalse()
+    {
+        const string errorMessage = "An error";
+
+        Result.OkIf(false, errorMessage)
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsAFailure && r.HasError<Error>(static e => e.Message == errorMessage));
+    }
+
+    [Fact(DisplayName = "OkIf returns a failed result with a matching, typed error if the condition is false")]
+    public void OkIfReturnsAFailedResultWithAMatchingTypedErrorIfTheConditionIsFalse()
+    {
+        const string errorMessage = "An error";
+
+        Result.OkIf(
+                false,
+                new RootError(errorMessage))
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsAFailure && r.HasError<RootError>(static e => e.Message == errorMessage));
+    }
+
+    [Fact(DisplayName = "OkIf returns successful result without calling error factory if the condition is true")]
+    public void OkIfReturnsSuccessfulResultWithoutCallingErrorMessageFactoryIfTheConditionIsTrue()
+    {
+        Result.OkIf(
+                true,
+                GetErrorMessage)
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsSuccessful && ValueIsAUnit(r));
+
+        static string GetErrorMessage() => throw new InvalidOperationException("Lazy OkIf overload instantiated an error for succesful result!");
+    }
+
+    [Fact(DisplayName = "OkIf returns a failed result with a matching, lazily evaluated error if the condition is false")]
+    public void OkIfReturnsAFailureWithAMatchingLazilyEvaluatedErrorIfTheConditionIsFalse()
+    {
+        const string errorMessage = "An error";
+
+        Result.OkIf(
+                false,
+                () => errorMessage)
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsAFailure && r.HasError<Error>(static e => e.Message == errorMessage));
+    }
+
+    [Fact(DisplayName = "OkIf returns a failed result with a matching, lazily evaluated and typed error if the condition is false")]
+    public void OkIfReturnsAFailedResultWithAMatchingLazilyEvaluatedAndTypedErrorIfTheConditionIsFalse()
+    {
+        const string errorMessage = "An error";
+
+        Result.OkIf(
+                false,
+                () => new RootError(errorMessage))
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsAFailure && r.HasError<RootError>(static e => e.Message == errorMessage));
+    }
+
+    [Fact(DisplayName = "FailIf returns successful result if the condition is false")]
+    public void FailIfRetursSuccessfulResultIfTheConditionIsFalse() =>
+        Result.FailIf(false, string.Empty)
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsSuccessful && ValueIsAUnit(r));
+
+    [Fact(DisplayName = "FailIf returns a failed result with a matching error if the condition is true")]
+    public void FailIfReturnsSuccessfulResultIfTheConditionIsTrue()
+    {
+        const string errorMessage = "An error";
+
+        Result.FailIf(true, errorMessage)
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsAFailure && r.HasError<Error>(static e => e.Message == errorMessage));
+    }
+
+    [Fact(DisplayName = "FailIf returns a failed result with a matching, typed error if the condition is true")]
+    public void FailIfReturnsAFailedResultWithAMatchingTypedErrorIfTheConditionIsTrue()
+    {
+        const string errorMessage = "An error";
+
+        Result.FailIf(
+                true,
+                new RootError(errorMessage))
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsAFailure && r.HasError<RootError>(static e => e.Message == errorMessage));
+    }
+
+    [Fact(DisplayName = "FailIf returns successful result without calling error factory if the condition is false")]
+    public void FailIfReturnsSuccessfulResultWithoutCallingErrorMessageFactoryIfTheConditionIsFalse()
+    {
+        Result.FailIf(
+                false,
+                GetErrorMessage)
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsSuccessful && ValueIsAUnit(r));
+
+        static string GetErrorMessage() => throw new InvalidOperationException("Lazy OkIf overload instantiated an error for succesful result!");
+    }
+
+    [Fact(DisplayName = "FailIf returns a failed result with a matching, lazily evaluated error if the condition is true")]
+    public void FailIfReturnsAFailureWithAMatchingLazilyEvaluatedErrorIfTheConditionIsTrue()
+    {
+        const string errorMessage = "An error";
+
+        Result.FailIf(
+                true,
+                () => errorMessage)
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsAFailure && r.HasError<Error>(static e => e.Message == errorMessage));
+    }
+
+    [Fact(DisplayName = "FailIf returns a failed result with a matching, lazily evaluated and typed error if the condition is true")]
+    public void FailIfReturnsAFailedResultWithAMatchingLazilyEvaluatedAndTypedErrorIfTheConditionIsTrue()
+    {
+        const string errorMessage = "An error";
+
+        Result.FailIf(
+                true,
+                () => new RootError(errorMessage))
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsAFailure && r.HasError<RootError>(static e => e.Message == errorMessage));
+    }
+
+    [Fact(DisplayName = "Try returns successful result if the action succeeds")]
+    public void TryReturnsSuccessfulResultIfTheActionSucceeds()
+    {
+        Result.Try(GetUnit)
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsSuccessful && ValueIsAUnit(r));
+
+        static Unit GetUnit() => Unit.Value;
+    }
+
+    [Fact(DisplayName = "Try returns a failed result with an ExceptionalError with proper exception referenced by CausedBy property if exception is thrown")]
+    public void TryReturnsAFailedResultWithAnExceptionalErrorWithProperExceptionIfAnExceptionIsThrown()
+    {
+        var exceptionToThrow = new InvalidOperationException("Oops!");
+
+        Result.Try(ThrowException)
+            .Should()
+            .Match<Result<Unit>>(r => r.IsAFailure && r.HasError<ExceptionalError>(ee => ee.CausedBy.Equals(exceptionToThrow)));
+
+        Unit ThrowException() => throw exceptionToThrow;
+    }
+
+    [Fact(DisplayName = "Try returns successful result if the Task succeeds")]
+    public async Task TryReturnsSuccessfulResultIfTheTaskSucceeds()
+    {
+        (await Result.Try(GetUnit))
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsSuccessful && ValueIsAUnit(r));
+
+        static Task<Unit> GetUnit() => Task.FromResult(Unit.Value);
+    }
+
+    [Fact(
+        DisplayName = 
+            "Try returns a failed result with an ExceptionalError with" +
+            "proper exception referenced by CausedBy property if exception is thrown " +
+            "by a Task")]
+    public async Task TryReturnsAFailedResultWithAnExceptionalErrorWithProperExceptionIfAnExceptionIsThrownByATask()
+    {
+        var exceptionToThrow = new InvalidOperationException("Oops!");
+
+        (await Result.Try(ThrowException))
+            .Should()
+            .Match<Result<Unit>>(r => r.IsAFailure && r.HasError<ExceptionalError>(ee => ee.CausedBy.Equals(exceptionToThrow)));
+
+        Task<Unit> ThrowException() => throw exceptionToThrow;
+    }
+
+    [Fact(DisplayName = "Try returns successful result if the ValueTask succeeds")]
+    public async Task TryReturnsSuccessfulResultIfTheValueTaskSucceeds()
+    {
+        (await Result.Try(GetUnit))
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsSuccessful && ValueIsAUnit(r));
+
+        static ValueTask<Unit> GetUnit() => new(Unit.Value);
+    }
+
+    [Fact(
+        DisplayName =
+            "Try returns a failed result with an ExceptionalError with" +
+            "proper exception referenced by CausedBy property if exception is thrown " +
+            "by a ValueTask")]
+    public async Task TryReturnsAFailedResultWithAnExceptionalErrorWithProperExceptionIfAnExceptionIsThrownByAValueTask()
+    {
+        var exceptionToThrow = new InvalidOperationException("Oops!");
+
+        (await Result.Try(ThrowException))
+            .Should()
+            .Match<Result<Unit>>(r => r.IsAFailure && r.HasError<ExceptionalError>(ee => ee.CausedBy.Equals(exceptionToThrow)));
+
+        ValueTask<Unit> ThrowException() => throw exceptionToThrow;
+    }
+
     private static bool ValueIsAUnit(Result<Unit> result) => result.ValueMatches(static u => u == Unit.Value);
 
     private sealed record RootError(
