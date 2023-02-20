@@ -162,7 +162,7 @@ public class ResultFactoriesTests
             });
 
     [Fact(DisplayName = "OkIf returns successful result if the condition is true")]
-    public void OKIfRetursSuccessfulResultIfTheConditionIsTrue() =>
+    public void OkIfRetursSuccessfulResultIfTheConditionIsTrue() =>
         Result.OkIf(true, string.Empty)
             .Should()
             .Match<Result<Unit>>(static r => r.IsSuccessful && ValueIsAUnit(r));

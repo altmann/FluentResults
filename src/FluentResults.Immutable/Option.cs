@@ -3,11 +3,11 @@
 /// <summary>
 ///     Represents an optional value.
 /// </summary>
-public abstract record Option
+public readonly record struct Option
 {
     /// <summary>
     ///     Represents the <paramref name="value" />
-    ///     as an <see cref="Option{T}" />.
+    ///     as an option.
     /// </summary>
     /// <typeparam name="T">Type of the value</typeparam>
     /// <param name="value">Value to associate with the option/</param>
@@ -26,21 +26,21 @@ public abstract record Option
 
 /// <inheritdoc cref="Option" />
 /// <typeparam name="T">Type of the value.</typeparam>
-public abstract record Option<T>
+public interface IOption<out T>
 {
     /// <summary>
-    ///     Projects the value of this <see cref="Option{T}" />
+    ///     Projects the value of this <see cref="IOption{T}" />
     ///     to a <typeparamref name="TMatchResult" />.
     /// </summary>
     /// <typeparam name="TMatchResult">Generic type of the match.</typeparam>
     /// <param name="matchSome">
     ///     A delegate accepting <typeparamref name="T" />,
-    ///     which will be executed if this <see cref="Option{T}" />
+    ///     which will be executed if this <see cref="IOption{T}" />
     ///     is <see cref="Some{T}" />.
     /// </param>
     /// <param name="matchNone">
     ///     A delegate which will be executed if
-    ///     this <see cref="Option{T}" /> is <see cref="None{T}" />.
+    ///     this <see cref="IOption{T}" /> is <see cref="None{T}" />.
     /// </param>
     /// <returns>
     ///     An instance of <typeparamref name="TMatchResult" />,
@@ -54,40 +54,50 @@ public abstract record Option<T>
     /// </exception>
     public TMatchResult Match<TMatchResult>(
         Func<T, TMatchResult> matchSome,
-        Func<TMatchResult> matchNone) =>
-        this switch
-        {
-            Some<T> { Value: var value, } => matchSome(value),
-            None<T> _ => matchNone(),
-            _ => throw new NotSupportedException(
-                $"Custom implementations of {nameof(Option<T>)} record are not supported!"),
-        };
+        Func<TMatchResult> matchNone);
 
     /// <summary>
     ///     Executes either <paramref name="matchSome" />
     ///     or <paramref name="matchNone" />, depending on whether
-    ///     this <see cref="Option{T}" /> is <see cref="Some{T}" />
+    ///     this <see cref="IOption{T}" /> is <see cref="Some{T}" />
     ///     or <see cref="None{T}" />.
     /// </summary>
     /// <param name="matchSome">
     ///     A delegate which will be executed if
-    ///     this <see cref="Option{T}" /> is <see cref="Some{T}" />.
+    ///     this <see cref="IOption{T}" /> is <see cref="Some{T}" />.
     /// </param>
     /// <param name="matchNone">
     ///     A delegate which will be executed if
-    ///     this <see cref="Option{T}" /> is <see cref="None{T}" />.
+    ///     this <see cref="IOption{T}" /> is <see cref="None{T}" />.
     /// </param>
     /// <exception cref="NotSupportedException"></exception>
     public void Match(
         Action<T> matchSome,
+        Action matchNone);
+
+    private protected static TMatchResult DefaultMatch<TMatchResult>(
+        IOption<T> @this,
+        Func<T, TMatchResult> matchSome,
+        Func<TMatchResult> matchNone) =>
+        @this switch
+        {
+            Some<T> { Value: var value, } => matchSome(value),
+            None<T> _ => matchNone(),
+            _ => throw new NotSupportedException(
+                $"Custom implementations of {nameof(IOption<T>)} interface are not supported!"),
+        };
+
+    private protected static void DefaultMatch(
+        IOption<T> @this,
+        Action<T> matchSome,
         Action matchNone)
     {
-        var actionToExecute = this switch
+        var actionToExecute = @this switch
         {
             Some<T> { Value: var value, } => () => matchSome(value),
             None<T> _ => matchNone,
             _ => throw new NotSupportedException(
-                $"Custom implementations of {nameof(Option<T>)} record are not supported!"),
+                $"Custom implementations of {nameof(IOption<T>)} interface are not supported!"),
         };
 
         actionToExecute();
@@ -98,33 +108,36 @@ public abstract record Option<T>
 ///     Represents a value.
 /// </summary>
 /// <typeparam name="T">Generic type of the value.</typeparam>
-public sealed record Some<T> : Option<T>
+public readonly record struct Some<T>(T Value) : IOption<T>
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="None{T}" /> record.
-    /// </summary>
-    /// <param name="value">Value to wrap.</param>
-    internal Some(T value)
-    {
-        Value = value;
-    }
+    public TMatchResult Match<TMatchResult>(Func<T, TMatchResult> matchSome, Func<TMatchResult> matchNone) =>
+        IOption<T>.DefaultMatch(
+            this,
+            matchSome,
+            matchNone);
 
-    /// <summary>
-    ///     Gets the value.
-    /// </summary>
-    public T Value { get; init; }
+    public void Match(Action<T> matchSome, Action matchNone) =>
+        IOption<T>.DefaultMatch(
+            this,
+            matchSome,
+            matchNone);
 }
 
 /// <summary>
 ///     Represents an absence of value.
 /// </summary>
-/// <typeparam name="T">Generic type of the <see cref="Option{T}" />.</typeparam>
-public sealed record None<T> : Option<T>
+/// <typeparam name="T">Generic type of the <see cref="IOption{T}" />.</typeparam>
+public readonly record struct None<T> : IOption<T>
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="None{T}" /> record.
-    /// </summary>
-    internal None()
-    {
-    }
+    public TMatchResult Match<TMatchResult>(Func<T, TMatchResult> matchSome, Func<TMatchResult> matchNone) =>
+        IOption<T>.DefaultMatch(
+            this,
+            matchSome,
+            matchNone);
+
+    public void Match(Action<T> matchSome, Action matchNone) =>
+        IOption<T>.DefaultMatch(
+            this,
+            matchSome,
+            matchNone);
 }

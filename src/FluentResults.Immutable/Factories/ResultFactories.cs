@@ -7,19 +7,19 @@ namespace FluentResults.Immutable;
 public readonly record struct Result
 {
     /// <summary>
-    ///     Represents a succesful operation.
+    ///     Represents a successful operation.
     /// </summary>
     /// <returns>
     ///     A successful result, wrapping a <see cref="Unit" />.
     /// </returns>
     /// <remarks>
     ///     This method should be used by all operations
-    ///     which are supposed to return <see cref="void" />.
+    ///     which are supposed to return <see langword="void" />.
     /// </remarks>
     public static Result<Unit> Ok() => new(Unit.Value);
 
     /// <summary>
-    ///     Represents a succesful operation.
+    ///     Represents a successful operation.
     /// </summary>
     /// <typeparam name="T">Type of the value.</typeparam>
     /// <param name="value">Value to associate with successful result.</param>

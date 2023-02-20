@@ -65,7 +65,7 @@ public readonly partial record struct Result<T> : IImmutableResult<T>
     ///     Initializes a new instance of the <see cref="Result{T}" /> structure.
     /// </summary>
     /// <param name="value">
-    ///     A <see cref="Option{T}" />,
+    ///     An <see cref="IOption{T}" />,
     ///     which will be assigned as <see cref="Value" />.
     /// </param>
     /// <param name="reasons">
@@ -73,7 +73,7 @@ public readonly partial record struct Result<T> : IImmutableResult<T>
     ///     to associate with the <see cref="Result{T}" />.
     /// </param>
     private Result(
-        Option<T> value,
+        IOption<T> value,
         IEnumerable<Reason> reasons)
     {
         Value = value;
@@ -96,7 +96,7 @@ public readonly partial record struct Result<T> : IImmutableResult<T>
     public ImmutableList<Reason> Reasons { get; internal init; }
 
     /// <inheritdoc />
-    public Option<T> Value { get; internal init; }
+    public IOption<T> Value { get; internal init; }
 
     /// <summary>
     ///     Creates a new <see cref="Result{T}" /> with a provided <paramref name="reason" />.
