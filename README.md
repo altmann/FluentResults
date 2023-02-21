@@ -576,6 +576,60 @@ Try it with the power of FluentAssertions and [FluentResults.Extensions.FluentAs
 FluentResults 3.x and above supports .NET Standard 2.0 and .NET Standard 2.1. 
 If you need support for .NET Standard 1.1, .NET 4.6.1 or .NET 4.5 use [FluentResults 2.x](https://www.nuget.org/packages/FluentResults/2.6.0).
 
+## FluentResults.Immutable
+
+The package contains an immutable version of the `Result<T>` type.
+To disallow the mutation of its instances, the main type is now
+a `readonly record struct`, while all of reasons (errors and successes)
+were converted into records, with all of the collections
+changed into their immutable counterparts.
+
+### Main differences between core package and FluentResults.Immutable
+
+- Non-generic `Result` is not defined in `FluentResults.Immutable`;
+  In order to achieve the same functionality, `Result<Unit>` should be used.
+  - This approach was introduced to convert the `Result` into a
+    readonly record struct.
+- Safe Value getter; `Result<T>.Value` now returns an `IOption<T>`,
+  which is either a `Some<T>`, or `None<T>`.
+  - The preferred way to obtain underlying value is pattern-matching:
+  ```csharp
+  var result = Result.Ok(2);
+
+  if (result is { IsSuccessful: true, Value: Some<int> { Value: var value, }, })
+  {
+      // safely evaluated value, pattern-matched to a variable
+  }
+  ```
+  - `IOption<T>` exposes 2 overloads of `Match` method, which allows you to
+    act on the value while ensuring compile-time safety:
+  ```csharp
+  var result = Result.Ok<int>(3);
+
+  if (result is { IsSuccessful: true, Value: var option })
+  {
+      var message = option.Match(
+          static i => $"The value is {i}",
+          static () => "There's no value associated with this result!");
+  }
+  ```
+  - Both of the 'utility types' (`Unit` and `Option`) are exposed as public,
+    so they're free to use as you see fit.
+- Projecting results into results of different types is now possible with
+  a more idiomatic syntax by utilizing `Select` and `SelectMany` methods.
+  - `Select` is an equivalent of `Bind` from the core package.
+  - The latter allows for acting on multiple results and aggregating
+    up to 5 values.
+- `IsSuccess` and `IsFailed` properties have been renamed to a more natural
+  language-oriented terms.
+- All "mutating" operations are returning new instances of a `Result`.
+
+### .NET Targeting
+
+FluentResults.Immutable targets .NET 6 and onwards. The package is unavailable
+in earlier versions of the framework due to lack of necessary APIs for it
+to function.
+
 ## Samples/Best Practices
 
 Here are some samples and best practices to be followed while using FluentResult or the Result pattern in general with some famous or commonly used frameworks and libraries.
