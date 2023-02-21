@@ -18,6 +18,12 @@ public class ResultFactoriesTests
             .Should()
             .Match<Result<Unit>>(static r => r.IsSuccessful && !r.Reasons.Any() && ValueIsAUnit(r));
 
+    [Fact(DisplayName = "Should create successful result of provided type with no reasons and no value")]
+    public void ShouldCreateSuccessfulResultOfProvidedTypeWithoutReasons() =>
+        Result.Ok<int>()
+            .Should()
+            .Match<Result<int>>(static r => r.IsSuccessful && !r.Reasons.Any() && r.Value is None<int>);
+
     [Fact(DisplayName = "Should create a failed result with one error from error message")]
     public void ShouldCreateFailedResultFromErrorMessage() =>
         Result.Fail(ErrorMessage)
@@ -40,6 +46,30 @@ public class ResultFactoriesTests
                 r => r.IsAFailure &&
                     r.Errors.Single()
                         .Equals(error));
+    }
+
+    [Fact(DisplayName = "Should create a failed result with a collection of errors")]
+    public void ShouldCreateAFailedResultWithACollectionOfErrors()
+    {
+        var errors = Enumerable.Range(1, 5)
+            .Select(static i => new Error($"Error number {i}"))
+            .ToList();
+
+        Result.Fail(errors)
+            .Should()
+            .Match<Result<Unit>>(r => r.IsAFailure && r.Errors.SequenceEqual(errors));
+    }
+
+    [Fact(DisplayName = "Should create a failed generic result with a collection of errors")]
+    public void ShouldCreateAFailedGenericResultWithACollectionOfErrors()
+    {
+        var errors = Enumerable.Range(1, 5)
+            .Select(static i => new Error($"Error number {i}"))
+            .ToList();
+
+        Result.Fail<int>(errors)
+            .Should()
+            .Match<Result<int>>(r => r.IsAFailure && r.Errors.SequenceEqual(errors));
     }
 
     [Fact(DisplayName = "HasError should return true for a failed result with generic error")]
@@ -97,7 +127,7 @@ public class ResultFactoriesTests
         MaxTest = 1000)]
     public Property MergingAListOfSuccessfulResultsShouldReturnSuccessfulResult() =>
         Prop.ForAll(
-            Gen.ListOf(GetSuccessfulIntegerResultGenerator())
+            Gen.ListOf(GetSuccessfulIntegerResultWithValueGenerator())
                 .ToArbitrary(),
             static list =>
                 list.Merge() is { IsSuccessful: true, Value: Some<IEnumerable<int>> { Value: var enumerable, }, } &&
@@ -129,7 +159,7 @@ public class ResultFactoriesTests
         MaxTest = 1000)]
     public Property MergingOfSuccessfulResultsIsSuccessful() =>
         Prop.ForAll(
-            Gen.Two(GetSuccessfulIntegerResultGenerator())
+            Gen.Two(GetSuccessfulIntegerResultWithValueGenerator())
                 .ToArbitrary(),
             static tuple =>
             {
@@ -226,7 +256,7 @@ public class ResultFactoriesTests
     }
 
     [Fact(DisplayName = "FailIf returns successful result if the condition is false")]
-    public void FailIfRetursSuccessfulResultIfTheConditionIsFalse() =>
+    public void FailIfReturnsSuccessfulResultIfTheConditionIsFalse() =>
         Result.FailIf(false, string.Empty)
             .Should()
             .Match<Result<Unit>>(static r => r.IsSuccessful && ValueIsAUnit(r));

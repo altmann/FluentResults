@@ -21,6 +21,14 @@ public readonly record struct Result
     /// <summary>
     ///     Represents a successful operation.
     /// </summary>
+    /// <returns>
+    ///     A successful result.
+    /// </returns>
+    public static Result<T> Ok<T>() => new();
+
+    /// <summary>
+    ///     Represents a successful operation.
+    /// </summary>
     /// <typeparam name="T">Type of the value.</typeparam>
     /// <param name="value">Value to associate with successful result.</param>
     /// <returns>

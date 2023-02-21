@@ -10,6 +10,8 @@ public sealed class ResultProjectionTests
 {
     private static Result<Unit> SuccessfulResult => Result.Ok();
 
+    private static Result<int> SuccessfulResultWithNoValue => Result.Ok<int>();
+
     [Fact(DisplayName = "No-op bind on a successful result of unit should return a result of unit")]
     public void NoOpBindOnSuccessfulResultShouldReturnAUnit() =>
         SuccessfulResult.Select(static () => Result.Ok())
@@ -33,6 +35,42 @@ public sealed class ResultProjectionTests
 
         resultOfANoOpBind.Should()
             .Be(SuccessfulResult);
+    }
+
+    [Fact(DisplayName = "No-op bind on a successful result with no value should return the same result")]
+    public void NoOpBindOnASuccessfulResultWithNoValueReturnsTheSameResult() =>
+        SuccessfulResultWithNoValue.Select(
+                static _ => throw new InvalidOperationException(
+                    "Binding on a result with value where there should be none!"),
+                static () => Result.Ok<int>())
+            .Should()
+            .Be(SuccessfulResultWithNoValue);
+
+    [Fact(DisplayName = "No-op Task bind on a successful result with no value should return the same result")]
+    public async Task NoOpAsyncTaskBindOnASuccessfulResultWithoutValueReturnsTheSameResult() =>
+        (await Awaiting(
+                static () => SuccessfulResultWithNoValue.SelectAsync(
+                    static _ => throw new InvalidOperationException(
+                        "Binding on a result with value where there should be none!"),
+                    static () => Task.FromResult(Result.Ok<int>())))
+            .Should()
+            .NotThrowAsync())
+        .Which
+        .Should()
+        .Be(SuccessfulResultWithNoValue);
+
+    [Fact(DisplayName = "No-op ValueTask bind on a successful result with no value should return the same result")]
+    public async Task NoOpAsyncValueTaskBindOnASuccessfulResultWithoutValueReturnsTheSameResult()
+    {
+        (await SuccessfulResultWithNoValue.SelectAsync(
+                ThrowException,
+                static () => new(Result.Ok<int>())))
+            .Should()
+            .Be(SuccessfulResultWithNoValue);
+
+        static ValueTask<Result<int>> ThrowException(int _) =>
+            throw new InvalidOperationException(
+                "Binding on a result with value where there should be none!");
     }
 
     [Fact(DisplayName = "Bind on a failed result should return a new, equivalent result without executing the bind")]
@@ -121,7 +159,7 @@ public sealed class ResultProjectionTests
         static Task<Result<int>> Increment(int i) => Task.FromResult(Result.Ok(i + 1));
     }
 
-    [Fact(DisplayName = "Asynchronously binding on a successful result with a value converts it")]
+    [Fact(DisplayName = "Asynchronously binding with a ValueTask on a successful result with a value converts it")]
     public async Task AsynchronouslyBindingWithAValueTaskOnASuccessfulResultWithValueConvertsIt()
     {
         (await Result.Ok(1)
@@ -130,6 +168,42 @@ public sealed class ResultProjectionTests
             .Match<Result<int>>(static r => r.ValueMatches(static i => i == 2));
 
         static ValueTask<Result<int>> Increment(int i) => new(Result.Ok(i + 1));
+    }
+
+    [Fact(DisplayName = "Binding on a result with no value should return a successful result with no value")]
+    public void BindingOnASuccessfulResultWithoutValueShouldReturnAFallbackResult()
+    {
+        SuccessfulResultWithNoValue.Select(ThrowException)
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsSuccessful && r.Value is None<Unit>);
+
+        static Result<Unit> ThrowException(int _) =>
+            throw new InvalidOperationException("Bind on a result with no value!");
+    }
+
+    [Fact(DisplayName = "Asynchronously binding on a result with no value using a Task should return a successful result with no value")]
+    public async Task AsynchronouslyBindingOnASuccessfulResultWithoutValueWithATaskShouldReturnAFallbackResult()
+    {
+        (await Awaiting(static () => SuccessfulResultWithNoValue.SelectAsync(ThrowException))
+                .Should()
+                .NotThrowAsync())
+            .Which
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsSuccessful && r.Value is None<Unit>);
+
+        static Task<Result<Unit>> ThrowException(int _) =>
+            throw new InvalidOperationException("Bind on a result with no value!");
+    }
+
+    [Fact(DisplayName = "Asynchronously binding on a result with no value using a ValueTask should return a successful result with no value")]
+    public async Task AsynchronouslyBindingOnASuccessfulResultWithoutValueWithAValueTaskShouldReturnAFallbackResult()
+    {
+        (await SuccessfulResultWithNoValue.SelectAsync(ThrowException))
+            .Should()
+            .Match<Result<Unit>>(static r => r.IsSuccessful && r.Value is None<Unit>);
+
+        static ValueTask<Result<Unit>> ThrowException(int _) =>
+            throw new InvalidOperationException("Bind on a result with no value!");
     }
 
     [Fact(DisplayName = "No-op binding on multiple results should return result of unit")]
@@ -147,7 +221,7 @@ public sealed class ResultProjectionTests
         EndSize = int.MaxValue)]
     public Property BindsAreAssociative() =>
         Prop.ForAll(
-            Gen.Three(GetSuccessfulIntegerResultGenerator())
+            Gen.Three(GetSuccessfulIntegerResultWithValueGenerator())
                 .ToArbitrary(),
             static tuple =>
             {
@@ -302,6 +376,359 @@ public sealed class ResultProjectionTests
                 success.ValueMatches(i => i == sum))
             .ToProperty();
     }
+
+    [Property(
+        DisplayName = "Binding on two successful results when any number has no value should return a default fallback result",
+        MaxTest = 1000,
+        StartSize = int.MaxValue / 2,
+        EndSize = int.MaxValue)]
+    public Property BindingOnTwoSuccessfulResultsWhenAnyNumberHasNoValueShouldReturnDefaultFallbackResult() =>
+        Prop.ForAll(
+            Gen.Two(GetSuccessfulIntegerResultGenerator())
+                .Where(
+                    static tuple =>
+                    {
+                        var (first, second) = tuple;
+
+                        return first.Value is None<int> || second.Value is None<int>;
+                    })
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (first, second) = tuple;
+
+                return first.SelectMany(
+                            _ => second,
+                            static (
+                                first,
+                                second) => Result.Ok(first + second))
+                        is { Value: None<int>, Reasons: var reasons, } &&
+                    reasons.SequenceEqual(first.Reasons);
+            });
+
+    [Property(
+        DisplayName = "Binding on three successful results when any number has no value should return a default fallback result",
+        MaxTest = 1000,
+        StartSize = int.MaxValue / 2,
+        EndSize = int.MaxValue)]
+    public Property BindingOnThreeSuccessfulResultsWhenAnyNumberHasNoValueShouldReturnDefaultFallbackResult() =>
+        Prop.ForAll(
+            Gen.Three(GetSuccessfulIntegerResultGenerator())
+                .Where(
+                    static tuple =>
+                    {
+                        var (first, second, third) = tuple;
+
+                        return first.Value is None<int> || second.Value is None<int> || third.Value is None<int>;
+                    })
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (first, second, third) = tuple;
+
+                return first.SelectMany(
+                        _ => second,
+                        _ => third,
+                        static (
+                            first,
+                            second,
+                            third) => Result.Ok(first + second + third))
+                    is { Value: None<int>, Reasons: var reasons, } &&
+                    reasons.SequenceEqual(first.Reasons);
+            });
+
+    [Property(
+        DisplayName = "Binding on four successful results when any number has no value should return a default fallback result",
+        MaxTest = 1000,
+        StartSize = int.MaxValue / 2,
+        EndSize = int.MaxValue)]
+    public Property BindingOnFourSuccessfulResultsWhenAnyNumberHasNoValueShouldReturnDefaultFallbackResult() =>
+        Prop.ForAll(
+            Gen.Four(GetSuccessfulIntegerResultGenerator())
+                .Where(
+                    static tuple =>
+                    {
+                        var (first, second, third, fourth) = tuple;
+
+                        return first.Value is None<int> ||
+                            second.Value is None<int> ||
+                            third.Value is None<int> ||
+                            fourth.Value is None<int>;
+                    })
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (first, second, third, fourth) = tuple;
+
+                return first.SelectMany(
+                            _ => second,
+                            _ => third,
+                            _ => fourth,
+                            static (
+                                first,
+                                second,
+                                third,
+                                fourth) => Result.Ok(first + second + third + fourth))
+                        is { Value: None<int>, Reasons: var reasons, } &&
+                    reasons.SequenceEqual(first.Reasons);
+            });
+
+    [Property(
+        DisplayName = "Binding on five successful results when any number has no value should return a default fallback result",
+        MaxTest = 1000,
+        StartSize = int.MaxValue / 2,
+        EndSize = int.MaxValue)]
+    public Property BindingOnFiveSuccessfulResultsWhenAnyNumberHasNoValueShouldReturnDefaultFallbackResult() =>
+        Prop.ForAll(
+            Gen.Four(GetSuccessfulIntegerResultGenerator())
+                .SelectMany(
+                    static _ => GetSuccessfulIntegerResultGenerator(),
+                    static (tuple, result) => (tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, result))
+                .Where(
+                    static tuple =>
+                    {
+                        var (first, second, third, fourth, fifth) = tuple;
+
+                        return first.Value is None<int> ||
+                            second.Value is None<int> ||
+                            third.Value is None<int> ||
+                            fourth.Value is None<int> ||
+                            fifth.Value is None<int>;
+                    })
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (first, second, third, fourth, fifth) = tuple;
+
+                return first.SelectMany(
+                            _ => second,
+                            _ => third,
+                            _ => fourth,
+                            _ => fifth,
+                            static (
+                                first,
+                                second,
+                                third,
+                                fourth,
+                                fifth) => Result.Ok(first + second + third + fourth + fifth))
+                        is { Value: None<int>, Reasons: var reasons, } &&
+                    reasons.SequenceEqual(first.Reasons);
+            });
+
+    [Property(
+        DisplayName = "Binding on six successful results when any number has no value should return a default fallback result",
+        MaxTest = 1000,
+        StartSize = int.MaxValue / 2,
+        EndSize = int.MaxValue)]
+    public Property BindingOnSixSuccessfulResultsWhenAnyNumberHasNoValueShouldReturnDefaultFallbackResult() =>
+        Prop.ForAll(
+            Gen.Four(GetSuccessfulIntegerResultGenerator())
+                .SelectMany(
+                    static _ => Gen.Two(GetSuccessfulIntegerResultGenerator()),
+                    static (tuple, tuple2) => (tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple2.Item1, tuple2.Item2))
+                .Where(
+                    static tuple =>
+                    {
+                        var (first, second, third, fourth, fifth, sixth) = tuple;
+
+                        return first.Value is None<int> ||
+                            second.Value is None<int> ||
+                            third.Value is None<int> ||
+                            fourth.Value is None<int> ||
+                            fifth.Value is None<int> ||
+                            sixth.Value is None<int>;
+                    })
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (first, second, third, fourth, fifth, sixth) = tuple;
+
+                return first.SelectMany(
+                            _ => second,
+                            _ => third,
+                            _ => fourth,
+                            _ => fifth,
+                            _ => sixth,
+                            static (
+                                first,
+                                second,
+                                third,
+                                fourth,
+                                fifth,
+                                sixth) => Result.Ok(first + second + third + fourth + fifth + sixth))
+                        is { Value: None<int>, Reasons: var reasons, } &&
+                    reasons.SequenceEqual(first.Reasons);
+            });
+
+    [Property(
+        DisplayName = "Binding on two successful results when any number has no value should return a provided fallback result",
+        MaxTest = 1000,
+        StartSize = int.MaxValue / 2,
+        EndSize = int.MaxValue)]
+    public Property BindingOnTwoSuccessfulResultsWhenOneHasNoValueShouldReturnAProvidedFallbackResult() =>
+        Prop.ForAll(
+            Gen.Two(GetSuccessfulIntegerResultGenerator())
+                .Where(
+                    static tuple =>
+                    {
+                        var (first, second) = tuple;
+
+                        return first.Value is None<int> || second.Value is None<int>;
+                    })
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (first, second) = tuple;
+
+                return first.SelectMany(
+                        _ => second,
+                        static (first, second) => Result.Ok(first + second),
+                        Fallback) ==
+                    Fallback();
+
+                static Result<int> Fallback() => Result.Ok(0);
+            });
+
+    [Property(
+        DisplayName = "Binding on three successful results when any number has no value should return a provided fallback result",
+        MaxTest = 1000,
+        StartSize = int.MaxValue / 2,
+        EndSize = int.MaxValue)]
+    public Property BindingOnThreeSuccessfulResultsWhenOneHasNoValueShouldReturnAProvidedFallbackResult() =>
+        Prop.ForAll(
+            Gen.Three(GetSuccessfulIntegerResultGenerator())
+                .Where(
+                    static tuple =>
+                    {
+                        var (first, second, third) = tuple;
+
+                        return first.Value is None<int> || second.Value is None<int> || third.Value is None<int>;
+                    })
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (first, second, third) = tuple;
+
+                return first.SelectMany(
+                        _ => second,
+                        _ => third,
+                        static (first, second, third) => Result.Ok(first + second + third),
+                        Fallback) ==
+                    Fallback();
+
+                static Result<int> Fallback() => Result.Ok(0);
+            });
+
+    [Property(
+        DisplayName = "Binding on four successful results when any number has no value should return a provided fallback result",
+        MaxTest = 1000,
+        StartSize = int.MaxValue / 2,
+        EndSize = int.MaxValue)]
+    public Property BindingOnFourSuccessfulResultsWhenOneHasNoValueShouldReturnAProvidedFallbackResult() =>
+        Prop.ForAll(
+            Gen.Four(GetSuccessfulIntegerResultGenerator())
+                .Where(
+                    static tuple =>
+                    {
+                        var (first, second, third, fourth) = tuple;
+
+                        return first.Value is None<int> || second.Value is None<int> || third.Value is None<int> || fourth.Value is None<int>;
+                    })
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (first, second, third, fourth) = tuple;
+
+                return first.SelectMany(
+                        _ => second,
+                        _ => third,
+                        _ => fourth,
+                        static (first, second, third, fourth) => Result.Ok(first + second + third + fourth),
+                        Fallback) ==
+                    Fallback();
+
+                static Result<int> Fallback() => Result.Ok(0);
+            });
+
+    [Property(
+        DisplayName = "Binding on five successful results when any number has no value should return a provided fallback result",
+        MaxTest = 1000,
+        StartSize = int.MaxValue / 2,
+        EndSize = int.MaxValue)]
+    public Property BindingOnFiveSuccessfulResultsWhenOneHasNoValueShouldReturnAProvidedFallbackResult() =>
+        Prop.ForAll(
+            Gen.Four(GetSuccessfulIntegerResultGenerator())
+                .SelectMany(
+                    static _ => GetSuccessfulIntegerResultGenerator(),
+                    static (tuple, result) => (tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, result))
+                .Where(
+                    static tuple =>
+                    {
+                        var (first, second, third, fourth, fifth) = tuple;
+
+                        return first.Value is None<int> ||
+                            second.Value is None<int> ||
+                            third.Value is None<int> ||
+                            fourth.Value is None<int> ||
+                            fifth.Value is None<int>;
+                    })
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (first, second, third, fourth, fifth) = tuple;
+
+                return first.SelectMany(
+                        _ => second,
+                        _ => third,
+                        _ => fourth,
+                        _ => fifth,
+                        static (first, second, third, fourth, fifth) => Result.Ok(first + second + third + fourth + fifth),
+                        Fallback) ==
+                    Fallback();
+
+                static Result<int> Fallback() => Result.Ok(0);
+            });
+
+    [Property(
+        DisplayName = "Binding on six successful results when any number has no value should return a provided fallback result",
+        MaxTest = 1000,
+        StartSize = int.MaxValue / 2,
+        EndSize = int.MaxValue)]
+    public Property BindingOnSixSuccessfulResultsWhenOneHasNoValueShouldReturnAProvidedFallbackResult() =>
+        Prop.ForAll(
+            Gen.Four(GetSuccessfulIntegerResultGenerator())
+                .SelectMany(
+                    static _ => Gen.Two(GetSuccessfulIntegerResultGenerator()),
+                    static (tuple, tuple2) => (tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple2.Item1, tuple2.Item2))
+                .Where(
+                    static tuple =>
+                    {
+                        var (first, second, third, fourth, fifth, sixth) = tuple;
+
+                        return first.Value is None<int> ||
+                            second.Value is None<int> ||
+                            third.Value is None<int> ||
+                            fourth.Value is None<int> ||
+                            fifth.Value is None<int> ||
+                            sixth.Value is None<int>;
+                    })
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (first, second, third, fourth, fifth, sixth) = tuple;
+
+                return first.SelectMany(
+                        _ => second,
+                        _ => third,
+                        _ => fourth,
+                        _ => fifth,
+                        _ => sixth,
+                        static (first, second, third, fourth, fifth, sixth) => Result.Ok(first + second + third + fourth + fifth + sixth),
+                        Fallback) ==
+                    Fallback();
+
+                static Result<int> Fallback() => Result.Ok(0);
+            });
 
     [Property(
         DisplayName = "Binding on two results should return a failure if at least one of these results is a failure",

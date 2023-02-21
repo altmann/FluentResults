@@ -5,6 +5,40 @@ namespace FluentResults.Immutable.Tests;
 
 public sealed class OptionTests
 {
+    [Property(DisplayName = "Some has appropriate value", MaxTest = 1000)]
+    public Property SomeHasAdequateValue() =>
+        Prop.ForAll(
+            Arb.Generate<int>()
+                .Select(static i => (Option: Option.Some(i), ExpectedValue: i))
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (option, expectedValue) = tuple;
+
+                return option is { Value: var actualValue, } &&
+                    actualValue == expectedValue;
+            });
+
+    [Property(DisplayName = "Some can be converted using with operator", MaxTest = 1000)]
+    public Property SomeCanBeConvertedUsingWithOperator() =>
+        Prop.ForAll(
+            Gen.Two(Arb.Generate<int>())
+                .Where(static tuple => tuple.Item1 != tuple.Item2)
+                .Select(static tuple => (Option: Option.Some(tuple.Item1), NewValue: tuple.Item2))
+                .ToArbitrary(),
+            static tuple =>
+            {
+                var (option, newValue) = tuple;
+
+                var newOption = option with
+                {
+                    Value = newValue,
+                };
+
+                return newOption is { Value: var actualValue, } &&
+                    actualValue == newValue;
+            });
+
     [Property(DisplayName = "Match of some returns proper value", MaxTest = 1000)]
     public Property MatchOfSomeReturnsProperValue() =>
         Prop.ForAll(
@@ -43,7 +77,7 @@ public sealed class OptionTests
                     _ => result = true,
                     static () => { });
 
-                return result.ToProperty();
+                return result;
             });
 
     [Property(DisplayName = "Match of none executes proper action", MaxTest = 1000)]
@@ -60,6 +94,6 @@ public sealed class OptionTests
                     static _ => { },
                     () => result = true);
 
-                return result.ToProperty();
+                return result;
             });
 }

@@ -119,9 +119,10 @@ public readonly partial record struct Result<T> : IImmutableResult<T>
     ///     A new <see cref="Result{T}" /> with provided <paramref name="reasons" />.
     /// </returns>
     public Result<T> WithReasons(IEnumerable<Reason> reasons) =>
-        reasons.Aggregate(
-            this,
-            static (resultSeed, reason) => resultSeed.WithReason(reason));
+        this with
+        {
+            Reasons = Reasons.AddRange(reasons),
+        };
 
     /// <summary>
     ///     Creates a new <see cref="Result{T}" /> with an <see cref="Error" />,

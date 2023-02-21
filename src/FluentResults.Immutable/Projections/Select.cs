@@ -38,18 +38,26 @@ public readonly partial record struct Result<T>
     ///     Generic parameter of the new <see cref="Result{T}" />.
     /// </typeparam>
     /// <param name="bindingFunction">Bind delegate to execute.</param>
+    /// <param name="noneBindingFunction">
+    ///     Bind delegate to execute if the <see cref="Result{T}.Value" />
+    ///     is <see cref="None{T}" />; defaults to returning a new result with
+    ///     changed generic type to <typeparamref name="TNew" />.
+    /// </param>
     /// <returns>
     ///     A <see cref="Result{T}" />, wrapping <typeparamref name="TNew" />
     ///     instance.
     /// </returns>
-    public Result<TNew> Select<TNew>(Func<T, Result<TNew>> bindingFunction)
+    public Result<TNew> Select<TNew>(
+        Func<T, Result<TNew>> bindingFunction,
+        Func<Result<TNew>>? noneBindingFunction = null)
     {
         Result<TNew> fallback = new(Reasons);
-
+        noneBindingFunction ??= () => fallback;
+        
         return IsSuccessful
             ? Value.Match(
                 bindingFunction,
-                () => fallback)
+                noneBindingFunction)
             : fallback;
     }
 
@@ -90,19 +98,27 @@ public readonly partial record struct Result<T>
     ///     Generic parameter of the new <see cref="Result{T}" />.
     /// </typeparam>
     /// <param name="asyncBindingFunction">Asynchronous delegate to execute.</param>
+    /// <param name="asyncNoneBindingFunction">
+    ///     Asynchronous delegate to execute if the <see cref="Result{T}.Value" /> is
+    ///     <see cref="None{T}" />; defaults to returning a new result
+    ///     with changed generic parameter to <typeparamref name="TNew" />.
+    /// </param>
     /// <returns>
     ///     A <see cref="Task{T}" />, representing the result of an asynchronous
     ///     operation, wrapping a <see cref="Result{T}" />, which contains
     ///     <typeparamref name="TNew" /> instance.
     /// </returns>
-    public Task<Result<TNew>> SelectAsync<TNew>(Func<T, Task<Result<TNew>>> asyncBindingFunction)
+    public Task<Result<TNew>> SelectAsync<TNew>(
+        Func<T, Task<Result<TNew>>> asyncBindingFunction,
+        Func<Task<Result<TNew>>>? asyncNoneBindingFunction = null)
     {
         var fallback = Task.FromResult<Result<TNew>>(new(Reasons));
+        asyncNoneBindingFunction ??= () => fallback;
 
         return IsSuccessful
             ? Value.Match(
                 asyncBindingFunction,
-                () => fallback)
+                asyncNoneBindingFunction)
             : fallback;
     }
 
@@ -133,29 +149,31 @@ public readonly partial record struct Result<T>
             }
             : new(Reasons);
 
-    /// <summary>
-    ///     Projects this <see cref="Result{T}" />
-    ///     to a <see cref="Result{T}" /> of <typeparamref name="TNew" />
-    ///     by executing <paramref name="asyncBindingFunction" /> asynchronously
-    ///     if this <see cref="Result{T}" /> is successful.
-    /// </summary>
     /// <typeparam name="TNew">
     ///     Generic parameter of the new <see cref="Result{T}" />.
     /// </typeparam>
-    /// <param name="asyncBindingFunction">Asynchronous delegate to execute.</param>
+    /// <param name="asyncNoneBindingFunction">
+    ///     Asynchronous delegate to execute if the <see cref="Result{T}.Value" /> is
+    ///     <see cref="None{T}" />; defaults to returning a new result
+    ///     with changed generic parameter to <typeparamref name="TNew" />.
+    /// </param>
     /// <returns>
-    ///     A <see cref="Task{T}" />, representing the result of an asynchronous
+    ///     A <see cref="ValueTask{T}" />, representing the result of an asynchronous
     ///     operation, wrapping a <see cref="Result{T}" />, which contains
     ///     <typeparamref name="TNew" /> instance.
     /// </returns>
-    public ValueTask<Result<TNew>> SelectAsync<TNew>(Func<T, ValueTask<Result<TNew>>> asyncBindingFunction)
+    /// <inheritdoc cref="SelectAsync{TNew}(Func{T,Task{Result{TNew}}}, Func{Task{Result{TNew}}})"/>
+    public ValueTask<Result<TNew>> SelectAsync<TNew>(
+        Func<T, ValueTask<Result<TNew>>> asyncBindingFunction,
+        Func<ValueTask<Result<TNew>>>? asyncNoneBindingFunction = null)
     {
         var fallback = new ValueTask<Result<TNew>>(new Result<TNew>(Reasons));
+        asyncNoneBindingFunction ??= () => fallback;
 
         return IsSuccessful
             ? Value.Match(
                 asyncBindingFunction,
-                () => fallback)
+                asyncNoneBindingFunction)
             : fallback;
     }
 }
