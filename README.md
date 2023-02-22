@@ -588,38 +588,39 @@ changed into their immutable counterparts.
 
 - Non-generic `Result` is not defined in `FluentResults.Immutable`;
   In order to achieve the same functionality, `Result<Unit>` should be used.
-  - This approach was introduced to convert the `Result` into a
-    readonly record struct.
 - Safe Value getter; `Result<T>.Value` now returns an `IOption<T>`,
   which is either a `Some<T>`, or `None<T>`.
   - The preferred way to obtain underlying value is pattern-matching:
-  ```csharp
-  var result = Result.Ok(2);
+    ```csharp
+    var result = Result.Ok(2);
 
-  if (result is { IsSuccessful: true, Value: Some<int> { Value: var value, }, })
-  {
-      // safely evaluated value, pattern-matched to a variable
-  }
-  ```
+    if (result is { IsSuccessful: true, Value: Some<int> { Value: var value, }, })
+    {
+        // safely evaluated value, pattern-matched to a variable
+    }
+    ```
   - `IOption<T>` exposes 2 overloads of `Match` method, which allows you to
     act on the value while ensuring compile-time safety:
-  ```csharp
-  var result = Result.Ok<int>(3);
+    ```csharp
+    var result = Result.Ok<int>(3);
 
-  if (result is { IsSuccessful: true, Value: var option })
-  {
-      var message = option.Match(
-          static i => $"The value is {i}",
-          static () => "There's no value associated with this result!");
-  }
-  ```
+    if (result is { IsSuccessful: true, Value: var option })
+    {
+        var message = option.Match(
+            static i => $"The value is {i}",
+            static () => "There's no value associated with this result!");
+    }
+    ```
   - Both of the 'utility types' (`Unit` and `Option`) are exposed as public,
-    so they're free to use as you see fit.
+    so they're free to use as you see fit (`Unit` from this package is equivalent
+    to the one supplied in [MediatR](https://github.com/jbogard/MediatR)).
 - Projecting results into results of different types is now possible with
   a more idiomatic syntax by utilizing `Select` and `SelectMany` methods.
   - `Select` is an equivalent of `Bind` from the core package.
-  - The latter allows for acting on multiple results and aggregating
+  - `SelectMany` allows for acting on multiple results and aggregating
     up to 5 values.
+    - Similar n-ary projection has been implemented for `IOption<T>` as
+      well, to easily aggregate multiple options.
 - `IsSuccess` and `IsFailed` properties have been renamed to a more natural
   language-oriented terms.
 - All "mutating" operations are returning new instances of a `Result`.
