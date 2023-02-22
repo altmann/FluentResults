@@ -26,7 +26,7 @@ public readonly record struct Option
 
 /// <inheritdoc cref="Option" />
 /// <typeparam name="T">Type of the value.</typeparam>
-public interface IOption<out T>
+public partial interface IOption<out T>
 {
     /// <summary>
     ///     Projects the value of this <see cref="IOption{T}" />
@@ -108,7 +108,7 @@ public interface IOption<out T>
 ///     Represents a value.
 /// </summary>
 /// <typeparam name="T">Generic type of the value.</typeparam>
-public readonly record struct Some<T>(T Value) : IOption<T>
+public readonly partial record struct Some<T>(T Value) : IOption<T>
 {
     public TMatchResult Match<TMatchResult>(Func<T, TMatchResult> matchSome, Func<TMatchResult> matchNone) =>
         IOption<T>.DefaultMatch(
@@ -127,7 +127,7 @@ public readonly record struct Some<T>(T Value) : IOption<T>
 ///     Represents an absence of value.
 /// </summary>
 /// <typeparam name="T">Generic type of the <see cref="IOption{T}" />.</typeparam>
-public readonly record struct None<T> : IOption<T>
+public readonly partial record struct None<T> : IOption<T>
 {
     public TMatchResult Match<TMatchResult>(Func<T, TMatchResult> matchSome, Func<TMatchResult> matchNone) =>
         IOption<T>.DefaultMatch(
