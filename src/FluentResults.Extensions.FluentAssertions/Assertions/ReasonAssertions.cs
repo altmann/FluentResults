@@ -22,7 +22,7 @@ namespace FluentResults.Extensions.FluentAssertions
                    .ForCondition(metadata =>
                                  {
                                      metadata.TryGetValue(metadataKey, out var actualMetadataValue);
-                                     return actualMetadataValue == metadataValue;
+                                     return Equals(actualMetadataValue, metadataValue);
                                  })
                    .FailWith($"Reason should contain '{metadataKey}' with '{metadataValue}', but not contain it");
 
