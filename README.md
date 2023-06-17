@@ -186,7 +186,7 @@ bool IsDivisibleByTen(int i) => i % 10 == 0;
 
 ### Try
 
-In some scenarios you want to execute an action. If this action throws an exception then the exception should be catched and transformed to a result object. 
+In some scenarios you want to execute an action. If this action throws an exception then the exception should be caught and transformed to a result object. 
 
 ```csharp
 var result = Result.Try(() => DoSomethingCritical());
