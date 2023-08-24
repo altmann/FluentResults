@@ -9,7 +9,12 @@ namespace FluentResults
     /// <summary>
     /// Extensions methods for <see cref="IResult{TValue}"/>
     /// </summary>
-    public static class IResultTExtensions
+    /// <remarks>
+    /// Adds methods that are defined in 
+    /// <see cref="Result{TValue}"/> so that they are also
+    /// available in <see cref="IResult{TValue}"/>.
+    /// </remarks>
+    public static class ResultTValueExtensions
     {
         /// <summary>
         /// Map all reasons of the result via reasonMapper

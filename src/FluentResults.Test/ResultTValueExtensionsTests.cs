@@ -11,7 +11,7 @@ using Xunit;
 
 namespace FluentResults.Test
 {
-    public class IResultTExtensionsTests
+    public class ResultTValueExtensionsTests
     {
         private void AssertEqual<TValue>(IResult<TValue> actual, IResult<TValue> expected)
         {
