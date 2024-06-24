@@ -26,12 +26,12 @@ namespace FluentResults
         /// <summary>
         /// Get all errors
         /// </summary>
-        List<IError> Errors { get; }
+        IReadOnlyList<IError> Errors { get; }
 
         /// <summary>
         /// Get all successes
         /// </summary>
-        List<ISuccess> Successes { get; }
+        IReadOnlyList<ISuccess> Successes { get; }
     }
 
     public abstract class ResultBase : IResultBase
@@ -54,12 +54,12 @@ namespace FluentResults
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public List<IError> Errors => Reasons.OfType<IError>().ToList();
+        public IReadOnlyList<IError> Errors => Reasons.OfType<IError>().ToList().AsReadOnly();
 
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public List<ISuccess> Successes => Reasons.OfType<ISuccess>().ToList();
+        public IReadOnlyList<ISuccess> Successes => Reasons.OfType<ISuccess>().ToList().AsReadOnly();
 
         protected ResultBase()
         {
@@ -226,7 +226,7 @@ namespace FluentResults
         {
             isSuccess = IsSuccess;
             isFailed = IsFailed;
-            errors = IsFailed ? Errors : default;
+            errors = IsFailed ? Errors.ToList() : default;
         }
     }
 
