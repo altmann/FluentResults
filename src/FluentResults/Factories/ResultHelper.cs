@@ -18,7 +18,7 @@ namespace FluentResults
             var resultList = results.ToList();
 
             var finalResult = Result.Ok<IEnumerable<TValue>>(new List<TValue>())
-                                    .WithReasons(resultList.SelectMany(result => result.Reasons));
+                .WithReasons(resultList.SelectMany(result => result.Reasons));
 
             if (finalResult.IsSuccess)
                 finalResult.WithValue(resultList.Select(r => r.Value).ToList());
@@ -40,13 +40,11 @@ namespace FluentResults
             }
 
             foreach (var error in errors)
-            {
-                if (HasError(error.Reasons, predicate, out var fErrors))
+                if (HasError(error.Reasons ?? new List<IError>(), predicate, out var fErrors))
                 {
                     result = fErrors;
                     return true;
                 }
-            }
 
             result = Array.Empty<TError>();
             return false;
@@ -59,9 +57,9 @@ namespace FluentResults
             where TException : Exception
         {
             var foundErrors = errors.OfType<ExceptionalError>()
-                                    .Where(e => e.Exception is TException rootExceptionOfTException
-                                                && predicate(rootExceptionOfTException))
-                                    .ToList();
+                .Where(e => e.Exception is TException rootExceptionOfTException
+                            && predicate(rootExceptionOfTException))
+                .ToList();
 
             if (foundErrors.Any())
             {
@@ -70,26 +68,24 @@ namespace FluentResults
             }
 
             foreach (var error in errors)
-            {
-                if (HasException(error.Reasons, predicate, out var fErrors))
+                if (HasException(error.Reasons ?? new List<IError>(), predicate, out var fErrors))
                 {
                     result = fErrors;
                     return true;
                 }
-            }
 
             result = Array.Empty<IError>();
             return false;
         }
 
         public static bool HasSuccess<TSuccess>(
-            List<ISuccess> successes, 
+            List<ISuccess> successes,
             Func<TSuccess, bool> predicate,
             out IEnumerable<TSuccess> result) where TSuccess : ISuccess
         {
             var foundSuccesses = successes.OfType<TSuccess>()
-                                          .Where(predicate)
-                                          .ToList();
+                .Where(predicate)
+                .ToList();
             if (foundSuccesses.Any())
             {
                 result = foundSuccesses;
