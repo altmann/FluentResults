@@ -2,15 +2,18 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <Version>3.15.2.0</Version>
+    <Version>3.16.0.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		FIXED - Result get packed twice because of implicit conversion to Result of object #165
+		- ADDED - Readme in Nuget #203
+		- CHANGED - Downgrade MEL.Abstractions to v2.1.1 #208
+		- FIXED - HasError of T can throw when I would expect false #204
+	    - FIXED - Typos in readme and inline documentation
 	</PackageReleaseNotes>
-    <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
+    <Copyright>Copyright 2024 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
     <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-128.png</PackageIconUrl>
