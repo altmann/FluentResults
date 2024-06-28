@@ -15,7 +15,8 @@
     <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-128.png</PackageIconUrl>
     <PackageIcon>FluentResults-Icon-128.png</PackageIcon>
-
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    
     <!--SourceLink-->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -27,6 +28,10 @@
 
   <ItemGroup>
     <None Include="..\..\resources\icons\FluentResults-Icon-128.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
