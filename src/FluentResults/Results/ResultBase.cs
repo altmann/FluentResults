@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    /// <summary>
+    /// Definition of a ResultBase
+    /// </summary>
     public interface IResultBase
     {
         /// <summary>
@@ -34,6 +37,9 @@ namespace FluentResults
         List<ISuccess> Successes { get; }
     }
 
+    /// <summary>
+    /// Default implementation of <see cref="IResultBase"/>
+    /// </summary>
     public abstract class ResultBase : IResultBase
     {
         /// <summary>
@@ -61,6 +67,9 @@ namespace FluentResults
         /// </summary>
         public List<ISuccess> Successes => Reasons.OfType<ISuccess>().ToList();
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         protected ResultBase()
         {
             Reasons = new List<IReason>();
@@ -230,6 +239,9 @@ namespace FluentResults
         }
     }
 
+    /// <summary>
+    /// Default implementation of <see cref="IResultBase"/> generics
+    /// </summary>
     public abstract class ResultBase<TResult> : ResultBase
         where TResult : ResultBase<TResult>
 
@@ -318,6 +330,9 @@ namespace FluentResults
             return WithSuccess(new TSuccess());
         }
 
+        /// <summary>
+        /// Add multiple successes
+        /// </summary>
         public TResult WithSuccesses(IEnumerable<ISuccess> successes)
         {
             foreach (var success in successes)
@@ -442,6 +457,10 @@ namespace FluentResults
             return (TResult)this;
         }
 
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             var reasonsString = Reasons.Any()
