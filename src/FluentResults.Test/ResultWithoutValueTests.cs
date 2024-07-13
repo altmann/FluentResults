@@ -272,6 +272,64 @@ namespace FluentResults.Test
         }
 
         [Fact]
+        public void FailIf_WithErrors_IsFailure()
+        {
+            // Arrange
+            string errorMessage = "Sample Error";
+            var errors = new List<IError> { new Error(errorMessage) };
+
+            // Act
+            var result = Result.FailIf(true, errors);
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Single().Message.Should().Be(errorMessage);
+        }
+
+        [Fact]
+        public void FailIf_WithNoErrors_IsSuccess()
+        {
+            // Arrange
+            var errors = new List<IError>();
+
+            // Act
+            var result = Result.FailIf(false, errors);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
+        }
+
+        [Fact]
+        public void FailIfNotEmpty_WithErrors_IsFailure()
+        {
+            // Arrange
+            string errorMessage = "Sample Error";
+            var errors = new List<IError> { new Error(errorMessage) };
+
+            // Act
+            var result = Result.FailIfNotEmpty(errors);
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Single().Message.Should().Be(errorMessage);
+        }
+
+        [Fact]
+        public void FailIfNotEmpty_WithNoErrors_IsSuccess()
+        {
+            // Arrange
+            var errors = new List<IError>();
+
+            // Act
+            var result = Result.FailIfNotEmpty(errors);
+
+            // Assert
+            result.IsSuccess.Should().BeTrue();
+            result.Errors.Should().BeEmpty();
+        }
+
+        [Fact]
         public void OkIf_SuccessConditionIsTrueAndWithStringErrorMessage_CreateFailedResult()
         {
             var result = Result.OkIf(true, "Error message");
