@@ -3,6 +3,9 @@
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    /// <summary>
+    /// Helpful extensions for IEnumerable
+    /// </summary>
     public static class EnumerableExtensions
     {
         /// <summary>
