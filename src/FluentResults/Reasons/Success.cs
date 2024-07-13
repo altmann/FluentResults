@@ -18,11 +18,18 @@ namespace FluentResults
         /// </summary>
         public Dictionary<string, object> Metadata { get; }
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         protected Success()
         {
             Metadata = new Dictionary<string, object>();
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Success"/> and initializes the <see cref="Message"/> property
+        /// </summary>
+        /// <param name="message">The message</param>
         public Success(string message) : this()
         {
             Message = message;
@@ -50,6 +57,10 @@ namespace FluentResults
             return this;
         }
 
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return new ReasonStringBuilder()
