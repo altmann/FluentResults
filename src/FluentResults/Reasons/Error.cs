@@ -25,6 +25,9 @@ namespace FluentResults
         /// </summary>
         public List<IError> Reasons { get; }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Error"/>
+        /// </summary>
         protected Error()
         {
             Metadata = new Dictionary<string, object>();
@@ -146,6 +149,9 @@ namespace FluentResults
             return this;
         }
 
+        /// <summary>
+        /// ToString override
+        /// </summary>
         public override string ToString()
         {
             return new ReasonStringBuilder()
