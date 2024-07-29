@@ -191,6 +191,21 @@ In some scenarios you want to execute an action. If this action throws an except
 var result = Result.Try(() => DoSomethingCritical());
 ```
 
+You can also return your own `Result` object
+
+```csharp
+var result = Result.Try(() => {
+    if(IsInvalid()) 
+    {
+        return Result.Fail("Some error");
+    }
+
+    int id = DoSomethingCritical();
+
+    return Result.Ok(id);
+});
+```
+
 In the above example the default catchHandler is used. The behavior of the default catchHandler can be overwritten via the global Result settings (see next example). You can control how the Error object looks.
 
 ```csharp
