@@ -229,6 +229,27 @@ namespace FluentResults
         }
 
         /// <summary>
+        /// Create a success/failed result depending on the parameter isFailure containing the specified errors
+        /// </summary>
+        public static Result FailIf(bool isFailure, IEnumerable<IError> errors)
+            => isFailure ? Fail(errors) : Ok();
+
+        /// <summary>
+        /// Create a success/failed result if any error objects exist
+        /// </summary>
+        public static Result FailIfNotEmpty(IEnumerable<IError> errors)
+            => errors.Any() ? Fail(errors) : Ok();
+
+        /// <summary>
+        /// Create a success/failed result depending if any error objects exist
+        /// </summary>
+        /// <remarks>
+        /// Error is lazily evaluated.
+        /// </remarks>
+        public static Result FailIfNotEmpty<T>(IEnumerable<T> errors, Func<T, IError> func)
+            => errors.Any() ? Fail(errors.Select(error => func(error))) : Ok();
+
+        /// <summary>
         /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
         /// </summary>
         public static Result Try(Action action, Func<Exception, IError> catchHandler = null)
