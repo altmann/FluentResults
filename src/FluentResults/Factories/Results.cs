@@ -153,6 +153,14 @@ namespace FluentResults
         }
 
         /// <summary>
+        /// Merge multiple result objects to one result object together. Return one result with a flattened list of merged values.
+        /// </summary>
+        public static Result<IEnumerable<TValue>> MergeFlat<TValue, TArray>(params Result<TArray>[] results) where TArray : IEnumerable<TValue>
+        {
+            return ResultHelper.MergeWithValue<TValue, TArray>(results);
+        }
+
+        /// <summary>
         /// Create a success/failed result depending on the parameter isSuccess
         /// </summary>
         public static Result OkIf(bool isSuccess, IError error)
