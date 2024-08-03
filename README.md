@@ -509,12 +509,18 @@ var outcome = result switch
 };
 ```
 
-### Deconstruct Operators
+### Golang-style Deconstruct Operators
 
 ```csharp
-var (isSuccess, isFailed, value, errors) = Result.Fail<bool>("Failure 1");
+// For Result<TValue> you get TValue and Errors
+var (result, errors) = Result.Ok(1);
+var (result, errors) = Result.Ok<int>(1);
+// beware that on error you will get "result==0" (since TValue is a non-nullable int), so you probably want to check errors first!
+var (result, errors) = Result.Fail<int>("fail");
 
-var (isSuccess, isFailed, errors) = Result.Fail("Failure 1");
+// For Result (without underlying value) you get bool isSuccess and Errors
+var (isSuccess, errors) = Result.Fail("Failure 1");
+var (isSuccess, errors) = Result.Ok();
 ```
 
 ### Logging
