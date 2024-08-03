@@ -196,7 +196,31 @@ namespace FluentResults
 
             return result;
         }
-        
+
+        /// <summary>
+        /// Deconstruct Result 
+        /// </summary>
+        /// <param name="isSuccess"></param>
+        /// <param name="isFailed"></param>
+        public void Deconstruct(out bool isSuccess, out bool isFailed)
+        {
+            isSuccess = IsSuccess;
+            isFailed = IsFailed;
+        }
+
+        /// <summary>
+        /// Deconstruct Result
+        /// </summary>
+        /// <param name="isSuccess"></param>
+        /// <param name="isFailed"></param>
+        /// <param name="errors"></param>
+        public void Deconstruct(out bool isSuccess, out bool isFailed, out List<IError> errors)
+        {
+            isSuccess = IsSuccess;
+            isFailed = IsFailed;
+            errors = IsFailed ? Errors : default;
+        }
+
         /// <summary>
         /// Implict conversion from <see cref="Error"/> to a <see cref="Result"/>
         /// </summary>
@@ -533,6 +557,17 @@ namespace FluentResults
         public static implicit operator Result<TValue>(List<Error> errors)
         {
             return Result.Fail(errors);
+        }
+
+        /// <summary>
+        /// Deconstruct Result
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="errors"></param>
+        public void Deconstruct(out TValue value, out List<IError> errors)
+        {
+            value = IsSuccess ? Value : default;
+            errors = IsFailed ? Errors : default;
         }
 
         /// <summary>

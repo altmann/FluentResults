@@ -998,21 +998,21 @@ namespace FluentResults.Test
         }
 
         [Fact]
-        public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed()
+        public void Can_deconstruct_generic_Ok_to_isSuccess_and_errors()
         {
-            var (isSuccess, isFailed) = Result.Ok(true);
+            var (isSuccess, errors) = Result.Ok(true);
 
             isSuccess.Should().Be(true);
-            isFailed.Should().Be(false);
+            errors.Should().BeNull();
         }
 
         [Fact]
-        public void Can_deconstruct_generic_Fail_to_isSuccess_and_isFailed()
+        public void Can_deconstruct_generic_Fail_to_isSuccess_and_errors()
         {
-            var (isSuccess, isFailed) = Result.Fail<bool>("fail");
+            var (isSuccess, errors) = Result.Fail<bool>("fail");
 
             isSuccess.Should().Be(false);
-            isFailed.Should().Be(true);
+            errors.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -1034,6 +1034,29 @@ namespace FluentResults.Test
             isFailed.Should().Be(true);
             value.Should().Be(default);
         }
+
+        [Fact]
+        public void Can_deconstruct_generic_Ok_to_value_with_errors()
+        {
+            var (value, errors) = Result.Ok(100);
+
+            value.Should().Be(100);
+            errors.Should().BeNull();
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Fail_to_value_with_errors()
+        {
+            var error = new Error("fail");
+
+            var (value, errors) = Result.Fail<int>(error);
+
+            value.Should().Be(default);
+
+            errors.Count.Should().Be(1);
+            errors.FirstOrDefault().Should().Be(error);
+        }
+
 
         [Fact]
         public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed_and_value_with_errors()
