@@ -329,5 +329,22 @@ namespace FluentResults.Extensions
             var result = await resultTask;
             return result.ToResult(value);
         }
+        
+        /// <summary>
+        /// Create a success/failed result depending on the parameter isFailure
+        /// </summary>
+        /// <param name="source">The previous result</param>
+        /// <param name="isFailure">The condition to check if the result should fail</param>
+        /// <param name="error">The error message</param>
+        /// <returns>The previous result if it is already failed or a new result</returns>
+        public static Result OrFailIf(this Result source, bool isFailure, string error)
+        {
+            if (source.IsFailed)
+            {
+                return source;
+            }
+            
+            return isFailure ? Result.Fail(error) : source;
+        }
     }
 }
