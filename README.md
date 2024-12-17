@@ -366,7 +366,7 @@ Result<T> result = myString;
 from a single error
 
 ```csharp
-error myError = new Error("error msg");
+Error myError = new Error("error msg");
 Result result = myError;
 ```
 or from a list of errors
