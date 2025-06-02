@@ -19,7 +19,7 @@ namespace FluentResults.Test
         [Fact]
         public void Result_of_ClassA_IsNot_Result_of_IInterfaceB()
         {
-            IResult<IInterfaceA> result = Result.Ok().WithValue(new ClassA());
+            IResult<IInterfaceA> result = Result.Create<IInterfaceA>(new ClassA());
 
             Assert.True(result is IResult<IInterfaceA>);
             Assert.True(result is IResult<ClassA>);
@@ -29,7 +29,7 @@ namespace FluentResults.Test
         [Fact]
         public void Result_of_ClassB_IsAlso_Result_of_IInterfaceA()
         {
-            IResult<IInterfaceA> result = Result.Ok().WithValue(new ClassB());
+            IResult<IInterfaceA> result = Result.Create<IInterfaceA>(new ClassB());
 
             Assert.True(result is IResult<IInterfaceA>);
             Assert.False(result is IResult<ClassA>);
@@ -40,7 +40,7 @@ namespace FluentResults.Test
         [Fact]
         public void WithValue_NewClassA_Correctly_Creates_Covariance()
         {
-            IResult<IInterfaceA> result = new Result<IInterfaceA>();
+            IResult<IInterfaceA> result = Result.Create<IInterfaceA>();
 
             Assert.True(result is IResult<IInterfaceA>);
             Assert.False(result is IResult<IInterfaceB>);
@@ -58,7 +58,7 @@ namespace FluentResults.Test
         [Fact]
         public void WithValue_NewClassB_Correctly_Creates_Covariance()
         {
-            IResult<IInterfaceA> result = new Result<IInterfaceA>();
+            IResult<IInterfaceA> result = Result.Create<IInterfaceA>();
 
             Assert.True(result is IResult<IInterfaceA>);
             Assert.False(result is IResult<IInterfaceB>);
@@ -76,7 +76,7 @@ namespace FluentResults.Test
         [Fact]
         public void IResultBase_WithValue()
         {
-            IResultBase result = Result.Ok().WithoutValue();
+            IResultBase result = Result.Create();
 
             Assert.False(result is IResult<IInterfaceA>);
             Assert.False(result is IResult<IInterfaceB>);
