@@ -1,3 +1,4 @@
+﻿using FluentResults.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,20 @@ namespace FluentResults
 
             Settings = settingsBuilder.Build();
         }
+
+        /// <summary>
+        /// Creates an empty <see cref="IResultBase"/>
+        /// </summary>
+        public static IResultBase Create() => new Result();
+
+        /// <summary>
+        /// Creates an empty <see cref="IResult{TValue}"/>.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="value">Optional value, to initialize the result with a value.</param>
+        /// <returns></returns>
+        public static IResult<TValue> Create<TValue>(TValue value = default) =>
+            CovarianceResultFactory.Create<TValue>(value);
 
         /// <summary>
         /// Creates a success result
