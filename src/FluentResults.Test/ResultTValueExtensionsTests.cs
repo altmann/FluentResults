@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using FluentAssertions;
+using FluentResults.Extensions;
 using FluentResults.Test.Mocks;
 using Microsoft.Extensions.Logging;
 using Xunit;

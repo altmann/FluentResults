@@ -338,33 +338,36 @@ namespace FluentResults.Extensions
 
         #region Extensions for Task<IResultBase>, ValueTask<IResultBase>, Task<IResult<T>>, and ValueTask<IResult<T>>
 
-#if false
+        /// <inheritdoc cref="MapErrors(Task{Result}, Func{IError, IError})"/>
         public static async Task<IResultBase> MapErrors(this Task<IResultBase> resultTask, Func<IError, IError> errorMapper)
         {
             var result = await resultTask;
             return result.MapErrors(errorMapper);
         }
-
+        /// <inheritdoc cref="MapErrors(ValueTask{Result}, Func{IError, IError})"/>
         public static async ValueTask<IResultBase> MapErrors(this ValueTask<IResultBase> resultTask, Func<IError, IError> errorMapper)
         {
             var result = await resultTask;
             return result.MapErrors(errorMapper);
         }
-#endif
 
+        /// <inheritdoc cref="MapErrors{T}(Task{Result{T}}, Func{IError, IError})"/>
         public static async Task<IResult<T>> MapErrors<T>(this Task<IResult<T>> resultTask, Func<IError, IError> errorMapper)
         {
             var result = await resultTask;
-            return result.MapErrors(errorMapper);
+            return result.IsSuccess ? result :
+                new Result<T>()
+                    .WithErrors(result.Errors.Select(errorMapper))
+                    .WithSuccesses(result.Successes);
         }
 
+        /// <inheritdoc cref="MapErrors{T}(ValueTask{Result{T}}, Func{IError, IError})"/>
         public static async ValueTask<IResult<T>> MapErrors<T>(this ValueTask<IResult<T>> resultTask, Func<IError, IError> errorMapper)
         {
             var result = await resultTask;
-            return result.MapErrors(errorMapper);
+            return result.IsSuccess ? result : result.MapReasons(errorMapper);
         }
 
-#if false
         public static async Task<IResultBase> MapSuccesses(this Task<IResultBase> resultTask, Func<ISuccess, ISuccess> errorMapper)
         {
             var result = await resultTask;
@@ -376,7 +379,6 @@ namespace FluentResults.Extensions
             var result = await resultTask;
             return result.MapSuccesses(errorMapper);
         }
-#endif
 
         public static async Task<IResult<T>> MapSuccesses<T>(this Task<IResult<T>> resultTask, Func<ISuccess, ISuccess> errorMapper)
         {
@@ -438,7 +440,6 @@ namespace FluentResults.Extensions
             return await result.Bind(bind);
         }
 
-#if false
         public static async Task<IResult<TNew>> Bind<TNew>(this Task<IResultBase> resultTask, Func<Task<IResult<TNew>>> bind)
         {
             var result = await resultTask;
@@ -462,7 +463,6 @@ namespace FluentResults.Extensions
             var result = await resultTask;
             return await result.Bind(bind);
         }
-#endif
 
         public static async Task<IResult<TNewValue>> Map<TOldValue, TNewValue>(this Task<IResult<TOldValue>> resultTask, Func<TOldValue, TNewValue> valueConverter)
         {
@@ -514,7 +514,6 @@ namespace FluentResults.Extensions
 
 
         #region Erweiterung: Member von Result für Interface IResultBase
-#if false
         /// <inheritdoc cref="Result.MapErrors(Func{IError, IError})"/>
         public static IResultBase MapErrors(this IResultBase result, Func<IError, IError> errorMapper) =>
             result.IsSuccess 
@@ -627,7 +626,6 @@ namespace FluentResults.Extensions
 
             return out_result;
         }
-#endif
         #endregion
 
 

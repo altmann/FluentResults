@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
-namespace FluentResults
+namespace FluentResults.Extensions
 {
     /// <summary>
     /// Extensions methods for <see cref="IResult{TValue}"/>
@@ -17,18 +17,26 @@ namespace FluentResults
     public static class ResultTValueExtensions
     {
         /// <summary>
+        /// Creates a new <see cref="IResult{TValue}"/> where the value is p<paramref name="value"/>.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="result"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static IResult<TValue> WithValue<TValue>(this IResult<TValue> result, TValue value) =>
+            CovarianceResultFactory.Create<TValue>(value).WithReasons(result.Reasons);
+
+        /// <summary>
         /// Map all reasons of the result via reasonMapper
         /// </summary>
         /// <remarks>
         /// If TReason is different from IReason the mapper is only to applied to 
         /// reasons of the appropriate type.
         /// </remarks>
-        public static Result<TValue> MapReasons<TValue, TReason>(this IResult<TValue> result, Func<TReason, TReason> reasonMapper)
+        public static IResult<TValue> MapReasons<TValue, TReason>(this IResult<TValue> result, Func<TReason, TReason> reasonMapper)
             where TReason : IReason =>
             // Create new Result object
-            new Result<TValue>()
-            // Set value, if any
-            .WithValue(result.ValueOrDefault)
+            CovarianceResultFactory.Create<TValue>(result.ValueOrDefault)
             // Set and map all reasons
             .WithReasons(
                 result.Reasons.Select(reason =>
@@ -44,27 +52,16 @@ namespace FluentResults
                 : result.MapReasons(errorMapper);
 
         /// <inheritdoc cref="Result{TValue}.MapSuccesses(Func{ISuccess, ISuccess})"/>
-        public static Result<TValue> MapSuccesses<TValue>(this IResult<TValue> result, Func<ISuccess, ISuccess> successMapper) =>
+        public static IResult<TValue> MapSuccesses<TValue>(this IResult<TValue> result, Func<ISuccess, ISuccess> successMapper) =>
             result.MapReasons(successMapper);
 
-        /// <inheritdoc cref="Result{TValue}.ToResult()"/>
-        public static Result ToResult<TValue>(this IResult<TValue> result) =>
-            new Result()
-                .WithReasons(result.Reasons);
-
-        /// <inheritdoc cref="Result{TValue}.ToResult{TNewValue}(Func{TValue, TNewValue})"/>
-        public static Result<TNewValue> ToResult<TValue, TNewValue>(this IResult<TValue> result, Func<TValue, TNewValue> valueConverter = null) =>
-            Map(result, valueConverter);
-
         /// <inheritdoc cref="Result{TValue}.Map{TNewValue}(Func{TValue, TNewValue})"/>
-        public static Result<TNewValue> Map<TValue, TNewValue>(this IResult<TValue> result, Func<TValue, TNewValue> mapLogic)
+        public static IResult<TNewValue> Map<TValue, TNewValue>(this IResult<TValue> result, Func<TValue, TNewValue> mapLogic)
         {
             if(result.IsSuccess && mapLogic == null)
                 throw new ArgumentException("If result is success then valueConverter should not be null");
 
-            return new Result<TNewValue>()
-                   .WithValue(result.IsFailed ? default : mapLogic(result.Value))
-                   .WithReasons(result.Reasons);
+            return result.WithValue(result.IsFailed ? default : mapLogic(result.Value));
         }
 
         /// <summary>

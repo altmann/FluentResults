@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentResults.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,38 @@ namespace FluentResults
     /// </remarks>
     public static class ResultBaseExtensions
     {
+        /// <summary>
+        /// Creates a copy of the result, without a value.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Works for any <see cref="IResultBase"/>, <see cref="Result" />, <see cref="IResult{TValue}"/> and <see cref="Result{TValue}"/>.
+        /// </para>
+        /// <para>
+        /// If the result is already of Type <see cref="Result"/> (and thus without value) <paramref name="resultBase"/> is directly returned.
+        /// </para>
+        /// <para>
+        /// The method can be used to cast <see cref="Result"/> as <see cref="IResultBase"/>.
+        /// </para>
+        /// </remarks>
+        public static IResultBase WithoutValue(this IResultBase resultBase) =>
+            resultBase is Result result ? result : new Result().WithReasons(resultBase.Reasons);
+
+        /// <summary>
+        /// Creates a copy of the result with the given value.
+        /// </summary>
+        /// <remarks>
+        /// Transforms the <see cref="IResultBase"/> into an <see cref="IResult{TValue}"/>.
+        /// </remarks>
+        /// <param name="resultBase">
+        /// The original ResultBase that should be copied into an IResult{TValue}.
+        /// </param>
+        /// <param name="value">
+        /// Die Value that should be set in the result. If omitted, the default value is used.
+        /// </param>
+        public static IResult<TValue> WithValue<TValue>(this IResultBase resultBase, TValue value = default) =>
+            CovarianceResultFactory.Create<TValue>(value).WithReasons(resultBase.Reasons);
+
         #region Methods from ResultBase
 
         /// <inheritdoc cref="ResultBase.HasError{TError}()"/>
