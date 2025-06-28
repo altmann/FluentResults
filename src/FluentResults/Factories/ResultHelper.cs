@@ -44,7 +44,7 @@ namespace FluentResults
         }
 
         public static bool HasError<TError>(
-            List<IError> errors,
+            IEnumerable<IError> errors,
             Func<TError, bool> predicate,
             out IEnumerable<TError> result)
             where TError : IError
@@ -68,7 +68,7 @@ namespace FluentResults
         }
 
         public static bool HasException<TException>(
-            List<IError> errors,
+            IEnumerable<IError> errors,
             Func<TException, bool> predicate,
             out IEnumerable<IError> result)
             where TException : Exception
@@ -96,7 +96,7 @@ namespace FluentResults
         }
 
         public static bool HasSuccess<TSuccess>(
-            List<ISuccess> successes,
+            IEnumerable<ISuccess> successes, 
             Func<TSuccess, bool> predicate,
             out IEnumerable<TSuccess> result) where TSuccess : ISuccess
         {

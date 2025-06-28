@@ -595,7 +595,7 @@ namespace FluentResults
             isSuccess = IsSuccess;
             isFailed = IsFailed;
             value = IsSuccess ? Value : default;
-            errors = IsFailed ? Errors : default;
+            errors = IsFailed ? Errors.ToList() : default;
         }
 
         private void ThrowIfFailed()
