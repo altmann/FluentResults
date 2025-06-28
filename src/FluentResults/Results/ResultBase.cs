@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    /// <summary>
+    /// Definition of a ResultBase
+    /// </summary>
     public interface IResultBase
     {
         /// <summary>
@@ -34,6 +37,9 @@ namespace FluentResults
         IReadOnlyList<ISuccess> Successes { get; }
     }
 
+    /// <summary>
+    /// Default implementation of <see cref="IResultBase"/>
+    /// </summary>
     public abstract class ResultBase : IResultBase
     {
         /// <summary>
@@ -61,6 +67,9 @@ namespace FluentResults
         /// </summary>
         public IReadOnlyList<ISuccess> Successes => Reasons.OfType<ISuccess>().ToList().AsReadOnly();
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         protected ResultBase()
         {
             Reasons = new List<IReason>();
@@ -204,32 +213,11 @@ namespace FluentResults
         {
             return ResultHelper.HasSuccess(Successes, predicate, out _);
         }
-
-        /// <summary>
-        /// Deconstruct Result 
-        /// </summary>
-        /// <param name="isSuccess"></param>
-        /// <param name="isFailed"></param>
-        public void Deconstruct(out bool isSuccess, out bool isFailed)
-        {
-            isSuccess = IsSuccess;
-            isFailed = IsFailed;
-        }
-
-        /// <summary>
-        /// Deconstruct Result
-        /// </summary>
-        /// <param name="isSuccess"></param>
-        /// <param name="isFailed"></param>
-        /// <param name="errors"></param>
-        public void Deconstruct(out bool isSuccess, out bool isFailed, out List<IError> errors)
-        {
-            isSuccess = IsSuccess;
-            isFailed = IsFailed;
-            errors = IsFailed ? Errors.ToList() : default;
-        }
     }
 
+    /// <summary>
+    /// Default implementation of <see cref="IResultBase"/> generics
+    /// </summary>
     public abstract class ResultBase<TResult> : ResultBase
         where TResult : ResultBase<TResult>
 
@@ -318,6 +306,9 @@ namespace FluentResults
             return WithSuccess(new TSuccess());
         }
 
+        /// <summary>
+        /// Add multiple successes
+        /// </summary>
         public TResult WithSuccesses(IEnumerable<ISuccess> successes)
         {
             foreach (var success in successes)
@@ -442,6 +433,10 @@ namespace FluentResults
             return (TResult)this;
         }
 
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             var reasonsString = Reasons.Any()

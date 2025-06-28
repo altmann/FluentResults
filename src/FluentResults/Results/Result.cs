@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    /// <summary>
+    /// Implementation of a Result
+    /// </summary>
     public partial class Result : ResultBase<Result>
     {
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public Result()
         { }
 
@@ -38,6 +44,11 @@ namespace FluentResults
                 .WithSuccesses(Successes.Select(successMapper));
         }
 
+        /// <summary>
+        /// Convert result without value to a result containing a value
+        /// </summary>
+        /// <typeparam name="TNewValue">Type of the value</typeparam>
+        /// <param name="newValue">Value to add to the new result</param>
         public Result<TNewValue> ToResult<TNewValue>(TNewValue newValue = default)
         {
             return new Result<TNewValue>()
@@ -185,18 +196,54 @@ namespace FluentResults
 
             return result;
         }
-        
+
+        /// <summary>
+        /// Deconstruct Result 
+        /// </summary>
+        /// <param name="isSuccess"></param>
+        /// <param name="isFailed"></param>
+        public void Deconstruct(out bool isSuccess, out bool isFailed)
+        {
+            isSuccess = IsSuccess;
+            isFailed = IsFailed;
+        }
+
+        /// <summary>
+        /// Deconstruct Result
+        /// </summary>
+        /// <param name="isSuccess"></param>
+        /// <param name="isFailed"></param>
+        /// <param name="errors"></param>
+        public void Deconstruct(out bool isSuccess, out bool isFailed, out List<IError> errors)
+        {
+            isSuccess = IsSuccess;
+            isFailed = IsFailed;
+            errors = IsFailed ? Errors : default;
+        }
+
+        /// <summary>
+        /// Implict conversion from <see cref="Error"/> to a <see cref="Result"/>
+        /// </summary>
+        /// <param name="error">The error</param>
         public static implicit operator Result(Error error)
         {
             return Fail(error);
         }
 
+        /// <summary>
+        /// Implict conversion from <see cref="List{Error}"/> to a <see cref="Result"/>
+        /// </summary>
+        /// <param name="errors">The errors</param>
         public static implicit operator Result(List<Error> errors)
         {
             return Fail(errors);
         }
     }
 
+    /// <summary>
+    /// Definition of a result with a value of type <typeparamref name="TValue"/>
+    /// </summary>
+    /// <typeparam name="TValue">The type of the value</typeparam>
     public interface IResult<out TValue> : IResultBase
     {
         /// <summary>
@@ -210,8 +257,15 @@ namespace FluentResults
         TValue ValueOrDefault { get; }
     }
 
+    /// <summary>
+    /// A result containing a value of type <typeparamref name="TValue"/>
+    /// </summary>
+    /// <typeparam name="TValue">The type of the value</typeparam>
     public class Result<TValue> : ResultBase<Result<TValue>>, IResult<TValue>
     {
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public Result()
         { }
 
@@ -452,6 +506,9 @@ namespace FluentResults
             return result;
         }
 
+        /// <summary>
+        /// ToString implementation
+        /// </summary>
         public override string ToString()
         {
             var baseString = base.ToString();
@@ -459,17 +516,58 @@ namespace FluentResults
             return $"{baseString}, {valueString}";
         }
 
+        /// <summary>
+        /// Implicit conversion from <see cref="Result"/> without a value to <see cref="Result{TValue}"/> having the default value
+        /// </summary>
         public static implicit operator Result<TValue>(Result result)
         {
             return result.ToResult<TValue>(default);
         }
 
+        /// <summary>
+        /// Implicit conversion from <see cref="Result{TValue}"/> having a value to <see cref="Result"/> without a value
+        /// </summary>
+        public static implicit operator Result<object>(Result<TValue> result)
+        {
+            return result.ToResult<object>(value => value);
+        }
+
+        /// <summary>
+        /// Implicit conversion of a value to <see cref="Result{TValue}"/>
+        /// </summary>
         public static implicit operator Result<TValue>(TValue value)
         {
             if (value is Result<TValue> r)
                 return r;
 
             return Result.Ok(value);
+        }
+        
+        /// <summary>
+        /// Implicit conversion of an <see cref="Error"/> to <see cref="Result{TValue}"/>
+        /// </summary>
+        public static implicit operator Result<TValue>(Error error)
+        {
+            return Result.Fail(error);
+        }
+
+        /// <summary>
+        /// Implicit conversion of a list of <see cref="Error"/> to <see cref="Result{TValue}"/>
+        /// </summary>
+        public static implicit operator Result<TValue>(List<Error> errors)
+        {
+            return Result.Fail(errors);
+        }
+
+        /// <summary>
+        /// Deconstruct Result
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="errors"></param>
+        public void Deconstruct(out TValue value, out List<IError> errors)
+        {
+            value = IsSuccess ? Value : default;
+            errors = IsFailed ? Errors : default;
         }
 
         /// <summary>

@@ -25,6 +25,9 @@ namespace FluentResults
         /// </summary>
         public List<IError> Reasons { get; }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Error"/>
+        /// </summary>
         protected Error()
         {
             Metadata = new Dictionary<string, object>();
@@ -34,7 +37,7 @@ namespace FluentResults
         /// <summary>
         /// Creates a new instance of <see cref="Error"/>
         /// </summary>
-        /// <param name="message">Discription of the error</param>
+        /// <param name="message">Description of the error</param>
         public Error(string message)
             : this()
         {
@@ -44,7 +47,7 @@ namespace FluentResults
         /// <summary>
         /// Creates a new instance of <see cref="Error"/>
         /// </summary>
-        /// <param name="message">Discription of the error</param>
+        /// <param name="message">Description of the error</param>
         /// <param name="causedBy">The root cause of the <see cref="Error"/></param>
         public Error(string message, IError causedBy)
             : this(message)
@@ -146,6 +149,9 @@ namespace FluentResults
             return this;
         }
 
+        /// <summary>
+        /// ToString override
+        /// </summary>
         public override string ToString()
         {
             return new ReasonStringBuilder()

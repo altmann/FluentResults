@@ -156,5 +156,35 @@ namespace FluentResults.Test
             result.Reasons[0].Message.Should().Be("First error message");
             result.Reasons[1].Message.Should().Be("Second error message");
         }
+        
+        [Fact]
+        public void CreateErrorOfT_FromErrorImplicitConversion()
+        {
+            var error = new Error("")
+                .CausedBy("First error message");
+
+            Result<string> result = error;
+
+            result.IsFailed.Should().Be(true);
+            result.Reasons.Should().HaveCount(1);
+            error.Reasons.First().Message.Should().Be("First error message");
+        }
+        
+        [Fact]
+        public void CreateErrorOfT_FromListOfErrorsImplicitConversion()
+        {
+            var errors = new List<Error>
+            {
+                new Error("First error message"),
+                new Error("Second error message"),
+            };
+
+            Result<string> result = errors;
+
+            result.IsFailed.Should().Be(true);
+            result.Reasons.Should().HaveCount(2);
+            result.Reasons[0].Message.Should().Be("First error message");
+            result.Reasons[1].Message.Should().Be("Second error message");
+        }
     }
 }

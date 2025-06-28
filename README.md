@@ -1,6 +1,7 @@
-<img src="https://github.com/altmann/FluentResults/blob/master/resources/icons/FluentResults-Icon-64.png" alt="FluentResults"/>
-
-# FluentResults
+<h1>
+  <img src="https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-64.png" alt="FluentResults"/>
+  FluentResults 
+</h1>
 
 [![Nuget downloads](https://img.shields.io/nuget/v/fluentresults.svg)](https://www.nuget.org/packages/FluentResults/)
 [![Nuget](https://img.shields.io/nuget/dt/fluentresults)](https://www.nuget.org/packages/FluentResults/)
@@ -15,7 +16,7 @@ You can install [FluentResults with NuGet](https://www.nuget.org/packages/Fluent
 Install-Package FluentResults
 ```
 
-> :heart: The most needed community feature will be delivered in the next weeks: **[FluentResults with ASP.NET Core integration](https://github.com/altmann/FluentResults/issues/149)**
+> :heart: The most needed community feature is pushed to nuget: **[FluentResults.Extensions.AspNetCore](https://www.nuget.org/packages/FluentResults.Extensions.AspNetCore/)** Read [documentation](https://github.com/altmann/FluentResults/wiki/Returning-Result-Objects-from-ASP.NET-Core-Controller). Try it, test it, [give feedback](https://github.com/altmann/FluentResults/issues/149).
 
 ## Key Features
 
@@ -28,13 +29,14 @@ Install-Package FluentResults
   - .NET Standard, .NET Core, .NET 5+ and .NET Full Framework support (details see [.NET Targeting](https://github.com/altmann/FluentResults#net-targeting))
   - SourceLink support
   - powerful [code samples](https://github.com/altmann/FluentResults#samplesbest-practices) which show the integration with famous or common frameworks/libraries
-- **NEW** Enhanced [FluentAssertions Extension](https://github.com/altmann/FluentResults/wiki) to assert FluentResult objects in an elegant way
+- **NEW** Enhanced [FluentAssertions Extension](https://github.com/altmann/FluentResults/wiki/Asserting-Result-Objects) to assert FluentResult objects in an elegant way
+- **IN PREVIEW** [Returning Result Objects from ASP.NET Controller](https://github.com/altmann/FluentResults/wiki/Returning-Result-Objects-from-ASP.NET-Core-Controller)
 
 ## Why Results instead of exceptions
 
 To be honest, the pattern - returning a Result object indicating success or failure - is not at all a new idea. This pattern comes from functional programming languages. With FluentResults this pattern can also be applied in .NET/C#. 
 
-The article [Exceptions for Flow Control by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/exceptions-for-flow-control/) describes very good in which scenarios the Result pattern makes sense and in which not. See the [list of Best Practices](https://github.com/altmann/FluentResults#samplesbest-practices) and the [list of resources](https://github.com/altmann/FluentResults#interesting-resources-about-result-pattern) to learn more about the Result Pattern.
+The article [Exceptions for Flow Control by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/exceptions-for-flow-control/) describes very well in which scenarios the Result pattern makes sense or not. See the [list of Best Practices](https://github.com/altmann/FluentResults#samplesbest-practices) and the [list of resources](https://github.com/altmann/FluentResults#interesting-resources-about-result-pattern) to learn more about the Result Pattern.
 
 ## Creating a Result
 
@@ -163,10 +165,23 @@ Very often you have to create a fail or success result depending on a condition.
 var result = string.IsNullOrEmpty(firstName) ? Result.Fail("First Name is empty") : Result.Ok();
 ```
 
-With the methods ```FailIf()``` and ```OkIf()``` you can also write in a more readable way:
+With the methods ```FailIf()``` and ```OkIf()``` you can also write in a more readable way.  You can also supply a collection of errors:
 
 ```csharp
 var result = Result.FailIf(string.IsNullOrEmpty(firstName), "First Name is empty");
+
+bool isValid = false; // Some check
+var errors = new List<Error>{ new Error("Error 1"), new Error("Error 2") };
+
+var result2 = Result.FailIf(isValid, errors);
+```
+
+If your success check is based on whether or not there are errors, you can use `FailIfNotEmpty()`
+
+```csharp
+var errors = PerformSomeValidation();
+
+var result = Result.FailIfNotEmpty(errors);
 ```
 
 If an error instance should be lazily initialized, overloads accepting ```Func<string>``` or ```Func<IError>``` can be used to that effect:
@@ -180,15 +195,36 @@ var result = Result.FailIf(
 
 bool IsDivisibleByTen(int i) => i % 10 == 0;
 
+var errors = PerformSomeValidation();
+
+var result = Result.FailIfNotEmpty(
+    errors,
+    (err) => new Error("Custom error message based on err"));
+
 // rest of the code
 ```
 
 ### Try
 
-In some scenarios you want to execute an action. If this action throws an exception then the exception should be catched and transformed to a result object. 
+In some scenarios you want to execute an action. If this action throws an exception then the exception should be caught and transformed to a result object. 
 
 ```csharp
 var result = Result.Try(() => DoSomethingCritical());
+```
+
+You can also return your own `Result` object
+
+```csharp
+var result = Result.Try(() => {
+    if(IsInvalid()) 
+    {
+        return Result.Fail("Some error");
+    }
+
+    int id = DoSomethingCritical();
+
+    return Result.Ok(id);
+});
 ```
 
 In the above example the default catchHandler is used. The behavior of the default catchHandler can be overwritten via the global Result settings (see next example). You can control how the Error object looks.
@@ -306,6 +342,17 @@ var results = new List<Result> { result1, result2, result3 };
 var mergedResult = results.Merge();
 ```
 
+You can also merge results containing a collection of elements into a flattened collection with `MergeFlat()`.  The value type and Enumerable type must be specified as generic parameters
+
+```csharp
+var result1 = Result.Ok(new string[] { "A", "B" });
+var result2 = Result.Ok(new string[] { "C", "D" });
+var result3 = Result.Ok(new string[] { "E", "F" });
+
+// Will contain ["A", "B", "C", "D", "E", "F"]
+var mergedResult = Result.MergeFlat<string, string[]>(result1, result2, result3);
+```
+
 ### Converting and Transformation
 
 A result object can be converted to another result object with methods `ToResult()` and `ToResult<TValue>()`.
@@ -351,7 +398,7 @@ Result<T> result = myString;
 from a single error
 
 ```csharp
-error myError = new Error("error msg");
+Error myError = new Error("error msg");
 Result result = myError;
 ```
 or from a list of errors
@@ -494,12 +541,18 @@ var outcome = result switch
 };
 ```
 
-### Deconstruct Operators
+### Golang-style Deconstruct Operators
 
 ```csharp
-var (isSuccess, isFailed, value, errors) = Result.Fail<bool>("Failure 1");
+// For Result<TValue> you get TValue and Errors
+var (result, errors) = Result.Ok(1);
+var (result, errors) = Result.Ok<int>(1);
+// beware that on error you will get "result==0" (since TValue is a non-nullable int), so you probably want to check errors first!
+var (result, errors) = Result.Fail<int>("fail");
 
-var (isSuccess, isFailed, errors) = Result.Fail("Failure 1");
+// For Result (without underlying value) you get bool isSuccess and Errors
+var (isSuccess, errors) = Result.Fail("Failure 1");
+var (isSuccess, errors) = Result.Ok();
 ```
 
 ### Logging

@@ -12,18 +12,35 @@ namespace FluentResults
             return Result.Ok().WithReasons(results.SelectMany(result => result.Reasons));
         }
 
-        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(
-            IEnumerable<Result<TValue>> results)
+        private static Result<IEnumerable<TValue>> MergeWithValue<TValue, TInValue>(
+            IEnumerable<Result<TInValue>> results,
+            Func<List<Result<TInValue>>, IEnumerable<TValue>> createValue)
         {
             var resultList = results.ToList();
 
             var finalResult = Result.Ok<IEnumerable<TValue>>(new List<TValue>())
-                                    .WithReasons(resultList.SelectMany(result => result.Reasons));
+                .WithReasons(resultList.SelectMany(result => result.Reasons));
 
             if (finalResult.IsSuccess)
-                finalResult.WithValue(resultList.Select(r => r.Value).ToList());
+                finalResult.WithValue(createValue(resultList));
 
             return finalResult;
+        }
+
+        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(
+            IEnumerable<Result<TValue>> results)
+        {
+            return MergeWithValue(
+                results,
+                resultList => resultList.Select(r => r.Value).ToList());
+        }
+
+        public static Result<IEnumerable<TValue>> MergeWithValue<TValue, TArray>(
+            IEnumerable<Result<TArray>> results) where TArray : IEnumerable<TValue>
+        {
+            return MergeWithValue(
+                results,
+                resultList => resultList.SelectMany(r => r.Value).ToList());
         }
 
         public static bool HasError<TError>(
@@ -40,13 +57,11 @@ namespace FluentResults
             }
 
             foreach (var error in errors)
-            {
-                if (HasError(error.Reasons, predicate, out var fErrors))
+                if (HasError(error.Reasons ?? new List<IError>(), predicate, out var fErrors))
                 {
                     result = fErrors;
                     return true;
                 }
-            }
 
             result = Array.Empty<TError>();
             return false;
@@ -59,9 +74,9 @@ namespace FluentResults
             where TException : Exception
         {
             var foundErrors = errors.OfType<ExceptionalError>()
-                                    .Where(e => e.Exception is TException rootExceptionOfTException
-                                                && predicate(rootExceptionOfTException))
-                                    .ToList();
+                .Where(e => e.Exception is TException rootExceptionOfTException
+                            && predicate(rootExceptionOfTException))
+                .ToList();
 
             if (foundErrors.Any())
             {
@@ -70,13 +85,11 @@ namespace FluentResults
             }
 
             foreach (var error in errors)
-            {
-                if (HasException(error.Reasons, predicate, out var fErrors))
+                if (HasException(error.Reasons ?? new List<IError>(), predicate, out var fErrors))
                 {
                     result = fErrors;
                     return true;
                 }
-            }
 
             result = Array.Empty<IError>();
             return false;
@@ -88,8 +101,8 @@ namespace FluentResults
             out IEnumerable<TSuccess> result) where TSuccess : ISuccess
         {
             var foundSuccesses = successes.OfType<TSuccess>()
-                                          .Where(predicate)
-                                          .ToList();
+                .Where(predicate)
+                .ToList();
             if (foundSuccesses.Any())
             {
                 result = foundSuccesses;

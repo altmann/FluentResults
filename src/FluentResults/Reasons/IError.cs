@@ -3,6 +3,9 @@
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
+    /// <summary>
+    /// Definition of an error
+    /// </summary>
     public interface IError : IReason
     {
         /// <summary>
