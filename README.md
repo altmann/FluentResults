@@ -163,10 +163,23 @@ Very often you have to create a fail or success result depending on a condition.
 var result = string.IsNullOrEmpty(firstName) ? Result.Fail("First Name is empty") : Result.Ok();
 ```
 
-With the methods ```FailIf()``` and ```OkIf()``` you can also write in a more readable way:
+With the methods ```FailIf()``` and ```OkIf()``` you can also write in a more readable way.  You can also supply a collection of errors:
 
 ```csharp
 var result = Result.FailIf(string.IsNullOrEmpty(firstName), "First Name is empty");
+
+bool isValid = false; // Some check
+var errors = new List<Error>{ new Error("Error 1"), new Error("Error 2") };
+
+var result2 = Result.FailIf(isValid, errors);
+```
+
+If your success check is based on whether or not there are errors, you can use `FailIfNotEmpty()`
+
+```csharp
+var errors = PerformSomeValidation();
+
+var result = Result.FailIfNotEmpty(errors);
 ```
 
 If an error instance should be lazily initialized, overloads accepting ```Func<string>``` or ```Func<IError>``` can be used to that effect:
@@ -179,6 +192,12 @@ var result = Result.FailIf(
     () => new Error($"Item {list.First(IsDivisibleByTen)} should not be on the list"));
 
 bool IsDivisibleByTen(int i) => i % 10 == 0;
+
+var errors = PerformSomeValidation();
+
+var result = Result.FailIfNotEmpty(
+    errors,
+    (err) => new Error("Custom error message based on err"));
 
 // rest of the code
 ```
