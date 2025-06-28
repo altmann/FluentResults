@@ -36,7 +36,7 @@ Install-Package FluentResults
 
 To be honest, the pattern - returning a Result object indicating success or failure - is not at all a new idea. This pattern comes from functional programming languages. With FluentResults this pattern can also be applied in .NET/C#. 
 
-The article [Exceptions for Flow Control by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/exceptions-for-flow-control/) describes very good in which scenarios the Result pattern makes sense and in which not. See the [list of Best Practices](https://github.com/altmann/FluentResults#samplesbest-practices) and the [list of resources](https://github.com/altmann/FluentResults#interesting-resources-about-result-pattern) to learn more about the Result Pattern.
+The article [Exceptions for Flow Control by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/exceptions-for-flow-control/) describes very well in which scenarios the Result pattern makes sense or not. See the [list of Best Practices](https://github.com/altmann/FluentResults#samplesbest-practices) and the [list of resources](https://github.com/altmann/FluentResults#interesting-resources-about-result-pattern) to learn more about the Result Pattern.
 
 ## Creating a Result
 
