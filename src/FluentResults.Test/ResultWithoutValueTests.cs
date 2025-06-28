@@ -1,8 +1,8 @@
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 
 namespace FluentResults.Test
@@ -126,6 +126,16 @@ namespace FluentResults.Test
         }
 
         [Fact]
+        public void Fail_WithEmptyEnumerableOfErrorMessages_ShouldThrow()
+        {
+            // Act
+            Action act = () => Result.Fail(Enumerable.Empty<string>());
+
+            // Assert
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
         public void Fail_WithValidErrors_ShouldReturnFailedResult()
         {
             // Act
@@ -152,12 +162,22 @@ namespace FluentResults.Test
         }
 
         [Fact]
+        public void Fail_WithEmptyEnumerableOfErrors_ShouldThrow()
+        {
+            // Act
+            Action act = () => Result.Fail(Enumerable.Empty<IError>());
+
+            // Assert
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
         public void ToResult_WithOkResultAndValue_ReturnSuccessResult()
         {
             var valueResult = Result.Ok();
 
             // Act
-            var result = valueResult.ToResult<float>(2.5f);
+            var result = valueResult.ToResult(2.5f);
 
             // Assert
             result.IsSuccess.Should().BeTrue();
@@ -275,7 +295,7 @@ namespace FluentResults.Test
         public void FailIf_WithErrors_IsFailure()
         {
             // Arrange
-            string errorMessage = "Sample Error";
+            var errorMessage = "Sample Error";
             var errors = new List<IError> { new Error(errorMessage) };
 
             // Act
@@ -304,7 +324,7 @@ namespace FluentResults.Test
         public void FailIfNotEmpty_WithErrors_IsFailure()
         {
             // Arrange
-            string errorMessage = "Sample Error";
+            var errorMessage = "Sample Error";
             var errors = new List<IError> { new Error(errorMessage) };
 
             // Act
@@ -429,7 +449,11 @@ namespace FluentResults.Test
         public void Try_execute_failed_action_return_failed_result()
         {
             var exception = new Exception("ex message");
-            void Action() => throw exception;
+
+            void Action()
+            {
+                throw exception;
+            }
 
             var result = Result.Try(Action);
 
@@ -445,7 +469,11 @@ namespace FluentResults.Test
         public void Try_execute_failed_action_with_custom_catchHandler_return_failed_result()
         {
             var exception = new Exception("ex message");
-            void Action() => throw exception;
+
+            void Action()
+            {
+                throw exception;
+            }
 
             var result = Result.Try(Action, e => new Error("xy"));
 
@@ -486,7 +514,11 @@ namespace FluentResults.Test
         public async Task Try_execute_failed_task_async_action_return_failed_result()
         {
             var exception = new Exception("ex message");
-            Task Action() => throw exception;
+
+            Task Action()
+            {
+                throw exception;
+            }
 
             var result = await Result.Try(Action);
 
@@ -502,7 +534,11 @@ namespace FluentResults.Test
         public async Task Try_execute_failed_valuetask_async_action_return_failed_result()
         {
             var exception = new Exception("ex message");
-            ValueTask Action() => throw exception;
+
+            ValueTask Action()
+            {
+                throw exception;
+            }
 
             var result = await Result.Try(Action);
 
@@ -518,7 +554,11 @@ namespace FluentResults.Test
         public async Task Try_execute_failed_task_async_action_with_custom_catchHandler_return_failed_result()
         {
             var exception = new Exception("ex message");
-            Task Action() => throw exception;
+
+            Task Action()
+            {
+                throw exception;
+            }
 
             var result = await Result.Try(Action, e => new Error("xy"));
 
@@ -533,7 +573,11 @@ namespace FluentResults.Test
         public async Task Try_execute_failed_valuetask_async_action_with_custom_catchHandler_return_failed_result()
         {
             var exception = new Exception("ex message");
-            ValueTask Action() => throw exception;
+
+            ValueTask Action()
+            {
+                throw exception;
+            }
 
             var result = await Result.Try(Action, e => new Error("xy"));
 
@@ -548,7 +592,11 @@ namespace FluentResults.Test
         public void Try_execute_failed_func_return_failed_result()
         {
             var error = new Error("xy");
-            Result Action() => Result.Fail(error);
+
+            Result Action()
+            {
+                return Result.Fail(error);
+            }
 
             var result = Result.Try(Action);
 
@@ -561,7 +609,11 @@ namespace FluentResults.Test
         public async Task Try_execute_failed_func_async_return_failed_result()
         {
             var error = new Error("xy");
-            Task<Result> Action() => Task.FromResult(Result.Fail(error));
+
+            Task<Result> Action()
+            {
+                return Task.FromResult(Result.Fail(error));
+            }
 
             var result = await Result.Try(Action);
 
@@ -574,7 +626,11 @@ namespace FluentResults.Test
         public async Task Try_execute_failed_valuetask_func_async_return_failed_result()
         {
             var error = new Error("xy");
-            ValueTask<Result> Action() => new ValueTask<Result>(Result.Fail(error));
+
+            ValueTask<Result> Action()
+            {
+                return new(Result.Fail(error));
+            }
 
             var result = await Result.Try(Action);
 
@@ -586,7 +642,10 @@ namespace FluentResults.Test
         [Fact]
         public void Try_execute_success_func_return_success_result()
         {
-            Result Action() => Result.Ok();
+            Result Action()
+            {
+                return Result.Ok();
+            }
 
             var result = Result.Try(Action);
 
@@ -597,7 +656,10 @@ namespace FluentResults.Test
         [Fact]
         public async Task Try_execute_success_func_async_return_success_result()
         {
-            Task<Result> Action() => Task.FromResult(Result.Ok());
+            Task<Result> Action()
+            {
+                return Task.FromResult(Result.Ok());
+            }
 
             var result = await Result.Try(Action);
 
@@ -608,7 +670,10 @@ namespace FluentResults.Test
         [Fact]
         public async Task Try_execute_success_valuetask_func_async_return_success_result()
         {
-            ValueTask<Result> Action() => new ValueTask<Result>(Result.Ok());
+            ValueTask<Result> Action()
+            {
+                return new(Result.Ok());
+            }
 
             var result = await Result.Try(Action);
 
@@ -620,7 +685,11 @@ namespace FluentResults.Test
         public void Try_execute_withresult_failed_task_action_with_custom_catchHandler_return_failed_result()
         {
             var exception = new Exception("ex message");
-            Result Action() => throw exception;
+
+            Result Action()
+            {
+                throw exception;
+            }
 
             var result = Result.Try(Action, _ => new Error("xy"));
 
@@ -632,10 +701,15 @@ namespace FluentResults.Test
         }
 
         [Fact]
-        public async Task Try_execute_withresult_failed_task_async_action_with_custom_catchHandler_return_failed_result()
+        public async Task
+            Try_execute_withresult_failed_task_async_action_with_custom_catchHandler_return_failed_result()
         {
             var exception = new Exception("ex message");
-            Task<Result> Action() => throw exception;
+
+            Task<Result> Action()
+            {
+                throw exception;
+            }
 
             var result = await Result.Try(Action, _ => new Error("xy"));
 
@@ -647,10 +721,15 @@ namespace FluentResults.Test
         }
 
         [Fact]
-        public async Task Try_execute_withresult_failed_valuetask_async_action_with_custom_catchHandler_return_failed_result()
+        public async Task
+            Try_execute_withresult_failed_valuetask_async_action_with_custom_catchHandler_return_failed_result()
         {
             var exception = new Exception("ex message");
-            ValueTask<Result> Action() => throw exception;
+
+            ValueTask<Result> Action()
+            {
+                throw exception;
+            }
 
             var result = await Result.Try(Action, _ => new Error("xy"));
 
@@ -825,7 +904,8 @@ namespace FluentResults.Test
             }
 
             [Fact]
-            public async Task Bind_ToAnotherValueTypeWithFailedResultAndFailedTransformation_ReturnFailedResultValueTask()
+            public async Task
+                Bind_ToAnotherValueTypeWithFailedResultAndFailedTransformation_ReturnFailedResultValueTask()
             {
                 var valueResult = Result.Fail("Original error message");
 
@@ -926,7 +1006,8 @@ namespace FluentResults.Test
                 var valueResult = Result.Ok().WithSuccess("An int");
 
                 // Act
-                var result = await valueResult.Bind(() => new ValueTask<Result<string>>("One".ToResult().WithSuccess("It is one")));
+                var result = await valueResult.Bind(() =>
+                    new ValueTask<Result<string>>("One".ToResult().WithSuccess("It is one")));
 
                 // Assert
                 result.IsSuccess.Should().BeTrue();
@@ -974,7 +1055,8 @@ namespace FluentResults.Test
                 var valueResult = Result.Ok().WithSuccess("First number");
 
                 // Act
-                var result = await valueResult.Bind(() => new ValueTask<Result<string>>(Result.Ok().WithSuccess("It is one")));
+                var result = await valueResult.Bind(() =>
+                    new ValueTask<Result<string>>(Result.Ok().WithSuccess("It is one")));
 
                 // Assert
                 result.IsSuccess.Should().BeTrue();
@@ -1021,7 +1103,8 @@ namespace FluentResults.Test
                 var valueResult = Result.Ok();
 
                 // Act
-                var result = await valueResult.Bind(() => new ValueTask<Result<string>>(Result.Fail<string>("Only one accepted")));
+                var result = await valueResult.Bind(() =>
+                    new ValueTask<Result<string>>(Result.Fail<string>("Only one accepted")));
 
                 // Assert
                 result.IsFailed.Should().BeTrue();
@@ -1069,7 +1152,8 @@ namespace FluentResults.Test
                 var valueResult = Result.Ok();
 
                 // Act
-                var result = await valueResult.Bind(() => new ValueTask<Result<string>>(Result.Fail("Only one accepted")));
+                var result =
+                    await valueResult.Bind(() => new ValueTask<Result<string>>(Result.Fail("Only one accepted")));
 
                 // Assert
                 result.IsFailed.Should().BeTrue();

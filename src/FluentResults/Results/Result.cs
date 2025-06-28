@@ -1,24 +1,25 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults
 {
     /// <summary>
-    /// Implementation of a Result
+    ///     Implementation of a Result
     /// </summary>
     public partial class Result : ResultBase<Result>
     {
         /// <summary>
-        /// Default constructor
+        ///     Default constructor
         /// </summary>
         public Result()
-        { }
+        {
+        }
 
         /// <summary>
-        /// Map all errors of the result via errorMapper
+        ///     Map all errors of the result via errorMapper
         /// </summary>
         /// <param name="errorMapper"></param>
         /// <returns></returns>
@@ -33,7 +34,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Map all successes of the result via successMapper
+        ///     Map all successes of the result via successMapper
         /// </summary>
         /// <param name="successMapper"></param>
         /// <returns></returns>
@@ -45,7 +46,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Convert result without value to a result containing a value
+        ///     Convert result without value to a result containing a value
         /// </summary>
         /// <typeparam name="TNewValue">Type of the value</typeparam>
         /// <param name="newValue">Value to add to the new result</param>
@@ -57,10 +58,10 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Convert result to result with value that may fail.
+        ///     Convert result to result with value that may fail.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var bakeryDtoResult = result.Bind(GetWhichMayFail);
         /// </code>
         /// </example>
@@ -69,7 +70,7 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-            
+
             if (IsSuccess)
             {
                 var converted = bind();
@@ -79,12 +80,12 @@ namespace FluentResults
 
             return result;
         }
-        
+
         /// <summary>
-        /// Convert result to result with value that may fail asynchronously.
+        ///     Convert result to result with value that may fail asynchronously.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var bakeryDtoResult = result.Bind(GetWhichMayFail);
         /// </code>
         /// </example>
@@ -93,7 +94,7 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-            
+
             if (IsSuccess)
             {
                 var converted = await bind();
@@ -103,12 +104,12 @@ namespace FluentResults
 
             return result;
         }
-        
+
         /// <summary>
-        /// Convert result to result with value that may fail asynchronously.
+        ///     Convert result to result with value that may fail asynchronously.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var bakeryDtoResult = result.Bind(GetWhichMayFail);
         /// </code>
         /// </example>
@@ -117,7 +118,7 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-            
+
             if (IsSuccess)
             {
                 var converted = await bind();
@@ -127,12 +128,12 @@ namespace FluentResults
 
             return result;
         }
-        
+
         /// <summary>
-        /// Execute an action which returns a <see cref="Result"/>.
+        ///     Execute an action which returns a <see cref="Result" />.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var done = result.Bind(ActionWhichMayFail);
         /// </code>
         /// </example>
@@ -141,7 +142,7 @@ namespace FluentResults
         {
             var result = new Result();
             result.WithReasons(Reasons);
-            
+
             if (IsSuccess)
             {
                 var converted = action();
@@ -150,12 +151,12 @@ namespace FluentResults
 
             return result;
         }
-        
+
         /// <summary>
-        /// Execute an action which returns a <see cref="Result"/> asynchronously.
+        ///     Execute an action which returns a <see cref="Result" /> asynchronously.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var done = result.Bind(ActionWhichMayFail);
         /// </code>
         /// </example>
@@ -164,7 +165,7 @@ namespace FluentResults
         {
             var result = new Result();
             result.WithReasons(Reasons);
-            
+
             if (IsSuccess)
             {
                 var converted = await action();
@@ -173,12 +174,12 @@ namespace FluentResults
 
             return result;
         }
-        
+
         /// <summary>
-        /// Execute an action which returns a <see cref="Result"/> asynchronously.
+        ///     Execute an action which returns a <see cref="Result" /> asynchronously.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var done = result.Bind(ActionWhichMayFail);
         /// </code>
         /// </example>
@@ -187,7 +188,7 @@ namespace FluentResults
         {
             var result = new Result();
             result.WithReasons(Reasons);
-            
+
             if (IsSuccess)
             {
                 var converted = await action();
@@ -198,7 +199,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Deconstruct Result 
+        ///     Deconstruct Result
         /// </summary>
         /// <param name="isSuccess"></param>
         /// <param name="isFailed"></param>
@@ -209,12 +210,12 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Deconstruct Result
+        ///     Deconstruct Result
         /// </summary>
         /// <param name="isSuccess"></param>
         /// <param name="isFailed"></param>
         /// <param name="errors"></param>
-        public void Deconstruct(out bool isSuccess, out bool isFailed, out List<IError> errors)
+        public void Deconstruct(out bool isSuccess, out bool isFailed, out IReadOnlyList<IError> errors)
         {
             isSuccess = IsSuccess;
             isFailed = IsFailed;
@@ -222,7 +223,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Implict conversion from <see cref="Error"/> to a <see cref="Result"/>
+        ///     Implict conversion from <see cref="Error" /> to a <see cref="Result" />
         /// </summary>
         /// <param name="error">The error</param>
         public static implicit operator Result(Error error)
@@ -231,7 +232,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Implict conversion from <see cref="List{Error}"/> to a <see cref="Result"/>
+        ///     Implict conversion from <see cref="List{Error}" /> to a <see cref="Result" />
         /// </summary>
         /// <param name="errors">The errors</param>
         public static implicit operator Result(List<Error> errors)
@@ -241,43 +242,43 @@ namespace FluentResults
     }
 
     /// <summary>
-    /// Definition of a result with a value of type <typeparamref name="TValue"/>
+    ///     Definition of a result with a value of type <typeparamref name="TValue" />
     /// </summary>
     /// <typeparam name="TValue">The type of the value</typeparam>
     public interface IResult<out TValue> : IResultBase
     {
         /// <summary>
-        /// Get the Value. If result is failed then an Exception is thrown because a failed result has no value. Opposite see property ValueOrDefault.
+        ///     Get the Value. If result is failed then an Exception is thrown because a failed result has no value. Opposite see
+        ///     property ValueOrDefault.
         /// </summary>
         TValue Value { get; }
 
         /// <summary>
-        /// Get the Value. If result is failed then a default value is returned. Opposite see property Value.
+        ///     Get the Value. If result is failed then a default value is returned. Opposite see property Value.
         /// </summary>
         TValue ValueOrDefault { get; }
     }
 
     /// <summary>
-    /// A result containing a value of type <typeparamref name="TValue"/>
+    ///     A result containing a value of type <typeparamref name="TValue" />
     /// </summary>
     /// <typeparam name="TValue">The type of the value</typeparam>
     public class Result<TValue> : ResultBase<Result<TValue>>, IResult<TValue>
     {
         /// <summary>
-        /// Default constructor
+        ///     Default constructor
         /// </summary>
         public Result()
-        { }
-
-        private TValue _value;
+        {
+        }
 
         /// <summary>
-        /// <inheritdoc/>
+        ///     <inheritdoc />
         /// </summary>
-        public TValue ValueOrDefault => _value;
+        public TValue ValueOrDefault { get; private set; }
 
         /// <summary>
-        /// <inheritdoc/>
+        ///     <inheritdoc />
         /// </summary>
         public TValue Value
         {
@@ -285,18 +286,18 @@ namespace FluentResults
             {
                 ThrowIfFailed();
 
-                return _value;
+                return ValueOrDefault;
             }
             private set
             {
                 ThrowIfFailed();
 
-                _value = value;
+                ValueOrDefault = value;
             }
         }
 
         /// <summary>
-        /// Set value
+        ///     Set value
         /// </summary>
         public Result<TValue> WithValue(TValue value)
         {
@@ -305,7 +306,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Map all errors of the result via errorMapper
+        ///     Map all errors of the result via errorMapper
         /// </summary>
         /// <param name="errorMapper"></param>
         /// <returns></returns>
@@ -320,7 +321,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Map all successes of the result via successMapper
+        ///     Map all successes of the result via successMapper
         /// </summary>
         /// <param name="successMapper"></param>
         /// <returns></returns>
@@ -333,7 +334,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Convert result with value to result without value
+        ///     Convert result with value to result without value
         /// </summary>
         public Result ToResult()
         {
@@ -342,7 +343,8 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Convert result with value to result with another value. Use valueConverter parameter to specify the value transformation logic.
+        ///     Convert result with value to result with another value. Use valueConverter parameter to specify the value
+        ///     transformation logic.
         /// </summary>
         public Result<TNewValue> ToResult<TNewValue>(Func<TValue, TNewValue> valueConverter = null)
         {
@@ -350,7 +352,8 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Convert result with value to result with another value. Use valueConverter parameter to specify the value transformation logic.
+        ///     Convert result with value to result with another value. Use valueConverter parameter to specify the value
+        ///     transformation logic.
         /// </summary>
         public Result<TNewValue> Map<TNewValue>(Func<TValue, TNewValue> mapLogic)
         {
@@ -358,15 +361,15 @@ namespace FluentResults
                 throw new ArgumentException("If result is success then valueConverter should not be null");
 
             return new Result<TNewValue>()
-                   .WithValue(IsFailed ? default : mapLogic(Value))
-                   .WithReasons(Reasons);
+                .WithValue(IsFailed ? default : mapLogic(Value))
+                .WithReasons(Reasons);
         }
 
         /// <summary>
-        /// Convert result with value to result with another value that may fail.
+        ///     Convert result with value to result with another value that may fail.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var bakeryDtoResult = result
         ///     .Bind(GetWhichMayFail)
         ///     .Bind(ProcessWhichMayFail)
@@ -378,7 +381,7 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-            
+
             if (IsSuccess)
             {
                 var converted = bind(Value);
@@ -388,12 +391,12 @@ namespace FluentResults
 
             return result;
         }
-        
+
         /// <summary>
-        /// Convert result with value to result with another value that may fail asynchronously.
+        ///     Convert result with value to result with another value that may fail asynchronously.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var bakeryDtoResult = await result.Bind(GetWhichMayFail);
         /// </code>
         /// </example>
@@ -402,7 +405,7 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-            
+
             if (IsSuccess)
             {
                 var converted = await bind(Value);
@@ -412,12 +415,12 @@ namespace FluentResults
 
             return result;
         }
-        
+
         /// <summary>
-        /// Convert result with value to result with another value that may fail asynchronously.
+        ///     Convert result with value to result with another value that may fail asynchronously.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var bakeryDtoResult = await result.Bind(GetWhichMayFail);
         /// </code>
         /// </example>
@@ -426,7 +429,7 @@ namespace FluentResults
         {
             var result = new Result<TNewValue>();
             result.WithReasons(Reasons);
-            
+
             if (IsSuccess)
             {
                 var converted = await bind(Value);
@@ -438,10 +441,10 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Execute an action which returns a <see cref="Result"/>.
+        ///     Execute an action which returns a <see cref="Result" />.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var done = result.Bind(ActionWhichMayFail);
         /// </code>
         /// </example>
@@ -459,12 +462,12 @@ namespace FluentResults
 
             return result;
         }
-        
+
         /// <summary>
-        /// Execute an action which returns a <see cref="Result"/> asynchronously.
+        ///     Execute an action which returns a <see cref="Result" /> asynchronously.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var done = await result.Bind(ActionWhichMayFail);
         /// </code>
         /// </example>
@@ -482,12 +485,12 @@ namespace FluentResults
 
             return result;
         }
-        
+
         /// <summary>
-        /// Execute an action which returns a <see cref="Result"/> asynchronously.
+        ///     Execute an action which returns a <see cref="Result" /> asynchronously.
         /// </summary>
         /// <example>
-        /// <code>
+        ///     <code>
         ///  var done = await result.Bind(ActionWhichMayFail);
         /// </code>
         /// </example>
@@ -507,7 +510,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// ToString implementation
+        ///     ToString implementation
         /// </summary>
         public override string ToString()
         {
@@ -517,15 +520,16 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Implicit conversion from <see cref="Result"/> without a value to <see cref="Result{TValue}"/> having the default value
+        ///     Implicit conversion from <see cref="Result" /> without a value to <see cref="Result{TValue}" /> having the default
+        ///     value
         /// </summary>
         public static implicit operator Result<TValue>(Result result)
         {
-            return result.ToResult<TValue>(default);
+            return result.ToResult<TValue>();
         }
 
         /// <summary>
-        /// Implicit conversion from <see cref="Result{TValue}"/> having a value to <see cref="Result"/> without a value
+        ///     Implicit conversion from <see cref="Result{TValue}" /> having a value to <see cref="Result" /> without a value
         /// </summary>
         public static implicit operator Result<object>(Result<TValue> result)
         {
@@ -533,7 +537,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Implicit conversion of a value to <see cref="Result{TValue}"/>
+        ///     Implicit conversion of a value to <see cref="Result{TValue}" />
         /// </summary>
         public static implicit operator Result<TValue>(TValue value)
         {
@@ -542,9 +546,9 @@ namespace FluentResults
 
             return Result.Ok(value);
         }
-        
+
         /// <summary>
-        /// Implicit conversion of an <see cref="Error"/> to <see cref="Result{TValue}"/>
+        ///     Implicit conversion of an <see cref="Error" /> to <see cref="Result{TValue}" />
         /// </summary>
         public static implicit operator Result<TValue>(Error error)
         {
@@ -552,7 +556,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Implicit conversion of a list of <see cref="Error"/> to <see cref="Result{TValue}"/>
+        ///     Implicit conversion of a list of <see cref="Error" /> to <see cref="Result{TValue}" />
         /// </summary>
         public static implicit operator Result<TValue>(List<Error> errors)
         {
@@ -560,18 +564,18 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Deconstruct Result
+        ///     Deconstruct Result
         /// </summary>
         /// <param name="value"></param>
         /// <param name="errors"></param>
-        public void Deconstruct(out TValue value, out List<IError> errors)
+        public void Deconstruct(out TValue value, out IReadOnlyList<IError> errors)
         {
             value = IsSuccess ? Value : default;
             errors = IsFailed ? Errors : default;
         }
 
         /// <summary>
-        /// Deconstruct Result
+        ///     Deconstruct Result
         /// </summary>
         /// <param name="isSuccess"></param>
         /// <param name="isFailed"></param>
@@ -584,7 +588,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Deconstruct Result
+        ///     Deconstruct Result
         /// </summary>
         /// <param name="isSuccess"></param>
         /// <param name="isFailed"></param>
@@ -601,7 +605,8 @@ namespace FluentResults
         private void ThrowIfFailed()
         {
             if (IsFailed)
-                throw new InvalidOperationException($"Result is in status failed. Value is not set. Having: {ReasonFormat.ErrorReasonsToString(Errors)}");
+                throw new InvalidOperationException(
+                    $"Result is in status failed. Value is not set. Having: {ReasonFormat.ErrorReasonsToString(Errors)}");
         }
     }
 }

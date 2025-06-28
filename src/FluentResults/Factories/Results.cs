@@ -8,15 +8,15 @@ namespace FluentResults
 {
     public partial class Result
     {
-        internal static ResultSettings Settings { get; private set; }
-
         static Result()
         {
             Settings = new ResultSettingsBuilder().Build();
         }
 
+        internal static ResultSettings Settings { get; private set; }
+
         /// <summary>
-        /// Setup global settings like logging
+        ///     Setup global settings like logging
         /// </summary>
         public static void Setup(Action<ResultSettingsBuilder> setupFunc)
         {
@@ -27,7 +27,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a success result
+        ///     Creates a success result
         /// </summary>
         public static Result Ok()
         {
@@ -35,7 +35,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given error
+        ///     Creates a failed result with the given error
         /// </summary>
         public static Result Fail(IError error)
         {
@@ -45,7 +45,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given error message. Internally an error object from the error factory is created. 
+        ///     Creates a failed result with the given error message. Internally an error object from the error factory is created.
         /// </summary>
         public static Result Fail(string errorMessage)
         {
@@ -55,12 +55,16 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given error messages. Internally a list of error objects from the error factory is created
+        ///     Creates a failed result with the given error messages. Internally a list of error objects from the error factory is
+        ///     created
         /// </summary>
         public static Result Fail(IEnumerable<string> errorMessages)
         {
             if (errorMessages == null)
                 throw new ArgumentNullException(nameof(errorMessages), "The list of error messages cannot be null");
+
+            if (!errorMessages.Any())
+                throw new ArgumentException("The list of errors is empty", nameof(errorMessages));
 
             var result = new Result();
             result.WithErrors(errorMessages.Select(Settings.ErrorFactory));
@@ -68,12 +72,16 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given errors.
+        ///     Creates a failed result with the given errors.
         /// </summary>
         public static Result Fail(IEnumerable<IError> errors)
         {
             if (errors == null)
                 throw new ArgumentNullException(nameof(errors), "The list of errors cannot be null");
+
+            if (!errors.Any())
+                throw new ArgumentException("The list of errors is empty", nameof(errors));
+
 
             var result = new Result();
             result.WithErrors(errors);
@@ -81,7 +89,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a success result with the given value
+        ///     Creates a success result with the given value
         /// </summary>
         public static Result<TValue> Ok<TValue>(TValue value)
         {
@@ -91,7 +99,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given error
+        ///     Creates a failed result with the given error
         /// </summary>
         public static Result<TValue> Fail<TValue>(IError error)
         {
@@ -101,7 +109,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given error message. Internally an error object from the error factory is created. 
+        ///     Creates a failed result with the given error message. Internally an error object from the error factory is created.
         /// </summary>
         public static Result<TValue> Fail<TValue>(string errorMessage)
         {
@@ -111,12 +119,16 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given error messages. Internally a list of error objects from the error factory is created. 
+        ///     Creates a failed result with the given error messages. Internally a list of error objects from the error factory is
+        ///     created.
         /// </summary>
         public static Result<TValue> Fail<TValue>(IEnumerable<string> errorMessages)
         {
             if (errorMessages == null)
                 throw new ArgumentNullException(nameof(errorMessages), "The list of error messages cannot be null");
+
+            if (!errorMessages.Any())
+                throw new ArgumentException("The list of errors is empty", nameof(errorMessages));
 
             var result = new Result<TValue>();
             result.WithErrors(errorMessages.Select(Settings.ErrorFactory));
@@ -124,12 +136,15 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Creates a failed result with the given errors.
+        ///     Creates a failed result with the given errors.
         /// </summary>
         public static Result<TValue> Fail<TValue>(IEnumerable<IError> errors)
         {
             if (errors == null)
                 throw new ArgumentNullException(nameof(errors), "The list of errors cannot be null");
+
+            if (!errors.Any())
+                throw new ArgumentException("The list of errors is empty", nameof(errors));
 
             var result = new Result<TValue>();
             result.WithErrors(errors);
@@ -137,7 +152,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Merge multiple result objects to one result object together
+        ///     Merge multiple result objects to one result object together
         /// </summary>
         public static Result Merge(params ResultBase[] results)
         {
@@ -145,7 +160,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Merge multiple result objects to one result object together. Return one result with a list of merged values.
+        ///     Merge multiple result objects to one result object together. Return one result with a list of merged values.
         /// </summary>
         public static Result<IEnumerable<TValue>> Merge<TValue>(params Result<TValue>[] results)
         {
@@ -153,15 +168,17 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Merge multiple result objects to one result object together. Return one result with a flattened list of merged values.
+        ///     Merge multiple result objects to one result object together. Return one result with a flattened list of merged
+        ///     values.
         /// </summary>
-        public static Result<IEnumerable<TValue>> MergeFlat<TValue, TArray>(params Result<TArray>[] results) where TArray : IEnumerable<TValue>
+        public static Result<IEnumerable<TValue>> MergeFlat<TValue, TArray>(params Result<TArray>[] results)
+            where TArray : IEnumerable<TValue>
         {
             return ResultHelper.MergeWithValue<TValue, TArray>(results);
         }
 
         /// <summary>
-        /// Create a success/failed result depending on the parameter isSuccess
+        ///     Create a success/failed result depending on the parameter isSuccess
         /// </summary>
         public static Result OkIf(bool isSuccess, IError error)
         {
@@ -169,7 +186,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Create a success/failed result depending on the parameter isSuccess
+        ///     Create a success/failed result depending on the parameter isSuccess
         /// </summary>
         public static Result OkIf(bool isSuccess, string error)
         {
@@ -177,10 +194,10 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Create a success/failed result depending on the parameter isSuccess
+        ///     Create a success/failed result depending on the parameter isSuccess
         /// </summary>
         /// <remarks>
-        /// Error is lazily evaluated.
+        ///     Error is lazily evaluated.
         /// </remarks>
         public static Result OkIf(bool isSuccess, Func<IError> errorFactory)
         {
@@ -188,10 +205,10 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Create a success/failed result depending on the parameter isSuccess
+        ///     Create a success/failed result depending on the parameter isSuccess
         /// </summary>
         /// <remarks>
-        /// Error is lazily evaluated.
+        ///     Error is lazily evaluated.
         /// </remarks>
         public static Result OkIf(bool isSuccess, Func<string> errorMessageFactory)
         {
@@ -199,7 +216,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Create a success/failed result depending on the parameter isFailure
+        ///     Create a success/failed result depending on the parameter isFailure
         /// </summary>
         public static Result FailIf(bool isFailure, IError error)
         {
@@ -207,7 +224,7 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Create a success/failed result depending on the parameter isFailure
+        ///     Create a success/failed result depending on the parameter isFailure
         /// </summary>
         public static Result FailIf(bool isFailure, string error)
         {
@@ -215,10 +232,10 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Create a success/failed result depending on the parameter isFailure
+        ///     Create a success/failed result depending on the parameter isFailure
         /// </summary>
         /// <remarks>
-        /// Error is lazily evaluated.
+        ///     Error is lazily evaluated.
         /// </remarks>
         public static Result FailIf(bool isFailure, Func<IError> errorFactory)
         {
@@ -226,10 +243,10 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Create a success/failed result depending on the parameter isFailure
+        ///     Create a success/failed result depending on the parameter isFailure
         /// </summary>
         /// <remarks>
-        /// Error is lazily evaluated.
+        ///     Error is lazily evaluated.
         /// </remarks>
         public static Result FailIf(bool isFailure, Func<string> errorMessageFactory)
         {
@@ -237,28 +254,35 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Create a success/failed result depending on the parameter isFailure containing the specified errors
+        ///     Create a success/failed result depending on the parameter isFailure containing the specified errors
         /// </summary>
         public static Result FailIf(bool isFailure, IEnumerable<IError> errors)
-            => isFailure ? Fail(errors) : Ok();
+        {
+            return isFailure ? Fail(errors) : Ok();
+        }
 
         /// <summary>
-        /// Create a success/failed result if any error objects exist
+        ///     Create a success/failed result if any error objects exist
         /// </summary>
         public static Result FailIfNotEmpty(IEnumerable<IError> errors)
-            => errors.Any() ? Fail(errors) : Ok();
+        {
+            return errors.Any() ? Fail(errors) : Ok();
+        }
 
         /// <summary>
-        /// Create a success/failed result depending if any error objects exist
+        ///     Create a success/failed result depending if any error objects exist
         /// </summary>
         /// <remarks>
-        /// Error is lazily evaluated.
+        ///     Error is lazily evaluated.
         /// </remarks>
         public static Result FailIfNotEmpty<T>(IEnumerable<T> errors, Func<T, IError> func)
-            => errors.Any() ? Fail(errors.Select(error => func(error))) : Ok();
+        {
+            return errors.Any() ? Fail(errors.Select(error => func(error))) : Ok();
+        }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
         public static Result Try(Action action, Func<Exception, IError> catchHandler = null)
         {
@@ -276,7 +300,8 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
         public static async Task<Result> Try(Func<Task> action, Func<Exception, IError> catchHandler = null)
         {
@@ -294,7 +319,8 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
         public static async ValueTask<Result> Try(Func<ValueTask> action, Func<Exception, IError> catchHandler = null)
         {
@@ -312,7 +338,8 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
         public static Result<T> Try<T>(Func<T> action, Func<Exception, IError> catchHandler = null)
         {
@@ -329,7 +356,8 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
         public static async Task<Result<T>> Try<T>(Func<Task<T>> action, Func<Exception, IError> catchHandler = null)
         {
@@ -346,9 +374,11 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
-        public static async ValueTask<Result<T>> Try<T>(Func<ValueTask<T>> action, Func<Exception, IError> catchHandler = null)
+        public static async ValueTask<Result<T>> Try<T>(Func<ValueTask<T>> action,
+            Func<Exception, IError> catchHandler = null)
         {
             catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
 
@@ -363,7 +393,8 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
         public static Result Try(Func<Result> action, Func<Exception, IError> catchHandler = null)
         {
@@ -377,11 +408,11 @@ namespace FluentResults
             {
                 return Fail(catchHandler(e));
             }
-
         }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
         public static async Task<Result> Try(Func<Task<Result>> action, Func<Exception, IError> catchHandler = null)
         {
@@ -398,9 +429,11 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
-        public static async ValueTask<Result> Try(Func<ValueTask<Result>> action, Func<Exception, IError> catchHandler = null)
+        public static async ValueTask<Result> Try(Func<ValueTask<Result>> action,
+            Func<Exception, IError> catchHandler = null)
         {
             catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
 
@@ -415,7 +448,8 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
         public static Result<T> Try<T>(Func<Result<T>> action, Func<Exception, IError> catchHandler = null)
         {
@@ -429,13 +463,14 @@ namespace FluentResults
             {
                 return Fail(catchHandler(e));
             }
-
         }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
-        public static async Task<Result<T>> Try<T>(Func<Task<Result<T>>> action, Func<Exception, IError> catchHandler = null)
+        public static async Task<Result<T>> Try<T>(Func<Task<Result<T>>> action,
+            Func<Exception, IError> catchHandler = null)
         {
             catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
 
@@ -450,9 +485,11 @@ namespace FluentResults
         }
 
         /// <summary>
-        /// Executes the action. If an exception is thrown within the action then this exception is transformed via the catchHandler to an Error object
+        ///     Executes the action. If an exception is thrown within the action then this exception is transformed via the
+        ///     catchHandler to an Error object
         /// </summary>
-        public static async ValueTask<Result<T>> Try<T>(Func<ValueTask<Result<T>>> action, Func<Exception, IError> catchHandler = null)
+        public static async ValueTask<Result<T>> Try<T>(Func<ValueTask<Result<T>>> action,
+            Func<Exception, IError> catchHandler = null)
         {
             catchHandler = catchHandler ?? Settings.DefaultTryCatchHandler;
 
@@ -465,6 +502,5 @@ namespace FluentResults
                 return Fail(catchHandler(e));
             }
         }
-
     }
 }
