@@ -340,6 +340,17 @@ var results = new List<Result> { result1, result2, result3 };
 var mergedResult = results.Merge();
 ```
 
+You can also merge results containing a collection of elements into a flattened collection with `MergeFlat()`.  The value type and Enumerable type must be specified as generic parameters
+
+```csharp
+var result1 = Result.Ok(new string[] { "A", "B" });
+var result2 = Result.Ok(new string[] { "C", "D" });
+var result3 = Result.Ok(new string[] { "E", "F" });
+
+// Will contain ["A", "B", "C", "D", "E", "F"]
+var mergedResult = Result.MergeFlat<string, string[]>(result1, result2, result3);
+```
+
 ### Converting and Transformation
 
 A result object can be converted to another result object with methods `ToResult()` and `ToResult<TValue>()`.
