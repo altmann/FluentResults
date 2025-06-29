@@ -14,6 +14,7 @@
 		- ADDED FailIf methods accepting a collection of errors #213
 		- ADDED Enumerable support for Merge #215
 		- ADDED OrFailIf method #221
+        - ADDED .NET8 and .NET9 support 
 		- FIXED readme #225 #228 #229 #230
     </PackageReleaseNotes>
     <Copyright>Copyright 2024 (c) Michael Altmann. All rights reserved.</Copyright>
