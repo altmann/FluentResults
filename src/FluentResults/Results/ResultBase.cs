@@ -29,12 +29,12 @@ namespace FluentResults
         /// <summary>
         /// Get all errors
         /// </summary>
-        List<IError> Errors { get; }
+        IReadOnlyList<IError> Errors { get; }
 
         /// <summary>
         /// Get all successes
         /// </summary>
-        List<ISuccess> Successes { get; }
+        IReadOnlyList<ISuccess> Successes { get; }
     }
 
     /// <summary>
@@ -60,12 +60,12 @@ namespace FluentResults
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public List<IError> Errors => Reasons.OfType<IError>().ToList();
+        public IReadOnlyList<IError> Errors => Reasons.OfType<IError>().ToList().AsReadOnly();
 
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public List<ISuccess> Successes => Reasons.OfType<ISuccess>().ToList();
+        public IReadOnlyList<ISuccess> Successes => Reasons.OfType<ISuccess>().ToList().AsReadOnly();
 
         /// <summary>
         /// Default constructor
@@ -212,30 +212,6 @@ namespace FluentResults
         public bool HasSuccess(Func<ISuccess, bool> predicate)
         {
             return ResultHelper.HasSuccess(Successes, predicate, out _);
-        }
-
-        /// <summary>
-        /// Deconstruct Result 
-        /// </summary>
-        /// <param name="isSuccess"></param>
-        /// <param name="isFailed"></param>
-        public void Deconstruct(out bool isSuccess, out bool isFailed)
-        {
-            isSuccess = IsSuccess;
-            isFailed = IsFailed;
-        }
-
-        /// <summary>
-        /// Deconstruct Result
-        /// </summary>
-        /// <param name="isSuccess"></param>
-        /// <param name="isFailed"></param>
-        /// <param name="errors"></param>
-        public void Deconstruct(out bool isSuccess, out bool isFailed, out List<IError> errors)
-        {
-            isSuccess = IsSuccess;
-            isFailed = IsFailed;
-            errors = IsFailed ? Errors : default;
         }
     }
 

@@ -12,8 +12,9 @@ namespace FluentResults
             return Result.Ok().WithReasons(results.SelectMany(result => result.Reasons));
         }
 
-        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(
-            IEnumerable<Result<TValue>> results)
+        private static Result<IEnumerable<TValue>> MergeWithValue<TValue, TInValue>(
+            IEnumerable<Result<TInValue>> results,
+            Func<List<Result<TInValue>>, IEnumerable<TValue>> createValue)
         {
             var resultList = results.ToList();
 
@@ -21,13 +22,29 @@ namespace FluentResults
                 .WithReasons(resultList.SelectMany(result => result.Reasons));
 
             if (finalResult.IsSuccess)
-                finalResult.WithValue(resultList.Select(r => r.Value).ToList());
+                finalResult.WithValue(createValue(resultList));
 
             return finalResult;
         }
 
+        public static Result<IEnumerable<TValue>> MergeWithValue<TValue>(
+            IEnumerable<Result<TValue>> results)
+        {
+            return MergeWithValue(
+                results,
+                resultList => resultList.Select(r => r.Value).ToList());
+        }
+
+        public static Result<IEnumerable<TValue>> MergeWithValue<TValue, TArray>(
+            IEnumerable<Result<TArray>> results) where TArray : IEnumerable<TValue>
+        {
+            return MergeWithValue(
+                results,
+                resultList => resultList.SelectMany(r => r.Value).ToList());
+        }
+
         public static bool HasError<TError>(
-            List<IError> errors,
+            IEnumerable<IError> errors,
             Func<TError, bool> predicate,
             out IEnumerable<TError> result)
             where TError : IError
@@ -51,7 +68,7 @@ namespace FluentResults
         }
 
         public static bool HasException<TException>(
-            List<IError> errors,
+            IEnumerable<IError> errors,
             Func<TException, bool> predicate,
             out IEnumerable<IError> result)
             where TException : Exception
@@ -79,7 +96,7 @@ namespace FluentResults
         }
 
         public static bool HasSuccess<TSuccess>(
-            List<ISuccess> successes,
+            IEnumerable<ISuccess> successes, 
             Func<TSuccess, bool> predicate,
             out IEnumerable<TSuccess> result) where TSuccess : ISuccess
         {

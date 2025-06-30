@@ -1,18 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
     <PackageId>FluentResults</PackageId>
-    <Version>3.16.0.0</Version>
+    <Version>4.0.0.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>A lightweight Result object implementation for .NET</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		- ADDED - Readme in Nuget #203
-		- CHANGED - Downgrade MEL.Abstractions to v2.1.1 #208
-		- FIXED - HasError of T can throw when I would expect false #204
-	    - FIXED - Typos in readme and inline documentation
-	</PackageReleaseNotes>
+	    - CHANGED Introduce ReadOnlyList type #164
+	    - CHANGED Deconstruct operators (BREAKING CHANGE) #217
+	    - CHANGED Calling Fail methods with an empty error list throws exception #227
+		- ADDED FailIf methods accepting a collection of errors #213
+		- ADDED Enumerable support for Merge #215
+		- ADDED OrFailIf method #221
+        - ADDED .NET8 and .NET9 support 
+		- FIXED readme #225 #228 #229 #230
+    </PackageReleaseNotes>
     <Copyright>Copyright 2024 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling</PackageTags>
     <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>

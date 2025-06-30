@@ -13,7 +13,7 @@ namespace FluentResults.Samples.WebController
             return new ResultDto(false, TransformErrors(result.Errors));
         }
 
-        private static IEnumerable<ErrorDto> TransformErrors(List<IError> errors)
+        private static IEnumerable<ErrorDto> TransformErrors(IEnumerable<IError> errors)
         {
             return errors.Select(TransformError);
         }

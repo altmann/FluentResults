@@ -1,8 +1,8 @@
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 
 namespace FluentResults.Test
@@ -127,6 +127,16 @@ namespace FluentResults.Test
         }
 
         [Fact]
+        public void Fail_WithEmptyEnumerableOfErrorMessages_ShouldThrow()
+        {
+            // Act
+            Action act = () => Result.Fail<int>(Enumerable.Empty<string>());
+
+            // Assert
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
         public void Fail_WithValidErrors_ShouldReturnFailedResult()
         {
             // Act
@@ -153,6 +163,16 @@ namespace FluentResults.Test
             act.Should().Throw<ArgumentNullException>();
         }
 
+        [Fact]
+        public void Fail_WithEmptyEnumerableOfErrors_ShouldThrow()
+        {
+            // Act
+            Action act = () => Result.Fail<int>(Enumerable.Empty<IError>());
+
+            // Assert
+            act.Should().Throw<ArgumentException>();
+        }
+
 
         [Fact]
         public void ValueOrDefault_WithDateTime_ShouldReturnFailedResult()
@@ -165,11 +185,6 @@ namespace FluentResults.Test
             // Assert
             var defaultDateTime = default(DateTime);
             valueOrDefault.Should().Be(defaultDateTime);
-        }
-
-        class TestValue
-        {
-
         }
 
         [Fact]
@@ -192,11 +207,15 @@ namespace FluentResults.Test
 
             // Assert
 
-            Action action = () => { var _ = result.Value; };
+            Action action = () =>
+            {
+                var _ = result.Value;
+            };
 
             action.Should()
                 .Throw<InvalidOperationException>()
-                .WithMessage("Result is in status failed. Value is not set. Having: Error with Message='Error message'");
+                .WithMessage(
+                    "Result is in status failed. Value is not set. Having: Error with Message='Error message'");
         }
 
         [Fact]
@@ -204,15 +223,19 @@ namespace FluentResults.Test
         {
             // Act
             var result = Result.Fail<int>("Error message")
-                               .WithError("Actual error");
+                .WithError("Actual error");
 
             // Assert
 
-            Action action = () => { var _ = result.Value; };
+            Action action = () =>
+            {
+                var _ = result.Value;
+            };
 
             action.Should()
                 .Throw<InvalidOperationException>()
-                .WithMessage("Result is in status failed. Value is not set. Having: Error with Message='Error message'; Error with Message='Actual error'");
+                .WithMessage(
+                    "Result is in status failed. Value is not set. Having: Error with Message='Error message'; Error with Message='Actual error'");
         }
 
         [Fact]
@@ -226,7 +249,8 @@ namespace FluentResults.Test
             // Assert
             action.Should()
                 .Throw<InvalidOperationException>()
-                .WithMessage("Result is in status failed. Value is not set. Having: Error with Message='Error message'");
+                .WithMessage(
+                    "Result is in status failed. Value is not set. Having: Error with Message='Error message'");
         }
 
         [Fact]
@@ -276,6 +300,520 @@ namespace FluentResults.Test
             // Assert
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(4);
+        }
+
+        [Fact]
+        public void ImplicitCastOperator_ReturnFailedResult()
+        {
+            var valueResult = Result.Fail<int>("First error message");
+
+            // Act
+            var result = valueResult.ToResult();
+
+            // Assert
+            result.IsFailed.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Try_execute_successfully_action_return_success_result()
+        {
+            int Action()
+            {
+                return 5;
+            }
+
+            var result = Result.Try(Action);
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(5);
+        }
+
+        [Fact]
+        public void Try_execute_failed_action_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+
+            int Action()
+            {
+                throw exception;
+            }
+
+            var result = Result.Try(Action);
+
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Should().HaveCount(1);
+
+            var error = (ExceptionalError)result.Errors.First();
+            error.Message.Should().Be(exception.Message);
+            error.Exception.Should().Be(exception);
+        }
+
+        [Fact]
+        public void Try_execute_failed_action_with_custom_catchHandler_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+
+            int Action()
+            {
+                throw exception;
+            }
+
+            var result = Result.Try(Action, _ => new Error("xy"));
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+
+            var error = result.Errors.First();
+            error.Message.Should().Be("xy");
+        }
+
+        [Fact]
+        public async Task Try_execute_successfully_task_async_action_return_success_result()
+        {
+            Task<int> Action()
+            {
+                return Task.FromResult(5);
+            }
+
+            var result = await Result.Try(Action);
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(5);
+        }
+
+        [Fact]
+        public async Task Try_execute_successfully_valuetask_async_action_return_success_result()
+        {
+            ValueTask<int> Action()
+            {
+                return new(5);
+            }
+
+            var result = await Result.Try(Action);
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(5);
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_task_async_action_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+
+            Task<int> Action()
+            {
+                throw exception;
+            }
+
+            var result = await Result.Try(Action);
+
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Should().HaveCount(1);
+
+            var error = (ExceptionalError)result.Errors.First();
+            error.Message.Should().Be(exception.Message);
+            error.Exception.Should().Be(exception);
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_valuetask_async_action_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+
+            ValueTask<int> Action()
+            {
+                throw exception;
+            }
+
+            var result = await Result.Try(Action);
+
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Should().HaveCount(1);
+
+            var error = (ExceptionalError)result.Errors.First();
+            error.Message.Should().Be(exception.Message);
+            error.Exception.Should().Be(exception);
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_task_async_action_with_custom_catchHandler_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+
+            Task<int> Action()
+            {
+                throw exception;
+            }
+
+            var result = await Result.Try(Action, _ => new Error("xy"));
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+
+            var error = result.Errors.First();
+            error.Message.Should().Be("xy");
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_valuetask_async_action_with_custom_catchHandler_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+
+            ValueTask<int> Action()
+            {
+                throw exception;
+            }
+
+            var result = await Result.Try(Action, _ => new Error("xy"));
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+
+            var error = result.Errors.First();
+            error.Message.Should().Be("xy");
+        }
+
+        [Fact]
+        public void Try_execute_failed_func_return_failed_result()
+        {
+            var error = new Error("xy");
+
+            Result<int> Action()
+            {
+                return Result.Fail<int>(error);
+            }
+
+            var result = Result.Try(Action);
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            result.Errors.First().Should().Be(error);
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_func_async_return_failed_result()
+        {
+            var error = new Error("xy");
+
+            Task<Result<int>> Action()
+            {
+                return Task.FromResult(Result.Fail<int>(error));
+            }
+
+            var result = await Result.Try(Action);
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            result.Errors.First().Should().Be(error);
+        }
+
+        [Fact]
+        public async Task Try_execute_failed_valuetask_func_async_return_failed_result()
+        {
+            var error = new Error("xy");
+
+            ValueTask<Result<int>> Action()
+            {
+                return new(Result.Fail<int>(error));
+            }
+
+            var result = await Result.Try(Action);
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            result.Errors.First().Should().Be(error);
+        }
+
+        [Fact]
+        public void Try_execute_success_func_return_success_result()
+        {
+            Result<int> Action()
+            {
+                return Result.Ok(5);
+            }
+
+            var result = Result.Try(Action);
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(5);
+            result.Errors.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task Try_execute_success_func_async_return_success_result()
+        {
+            Task<Result<int>> Action()
+            {
+                return Task.FromResult(Result.Ok(5));
+            }
+
+            var result = await Result.Try(Action);
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(5);
+            result.Errors.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task Try_execute_success_valuetask_func_async_return_success_result()
+        {
+            ValueTask<Result<int>> Action()
+            {
+                return new(Result.Ok(5));
+            }
+
+            var result = await Result.Try(Action);
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(5);
+            result.Errors.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Try_execute_withresult_failed_task_action_with_custom_catchHandler_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+
+            Result<int> Action()
+            {
+                throw exception;
+            }
+
+            var result = Result.Try(Action, _ => new Error("xy"));
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+
+            var error = result.Errors.First();
+            error.Message.Should().Be("xy");
+        }
+
+        [Fact]
+        public async Task
+            Try_execute_withresult_failed_task_async_action_with_custom_catchHandler_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+
+            Task<Result<int>> Action()
+            {
+                throw exception;
+            }
+
+            var result = await Result.Try(Action, _ => new Error("xy"));
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+
+            var error = result.Errors.First();
+            error.Message.Should().Be("xy");
+        }
+
+        [Fact]
+        public async Task
+            Try_execute_withresult_failed_valuetask_async_action_with_custom_catchHandler_return_failed_result()
+        {
+            var exception = new Exception("ex message");
+
+            ValueTask<Result<int>> Action()
+            {
+                throw exception;
+            }
+
+            var result = await Result.Try(Action, _ => new Error("xy"));
+
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+
+            var error = result.Errors.First();
+            error.Message.Should().Be("xy");
+        }
+
+        [Fact]
+        public void Implicit_conversion_T_is_converted_to_Success_result_of_T()
+        {
+            var value = "result";
+
+            Result<string> result = value;
+
+            result.IsSuccess.Should().BeTrue();
+            result.IsFailed.Should().BeFalse();
+            result.Reasons.Should().BeEmpty();
+            result.Errors.Should().BeEmpty();
+
+            result.Value.Should().Be(value);
+            result.Value.Should().BeOfType<string>();
+
+            result.ValueOrDefault.Should().Be(value);
+            result.ValueOrDefault.Should().BeOfType<string>();
+        }
+
+        [Fact]
+        public void Implicit_conversion_Null_is_converted_to_Success_result_of_Null()
+        {
+            Result<object> result = (object)null;
+
+            result.IsSuccess.Should().BeTrue();
+            result.IsFailed.Should().BeFalse();
+            result.Reasons.Should().BeEmpty();
+            result.Errors.Should().BeEmpty();
+
+            result.Value.Should().BeNull();
+            result.ValueOrDefault.Should().BeNull();
+        }
+
+        [Fact]
+        public void Implicit_conversion_Result_Value_is_converted_to_Result_object()
+        {
+            Result<object> result = new Result<int>().WithValue(42);
+
+            result.IsSuccess.Should().BeTrue();
+            result.IsFailed.Should().BeFalse();
+            result.Reasons.Should().BeEmpty();
+            result.Errors.Should().BeEmpty();
+
+            result.Value.Should().NotBeNull();
+            result.ValueOrDefault.Should().NotBeNull();
+            result.Value.Should().Be(42);
+        }
+
+        [Fact]
+        public void Implicit_conversion_Result_Value_is_converted_to_Result_object_with_Reasons()
+        {
+            Result<object> result = new Result<int>().WithValue(42).WithReason(new SuccessTests.CustomSuccess());
+
+            result.IsSuccess.Should().BeTrue();
+            result.IsFailed.Should().BeFalse();
+            result.Errors.Should().BeEmpty();
+
+            result.Value.Should().NotBeNull();
+            result.ValueOrDefault.Should().NotBeNull();
+            result.Value.Should().Be(42);
+
+            result.Reasons.Should().ContainSingle();
+            result.Reasons.Should().AllBeEquivalentTo(new SuccessTests.CustomSuccess());
+        }
+
+        [Fact]
+        public void Implicit_conversion_Result_Value_is_converted_to_Result_object_with_Errors()
+        {
+            Result<object> result = new Result<int>().WithValue(42).WithError("foo");
+
+            result.IsSuccess.Should().BeFalse();
+            result.IsFailed.Should().BeTrue();
+
+            result.Reasons.Should().ContainSingle();
+            result.Reasons.Should().AllBeEquivalentTo(new Error("foo"));
+
+            result.Errors.Should().ContainSingle();
+            result.Errors.Should().AllBeEquivalentTo(new Error("foo"));
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Ok_to_isSuccess_and_errors()
+        {
+            var (isSuccess, errors) = Result.Ok(true);
+
+            isSuccess.Should().Be(true);
+            errors.Should().BeNull();
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Fail_to_isSuccess_and_errors()
+        {
+            var (isSuccess, errors) = Result.Fail<bool>("fail");
+
+            isSuccess.Should().Be(false);
+            errors.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed_and_value()
+        {
+            var (isSuccess, isFailed, value) = Result.Ok(100);
+
+            isSuccess.Should().Be(true);
+            isFailed.Should().Be(false);
+            value.Should().Be(100);
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Fail_to_isSuccess_and_isFailed_and_value()
+        {
+            var (isSuccess, isFailed, value) = Result.Fail<int>("fail");
+
+            isSuccess.Should().Be(false);
+            isFailed.Should().Be(true);
+            value.Should().Be(default);
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Ok_to_value_with_errors()
+        {
+            var (value, errors) = Result.Ok(100);
+
+            value.Should().Be(100);
+            errors.Should().BeNull();
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Fail_to_value_with_errors()
+        {
+            var error = new Error("fail");
+
+            var (value, errors) = Result.Fail<int>(error);
+
+            value.Should().Be(default);
+
+            errors.Count.Should().Be(1);
+            errors.FirstOrDefault().Should().Be(error);
+        }
+
+
+        [Fact]
+        public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed_and_value_with_errors()
+        {
+            var (isSuccess, isFailed, value, errors) = Result.Ok(100);
+
+            isSuccess.Should().Be(true);
+            isFailed.Should().Be(false);
+            value.Should().Be(100);
+            errors.Should().BeNull();
+        }
+
+        [Fact]
+        public void Can_deconstruct_generic_Fail_to_isSuccess_and_isFailed_and_errors_with_value()
+        {
+            var error = new Error("fail");
+
+            var (isSuccess, isFailed, value, errors) = Result.Fail<bool>(error);
+
+            isSuccess.Should().Be(false);
+            isFailed.Should().Be(true);
+            value.Should().Be(default);
+
+            errors.Count.Should().Be(1);
+            errors.FirstOrDefault().Should().Be(error);
+        }
+
+        [Fact]
+        public void Dynamic_value_is_implicit_converted_to_ValueResult()
+        {
+            var result = DynamicConvert("hello", typeof(string));
+
+            ((object)result.Value).Should().Be("hello");
+            ((object)result.Value).Should().BeOfType(typeof(string));
+        }
+
+        private static Result<dynamic> DynamicConvert(dynamic source, Type dest)
+        {
+            var result = new Result<dynamic>();
+            var converted = Convert.ChangeType(source, dest);
+            var x = result.WithValue(converted);
+            return x;
+        }
+
+        private class TestValue
+        {
         }
 
         public class BindMethod
@@ -401,7 +939,8 @@ namespace FluentResults.Test
             }
 
             [Fact]
-            public async Task Bind_ToAnotherValueTypeWithFailedResultAndFailedTransformation_ReturnFailedResultValueTask()
+            public async Task
+                Bind_ToAnotherValueTypeWithFailedResultAndFailedTransformation_ReturnFailedResultValueTask()
             {
                 var valueResult = Result.Fail<int>("Original error message");
 
@@ -541,7 +1080,8 @@ namespace FluentResults.Test
                 var valueResult = Result.Ok(1).WithSuccess("First number");
 
                 // Act
-                var result = await valueResult.Bind(n => Task.FromResult(Result.OkIf(n == 1, "Irrelevant").WithSuccess("It is one")));
+                var result = await valueResult.Bind(n =>
+                    Task.FromResult(Result.OkIf(n == 1, "Irrelevant").WithSuccess("It is one")));
 
                 // Assert
                 result.IsSuccess.Should().BeTrue();
@@ -556,7 +1096,8 @@ namespace FluentResults.Test
                 var valueResult = Result.Ok(1).WithSuccess("First number");
 
                 // Act
-                var result = await valueResult.Bind(n => new ValueTask<Result<string>>(Result.OkIf(n == 1, "Irrelevant").WithSuccess("It is one")));
+                var result = await valueResult.Bind(n =>
+                    new ValueTask<Result<string>>(Result.OkIf(n == 1, "Irrelevant").WithSuccess("It is one")));
 
                 // Assert
                 result.IsSuccess.Should().BeTrue();
@@ -603,7 +1144,8 @@ namespace FluentResults.Test
                 var valueResult = Result.Ok(5);
 
                 // Act
-                var result = await valueResult.Bind(n => new ValueTask<Result<string>>(Result.Fail<string>("Only one accepted")));
+                var result = await valueResult.Bind(n =>
+                    new ValueTask<Result<string>>(Result.Fail<string>("Only one accepted")));
 
                 // Assert
                 result.IsFailed.Should().BeTrue();
@@ -651,7 +1193,8 @@ namespace FluentResults.Test
                 var valueResult = Result.Ok(5);
 
                 // Act
-                var result = await valueResult.Bind(n => new ValueTask<Result<string>>(Result.Fail("Only one accepted")));
+                var result =
+                    await valueResult.Bind(n => new ValueTask<Result<string>>(Result.Fail("Only one accepted")));
 
                 // Assert
                 result.IsFailed.Should().BeTrue();
@@ -660,422 +1203,6 @@ namespace FluentResults.Test
                     .Should()
                     .BeEquivalentTo("Only one accepted");
             }
-        }
-
-        [Fact]
-        public void ImplicitCastOperator_ReturnFailedResult()
-        {
-            var valueResult = Result.Fail<int>("First error message");
-
-            // Act
-            Result result = valueResult.ToResult();
-
-            // Assert
-            result.IsFailed.Should().BeTrue();
-        }
-
-        [Fact]
-        public void Try_execute_successfully_action_return_success_result()
-        {
-            int Action() => 5;
-            var result = Result.Try(Action);
-
-            result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Be(5);
-        }
-
-        [Fact]
-        public void Try_execute_failed_action_return_failed_result()
-        {
-            var exception = new Exception("ex message");
-            int Action() => throw exception;
-
-            var result = Result.Try(Action);
-
-            result.IsFailed.Should().BeTrue();
-            result.Errors.Should().HaveCount(1);
-
-            var error = (ExceptionalError)result.Errors.First();
-            error.Message.Should().Be(exception.Message);
-            error.Exception.Should().Be(exception);
-        }
-
-        [Fact]
-        public void Try_execute_failed_action_with_custom_catchHandler_return_failed_result()
-        {
-            var exception = new Exception("ex message");
-            int Action() => throw exception;
-
-            var result = Result.Try(Action, _ => new Error("xy"));
-
-            result.IsSuccess.Should().BeFalse();
-            result.Errors.Should().HaveCount(1);
-
-            var error = result.Errors.First();
-            error.Message.Should().Be("xy");
-        }
-
-        [Fact]
-        public async Task Try_execute_successfully_task_async_action_return_success_result()
-        {
-            Task<int> Action() => Task.FromResult(5);
-            var result = await Result.Try(Action);
-
-            result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Be(5);
-        }
-
-        [Fact]
-        public async Task Try_execute_successfully_valuetask_async_action_return_success_result()
-        {
-            ValueTask<int> Action() => new ValueTask<int>(5);
-            var result = await Result.Try(Action);
-
-            result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Be(5);
-        }
-
-        [Fact]
-        public async Task Try_execute_failed_task_async_action_return_failed_result()
-        {
-            var exception = new Exception("ex message");
-            Task<int> Action() => throw exception;
-
-            var result = await Result.Try(Action);
-
-            result.IsFailed.Should().BeTrue();
-            result.Errors.Should().HaveCount(1);
-
-            var error = (ExceptionalError)result.Errors.First();
-            error.Message.Should().Be(exception.Message);
-            error.Exception.Should().Be(exception);
-        }
-
-        [Fact]
-        public async Task Try_execute_failed_valuetask_async_action_return_failed_result()
-        {
-            var exception = new Exception("ex message");
-            ValueTask<int> Action() => throw exception;
-
-            var result = await Result.Try(Action);
-
-            result.IsFailed.Should().BeTrue();
-            result.Errors.Should().HaveCount(1);
-
-            var error = (ExceptionalError)result.Errors.First();
-            error.Message.Should().Be(exception.Message);
-            error.Exception.Should().Be(exception);
-        }
-
-        [Fact]
-        public async Task Try_execute_failed_task_async_action_with_custom_catchHandler_return_failed_result()
-        {
-            var exception = new Exception("ex message");
-            Task<int> Action() => throw exception;
-
-            var result = await Result.Try(Action, _ => new Error("xy"));
-
-            result.IsSuccess.Should().BeFalse();
-            result.Errors.Should().HaveCount(1);
-
-            var error = result.Errors.First();
-            error.Message.Should().Be("xy");
-        }
-
-        [Fact]
-        public async Task Try_execute_failed_valuetask_async_action_with_custom_catchHandler_return_failed_result()
-        {
-            var exception = new Exception("ex message");
-            ValueTask<int> Action() => throw exception;
-
-            var result = await Result.Try(Action, _ => new Error("xy"));
-
-            result.IsSuccess.Should().BeFalse();
-            result.Errors.Should().HaveCount(1);
-
-            var error = result.Errors.First();
-            error.Message.Should().Be("xy");
-        }
-
-        [Fact]
-        public void Try_execute_failed_func_return_failed_result()
-        {
-            var error = new Error("xy");
-            Result<int> Action() => Result.Fail<int>(error);
-
-            var result = Result.Try(Action);
-
-            result.IsSuccess.Should().BeFalse();
-            result.Errors.Should().HaveCount(1);
-            result.Errors.First().Should().Be(error);
-        }
-
-        [Fact]
-        public async Task Try_execute_failed_func_async_return_failed_result()
-        {
-            var error = new Error("xy");
-            Task<Result<int>> Action() => Task.FromResult(Result.Fail<int>(error));
-
-            var result = await Result.Try(Action);
-
-            result.IsSuccess.Should().BeFalse();
-            result.Errors.Should().HaveCount(1);
-            result.Errors.First().Should().Be(error);
-        }
-
-        [Fact]
-        public async Task Try_execute_failed_valuetask_func_async_return_failed_result()
-        {
-            var error = new Error("xy");
-            ValueTask<Result<int>> Action() => new ValueTask<Result<int>>(Result.Fail<int>(error));
-
-            var result = await Result.Try(Action);
-
-            result.IsSuccess.Should().BeFalse();
-            result.Errors.Should().HaveCount(1);
-            result.Errors.First().Should().Be(error);
-        }
-
-        [Fact]
-        public void Try_execute_success_func_return_success_result()
-        {
-            Result<int> Action() => Result.Ok(5);
-
-            var result = Result.Try(Action);
-
-            result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Be(5);
-            result.Errors.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Try_execute_success_func_async_return_success_result()
-        {
-            Task<Result<int>> Action() => Task.FromResult(Result.Ok(5));
-
-            var result = await Result.Try(Action);
-
-            result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Be(5);
-            result.Errors.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Try_execute_success_valuetask_func_async_return_success_result()
-        {
-            ValueTask<Result<int>> Action() => new ValueTask<Result<int>>(Result.Ok(5));
-
-            var result = await Result.Try(Action);
-
-            result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Be(5);
-            result.Errors.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void Try_execute_withresult_failed_task_action_with_custom_catchHandler_return_failed_result()
-        {
-            var exception = new Exception("ex message");
-            Result<int> Action() => throw exception;
-
-            var result = Result.Try(Action, _ => new Error("xy"));
-
-            result.IsSuccess.Should().BeFalse();
-            result.Errors.Should().HaveCount(1);
-
-            var error = result.Errors.First();
-            error.Message.Should().Be("xy");
-        }
-
-        [Fact]
-        public async Task Try_execute_withresult_failed_task_async_action_with_custom_catchHandler_return_failed_result()
-        {
-            var exception = new Exception("ex message");
-            Task<Result<int>> Action() => throw exception;
-
-            var result = await Result.Try(Action, _ => new Error("xy"));
-
-            result.IsSuccess.Should().BeFalse();
-            result.Errors.Should().HaveCount(1);
-
-            var error = result.Errors.First();
-            error.Message.Should().Be("xy");
-        }
-
-        [Fact]
-        public async Task Try_execute_withresult_failed_valuetask_async_action_with_custom_catchHandler_return_failed_result()
-        {
-            var exception = new Exception("ex message");
-            ValueTask<Result<int>> Action() => throw exception;
-
-            var result = await Result.Try(Action, _ => new Error("xy"));
-
-            result.IsSuccess.Should().BeFalse();
-            result.Errors.Should().HaveCount(1);
-
-            var error = result.Errors.First();
-            error.Message.Should().Be("xy");
-        }
-
-        [Fact]
-        public void Implicit_conversion_T_is_converted_to_Success_result_of_T()
-        {
-            string value = "result";
-
-            Result<string> result = value;
-
-            result.IsSuccess.Should().BeTrue();
-            result.IsFailed.Should().BeFalse();
-            result.Reasons.Should().BeEmpty();
-            result.Errors.Should().BeEmpty();
-
-            result.Value.Should().Be(value);
-            result.Value.Should().BeOfType<string>();
-
-            result.ValueOrDefault.Should().Be(value);
-            result.ValueOrDefault.Should().BeOfType<string>();
-        }
-
-        [Fact]
-        public void Implicit_conversion_Null_is_converted_to_Success_result_of_Null()
-        {
-            Result<object> result = (object)null;
-
-            result.IsSuccess.Should().BeTrue();
-            result.IsFailed.Should().BeFalse();
-            result.Reasons.Should().BeEmpty();
-            result.Errors.Should().BeEmpty();
-
-            result.Value.Should().BeNull();
-            result.ValueOrDefault.Should().BeNull();
-        }
-
-        [Fact]
-        public void Implicit_conversion_Result_Value_is_converted_to_Result_object()
-        {
-            Result<object> result = new Result<int>().WithValue(42);
-
-            result.IsSuccess.Should().BeTrue();
-            result.IsFailed.Should().BeFalse();
-            result.Reasons.Should().BeEmpty();
-            result.Errors.Should().BeEmpty();
-
-            result.Value.Should().NotBeNull();
-            result.ValueOrDefault.Should().NotBeNull();
-            result.Value.Should().Be(42);
-        }
-
-        [Fact]
-        public void Implicit_conversion_Result_Value_is_converted_to_Result_object_with_Reasons()
-        {
-            Result<object> result = new Result<int>().WithValue(42).WithReason(new SuccessTests.CustomSuccess());
-
-            result.IsSuccess.Should().BeTrue();
-            result.IsFailed.Should().BeFalse();
-            result.Errors.Should().BeEmpty();
-
-            result.Value.Should().NotBeNull();
-            result.ValueOrDefault.Should().NotBeNull();
-            result.Value.Should().Be(42);
-
-            result.Reasons.Should().ContainSingle();
-            result.Reasons.Should().AllBeEquivalentTo(new SuccessTests.CustomSuccess());
-        }
-
-        [Fact]
-        public void Implicit_conversion_Result_Value_is_converted_to_Result_object_with_Errors()
-        {
-            Result<object> result = new Result<int>().WithValue(42).WithError("foo");
-
-            result.IsSuccess.Should().BeFalse();
-            result.IsFailed.Should().BeTrue();
-
-            result.Reasons.Should().ContainSingle();
-            result.Reasons.Should().AllBeEquivalentTo(new Error("foo"));
-
-            result.Errors.Should().ContainSingle();
-            result.Errors.Should().AllBeEquivalentTo(new Error("foo"));
-        }
-
-        [Fact]
-        public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed()
-        {
-            var (isSuccess, isFailed) = Result.Ok(true);
-
-            isSuccess.Should().Be(true);
-            isFailed.Should().Be(false);
-        }
-
-        [Fact]
-        public void Can_deconstruct_generic_Fail_to_isSuccess_and_isFailed()
-        {
-            var (isSuccess, isFailed) = Result.Fail<bool>("fail");
-
-            isSuccess.Should().Be(false);
-            isFailed.Should().Be(true);
-        }
-
-        [Fact]
-        public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed_and_value()
-        {
-            var (isSuccess, isFailed, value) = Result.Ok(100);
-
-            isSuccess.Should().Be(true);
-            isFailed.Should().Be(false);
-            value.Should().Be(100);
-        }
-
-        [Fact]
-        public void Can_deconstruct_generic_Fail_to_isSuccess_and_isFailed_and_value()
-        {
-            var (isSuccess, isFailed, value) = Result.Fail<int>("fail");
-
-            isSuccess.Should().Be(false);
-            isFailed.Should().Be(true);
-            value.Should().Be(default);
-        }
-
-        [Fact]
-        public void Can_deconstruct_generic_Ok_to_isSuccess_and_isFailed_and_value_with_errors()
-        {
-            var (isSuccess, isFailed, value, errors) = Result.Ok(100);
-
-            isSuccess.Should().Be(true);
-            isFailed.Should().Be(false);
-            value.Should().Be(100);
-            errors.Should().BeNull();
-        }
-
-        [Fact]
-        public void Can_deconstruct_generic_Fail_to_isSuccess_and_isFailed_and_errors_with_value()
-        {
-            var error = new Error("fail");
-
-            var (isSuccess, isFailed, value, errors) = Result.Fail<bool>(error);
-
-            isSuccess.Should().Be(false);
-            isFailed.Should().Be(true);
-            value.Should().Be(default);
-
-            errors.Count.Should().Be(1);
-            errors.FirstOrDefault().Should().Be(error);
-        }
-
-        [Fact]
-        public void Dynamic_value_is_implicit_converted_to_ValueResult()
-        {
-            var result = DynamicConvert("hello", typeof(string));
-
-            ((object)result.Value).Should().Be("hello");
-            ((object)result.Value).Should().BeOfType(typeof(string));
-        }
-
-        private static Result<dynamic> DynamicConvert(dynamic source, Type dest)
-        {
-            var result = new Result<dynamic>();
-            var converted = Convert.ChangeType(source, dest);
-            var x = result.WithValue(converted);
-            return x;
         }
     }
 }

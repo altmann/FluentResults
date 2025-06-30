@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
     <PackageId>FluentResults.Extensions.AspNetCore</PackageId>
-    <Version>0.1.0.0</Version>
+    <Version>0.2.0.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>FluentResult Asp.Net Core integration</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-        Init version
+		- CHANGED Microsoft.AspNetCore.Mvc.Core update to 2.3.0 (2.2.5 is deprecated) #233
     </PackageReleaseNotes>
     <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling FluentResults</PackageTags>
@@ -27,7 +27,7 @@
     
   <ItemGroup>
     <PackageReference Include="FluentResults" Version="3.15.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
