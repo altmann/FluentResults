@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
     <PackageId>FluentResults.Extensions.FluentAssertions</PackageId>
-    <Version>2.2.0.0</Version>
+    <Version>2.2.1.0</Version>
     <Authors>Michael Altmann</Authors>
     <Description>Asserting FluentResults objects with FluentAssertions</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -11,7 +11,7 @@
     <PackageReleaseNotes>
 		- Pin FluentAssertions dependency to prevent future updates #232
     </PackageReleaseNotes>
-    <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
+    <Copyright>Copyright 2025 (c) Michael Altmann. All rights reserved.</Copyright>
     <PackageTags>Result Results exception error handling FluentResults</PackageTags>
     <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-128.png</PackageIconUrl>
@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="[6.7.0]" />
-    <PackageReference Include="FluentResults" Version="3.0.0" />
+    <PackageReference Include="FluentResults" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>

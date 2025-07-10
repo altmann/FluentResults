@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using System;
+﻿using System;
+using FluentAssertions;
 using Xunit;
 using Xunit.Sdk;
 
@@ -14,7 +14,9 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ResultTests
         {
             var failedResult = Result.Fail("Error 1");
 
-            Action action = () => failedResult.Should().BeFailure().And.HaveReason(expectedError, MessageComparisonLogics.ActualContainsExpected);
+            Action action = () =>
+                failedResult.Should().BeFailure().And
+                    .HaveReason(expectedError, MessageComparisonLogics.ActualContainsExpected);
 
             action.Should().NotThrow();
         }
@@ -28,7 +30,8 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ResultTests
 
             action.Should()
                 .Throw<XunitException>()
-                .WithMessage("Expected result to contain reason with message containing \"Error 1\", but found reasons '{Error with Message='Error 2'}'");
+                .WithMessage(
+                    "Expected result to contain reason with message containing \"Error 1\", but found reasons '{Error with Message='Error 2'}'");
         }
 
         [Theory]
@@ -49,7 +52,9 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ResultTests
         {
             var successResult = Result.Fail(new SomeReason("Error 1"));
 
-            Action action = () => successResult.Should().BeFailure().And.HaveReason<SomeReason>(expectedError, MessageComparisonLogics.ActualContainsExpected);
+            Action action = () =>
+                successResult.Should().BeFailure().And
+                    .HaveReason<SomeReason>(expectedError, MessageComparisonLogics.ActualContainsExpected);
 
             action.Should().NotThrow();
         }
@@ -63,7 +68,8 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ResultTests
 
             action.Should()
                 .Throw<XunitException>()
-                .WithMessage("Expected result to contain reason of type \"SomeReason\" with message containing \"Error 1\", but found reasons '{Error with Message='Error 1'}'");
+                .WithMessage(
+                    "Expected result to contain reason of type \"SomeReason\" with message containing \"Error 1\", but found reasons '{Error with Message='Error 1'}'");
         }
 
         [Fact]
@@ -85,7 +91,8 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ResultTests
 
             action.Should()
                 .Throw<XunitException>()
-                .WithMessage("Expected Subject.Reasons {Error with Message='Error 1'} to contain equivalent of Error with Message='Error 2'*");
+                .WithMessage(
+                    "Expected Subject.Reasons {Error with Message='Error 1'} to contain equivalent of Error with Message='Error 2'*");
         }
     }
 }
