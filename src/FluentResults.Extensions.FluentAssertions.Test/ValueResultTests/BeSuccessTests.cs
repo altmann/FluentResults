@@ -26,7 +26,7 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ValueResultTests
 
             action.Should()
                 .Throw<XunitException>()
-                .WithMessage("Expected result be success, but is failed because of 'Error 1'");
+                .WithMessage("Expected result be success, but is failed because of '{Error with Message='Error 1'}'");
         }
 
         [Fact]
@@ -39,7 +39,8 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ValueResultTests
 
             action.Should()
                 .Throw<XunitException>()
-                .WithMessage("Expected result be success, but is failed because of 'Error 1; Error 2'");
+                .WithMessage(
+                    "Expected result be success, but is failed because of '{Error with Message='Error 1', Error with Message='Error 2'}'");
         }
 
         [Fact]
@@ -52,7 +53,7 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ValueResultTests
 
             action.Should()
                 .Throw<XunitException>()
-                .WithMessage("Expected result be success, but is failed because of 'Error 1'");
+                .WithMessage("Expected result be success, but is failed because of '{Error with Message='Error 1'}'");
         }
     }
 }

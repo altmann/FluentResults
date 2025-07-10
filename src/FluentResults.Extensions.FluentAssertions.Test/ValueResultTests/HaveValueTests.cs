@@ -38,7 +38,8 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ValueResultTests
 
             action.Should()
                 .Throw<XunitException>()
-                .WithMessage("Value can not be asserted because result is failed because of 'Error 1'");
+                .WithMessage(
+                    "Value can not be asserted because result is failed because of '{Error with Message='Error 1'}'");
         }
 
         [Fact]
@@ -72,9 +73,11 @@ namespace FluentResults.Extensions.FluentAssertions.Test.ValueResultTests
         }
 
         internal struct SomeStruct
-        { }
+        {
+        }
 
         internal class SomeClass
-        { }
+        {
+        }
     }
 }
