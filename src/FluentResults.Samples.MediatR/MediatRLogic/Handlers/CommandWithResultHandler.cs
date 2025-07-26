@@ -10,7 +10,7 @@ namespace FluentResults.Samples.MediatR.MediatRLogic.Handlers
     {
         public Task<Result> Handle(CommandWithResult request, CancellationToken cancellationToken)
         {
-            Console.WriteLine($"Hello {nameof(CommandWithoutResult)}");
+            Console.WriteLine($"Hello {nameof(CommandWithResult)}");
 
             return Task.FromResult(Result.Ok());
         }
