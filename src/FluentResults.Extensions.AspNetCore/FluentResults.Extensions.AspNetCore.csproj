@@ -1,49 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
-		<PackageId>FluentResults.Extensions.AspNetCore</PackageId>
-		<Version>0.2.1.0</Version>
-		<Authors>Michael Altmann</Authors>
-		<Description>FluentResult Asp.Net Core integration</Description>
-		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageReleaseNotes>
-			- CHANGED Microsoft.AspNetCore.Mvc.Core update to 2.3.0 (2.2.5 is deprecated) #233
-			- CHANGED Microsoft.AspNetCore.Mvc.Core package reference to Microsoft.AspNetCore.App framework reference for .NET8 and .NET9 #238
-		</PackageReleaseNotes>
-		<Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
-		<PackageTags>Result Results exception error handling FluentResults</PackageTags>
-		<PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
-		<PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-128.png</PackageIconUrl>
-		<PackageIcon>FluentResults-Icon-128.png</PackageIcon>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
+    <PackageId>FluentResults.Extensions.AspNetCore</PackageId>
+    <Version>0.2.1.0</Version>
+    <Authors>Michael Altmann</Authors>
+    <Description>FluentResult Asp.Net Core integration</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes>
+      - CHANGED Microsoft.AspNetCore.Mvc.Core update to 2.3.0 (2.2.5 is deprecated) #233
+      - CHANGED Microsoft.AspNetCore.Mvc.Core package reference to Microsoft.AspNetCore.App framework reference for .NET8 and .NET9 #238
+    </PackageReleaseNotes>
+    <Copyright>Copyright 2022 (c) Michael Altmann. All rights reserved.</Copyright>
+    <PackageTags>Result Results exception error handling FluentResults</PackageTags>
+    <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-128.png</PackageIconUrl>
+    <PackageIcon>FluentResults-Icon-128.png</PackageIcon>
 
-		<!--SourceLink-->
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-	</PropertyGroup>
+    <!--SourceLink-->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
 
-	<PropertyGroup>
-		<UseFrameworkReference>$([MSBuild]::VersionGreaterThanOrEquals('$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)'))','8.0'))</UseFrameworkReference>
-	</PropertyGroup>
+  <PropertyGroup>
+    <UseFrameworkReference>$([MSBuild]::VersionGreaterThanOrEquals('$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)'))','8.0'))</UseFrameworkReference>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="FluentResults" Version="4.0.0" />
-	</ItemGroup>
-	
-	<ItemGroup Condition="$(UseFrameworkReference)" >
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
-	
-	<ItemGroup Condition="!$(UseFrameworkReference)" >
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentResults" Version="4.0.0" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<None Include="..\..\resources\icons\FluentResults-Icon-128.png" Pack="true" PackagePath="" />
-	</ItemGroup>
+  <ItemGroup Condition="$(UseFrameworkReference)" >
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(UseFrameworkReference)" >
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\resources\icons\FluentResults-Icon-128.png" Pack="true" PackagePath="" />
+  </ItemGroup>
 
 </Project>
