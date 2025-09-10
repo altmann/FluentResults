@@ -1,8 +1,3 @@
-using System;
-using FluentAssertions;
-using Xunit;
-using Xunit.Sdk;
-
 // ReSharper disable once CheckNamespace
 namespace FluentResults.Extensions.AwesomeAssertions.Test.ResultTests
 {

@@ -1,9 +1,4 @@
-﻿using FluentAssertions;
-using System;
-using Xunit;
-using Xunit.Sdk;
-
-namespace FluentResults.Extensions.AwesomeAssertions.Test.ValueResultTests
+﻿namespace FluentResults.Extensions.AwesomeAssertions.Test.ValueResultTests
 {
     public class HaveReasonTests
     {
