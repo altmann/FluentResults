@@ -26,6 +26,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentResults.Extensions.As
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentResults.Samples.WebHost", "FluentResults.Samples.WebHost\FluentResults.Samples.WebHost.csproj", "{47A242AF-DB1A-4E2C-A1BE-E3C2840BD9F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentResults.Extensions.AwesomeAssertions.Test", "FluentResults.Extensions.AwesomeAssertions.Test\FluentResults.Extensions.AwesomeAssertions.Test.csproj", "{7A0052F0-AAC2-D45E-B7DF-1B277D36778C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentResults.Extensions.AwesomeAssertions", "FluentResults.Extensions.AwesomeAssertions\FluentResults.Extensions.AwesomeAssertions.csproj", "{9657E8E2-6B45-58FF-0FD3-CC71E9CD3D26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +68,14 @@ Global
 		{47A242AF-DB1A-4E2C-A1BE-E3C2840BD9F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47A242AF-DB1A-4E2C-A1BE-E3C2840BD9F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47A242AF-DB1A-4E2C-A1BE-E3C2840BD9F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A0052F0-AAC2-D45E-B7DF-1B277D36778C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0052F0-AAC2-D45E-B7DF-1B277D36778C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0052F0-AAC2-D45E-B7DF-1B277D36778C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0052F0-AAC2-D45E-B7DF-1B277D36778C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9657E8E2-6B45-58FF-0FD3-CC71E9CD3D26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9657E8E2-6B45-58FF-0FD3-CC71E9CD3D26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9657E8E2-6B45-58FF-0FD3-CC71E9CD3D26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9657E8E2-6B45-58FF-0FD3-CC71E9CD3D26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
