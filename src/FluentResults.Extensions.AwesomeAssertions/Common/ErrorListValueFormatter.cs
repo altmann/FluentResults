@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions.Formatting;
+using AwesomeAssertions.Formatting;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults.Extensions.AwesomeAssertions

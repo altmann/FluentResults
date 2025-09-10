@@ -1,4 +1,5 @@
 ﻿using System;
+using AwesomeAssertions.Execution;
 
 namespace FluentResults.Extensions.AwesomeAssertions
 {
@@ -7,7 +8,7 @@ namespace FluentResults.Extensions.AwesomeAssertions
         public static ReasonAssertions Should(this IReason reason)
         {
             if (reason == null) throw new ArgumentNullException(nameof(reason));
-            return new ReasonAssertions(reason);
+            return new ReasonAssertions(reason, AssertionChain.GetOrCreate());
         }
     }
 }

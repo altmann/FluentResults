@@ -1,22 +1,22 @@
 ﻿using System;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using FluentAssertions.Primitives;
+using AwesomeAssertions;
+using AwesomeAssertions.Execution;
+using AwesomeAssertions.Primitives;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults.Extensions.AwesomeAssertions
 {
     public class ReasonAssertions : ReferenceTypeAssertions<IReason, ReasonAssertions>
     {
-        public ReasonAssertions(IReason subject)
-            : base(subject)
+        public ReasonAssertions(IReason subject, AssertionChain assertionChain)
+            : base(subject, assertionChain)
         { }
 
         protected override string Identifier => nameof(IReason);
 
         public AndWhichConstraint<ReasonAssertions, IReason> HaveMetadata(string metadataKey, object metadataValue, string because = "", params object[] becauseArgs)
         {
-            Execute.Assertion
+            CurrentAssertionChain
                    .BecauseOf(because, becauseArgs)
                    .Given(() => Subject.Metadata)
                    .ForCondition(metadata =>
@@ -33,7 +33,7 @@ namespace FluentResults.Extensions.AwesomeAssertions
         {
             var specificReason = Subject as TReason;
 
-            Execute.Assertion
+            CurrentAssertionChain
                    .Given(() => Subject)
                    .ForCondition(reason => reason is TReason)
                    .FailWith($"Reason should be of type '{typeof(TReason)}', but is of type '{Subject.GetType()}'");

@@ -1,6 +1,7 @@
 ﻿using System;
-using FluentAssertions;
-using FluentAssertions.Primitives;
+using AwesomeAssertions;
+using AwesomeAssertions.Execution;
+using AwesomeAssertions.Primitives;
 
 // ReSharper disable once CheckNamespace
 namespace FluentResults.Extensions.AwesomeAssertions
@@ -12,8 +13,8 @@ namespace FluentResults.Extensions.AwesomeAssertions
             ResultFormatters.Register();
         }
 
-        public ResultAssertions(Result subject)
-            : base(subject)
+        public ResultAssertions(Result subject, AssertionChain assertionChain)
+            : base(subject, assertionChain)
         {
         }
 
@@ -21,27 +22,27 @@ namespace FluentResults.Extensions.AwesomeAssertions
 
         public AndWhichConstraint<ResultAssertions, Result> BeFailure(string because = "", params object[] becauseArgs)
         {
-            return new BeFailureAssertionOperator().Do(Subject, this, because, becauseArgs);
+            return new BeFailureAssertionOperator().Do(Subject, this, CurrentAssertionChain, because, becauseArgs);
         }
 
         public AndWhichConstraint<ResultAssertions, Result> BeSuccess(string because = "", params object[] becauseArgs)
         {
-            return new BeSuccessAssertionOperator().Do(Subject, this, because, becauseArgs);
+            return new BeSuccessAssertionOperator().Do(Subject, this, CurrentAssertionChain, because, becauseArgs);
         }
 
         public AndWhichThatConstraint<ResultAssertions, Result, ReasonAssertions> HaveReason(string message, Func<string, string, bool> messageComparison = null, string because = "", params object[] becauseArgs)
         {
-            return new HaveReasonAssertionOperator().Do(Subject, this, message, messageComparison, because, becauseArgs);
+            return new HaveReasonAssertionOperator().Do(Subject, this, CurrentAssertionChain, message, messageComparison, because, becauseArgs);
         }
-        
+
         public AndWhichThatConstraint<ResultAssertions, Result, ReasonAssertions> HaveReason<TReason>(string message, Func<string, string, bool> messageComparison = null, string because = "", params object[] becauseArgs) where TReason : IReason
         {
-            return new HaveReasonTAssertionOperator().Do<ResultAssertions, Result, TReason>(Subject, this, message, messageComparison, because, becauseArgs);
+            return new HaveReasonTAssertionOperator().Do<ResultAssertions, Result, TReason>(Subject, this, CurrentAssertionChain, message, messageComparison, because, becauseArgs);
         }
 
         public AndWhichThatConstraint<ResultAssertions, Result, ReasonAssertions> HaveError(string message, Func<string, string, bool> messageComparison = null, string because = "", params object[] becauseArgs)
         {
-            return new HaveErrorAssertionOperator().Do(Subject, this, message, messageComparison, because, becauseArgs);
+            return new HaveErrorAssertionOperator().Do(Subject, this, CurrentAssertionChain, message, messageComparison, because, becauseArgs);
         }
 
         public AndWhichConstraint<ResultAssertions, Result> HaveReason(IReason reason, string because = "", params object[] becauseArgs)
@@ -66,8 +67,8 @@ namespace FluentResults.Extensions.AwesomeAssertions
             ResultFormatters.Register();
         }
 
-        public ResultAssertions(Result<T> subject)
-            : base(subject)
+        public ResultAssertions(Result<T> subject, AssertionChain assertionChain)
+            : base(subject, assertionChain)
         {
         }
 
@@ -75,27 +76,27 @@ namespace FluentResults.Extensions.AwesomeAssertions
 
         public AndWhichConstraint<ResultAssertions<T>, Result<T>> BeFailure(string because = "", params object[] becauseArgs)
         {
-            return new BeFailureAssertionOperator().Do(Subject, this, because, becauseArgs);
+            return new BeFailureAssertionOperator().Do(Subject, this, CurrentAssertionChain, because, becauseArgs);
         }
 
         public AndWhichConstraint<ResultAssertions<T>, Result<T>> BeSuccess(string because = "", params object[] becauseArgs)
         {
-            return new BeSuccessAssertionOperator().Do(Subject, this, because, becauseArgs);
+            return new BeSuccessAssertionOperator().Do(Subject, this, CurrentAssertionChain, because, becauseArgs);
         }
 
         public AndWhichThatConstraint<ResultAssertions<T>, Result<T>, ReasonAssertions> HaveReason(string message, Func<string, string, bool> messageComparison = null, string because = "", params object[] becauseArgs)
         {
-            return new HaveReasonAssertionOperator().Do(Subject, this, message, messageComparison, because, becauseArgs);
+            return new HaveReasonAssertionOperator().Do(Subject, this, CurrentAssertionChain, message, messageComparison, because, becauseArgs);
         }
 
         public AndWhichThatConstraint<ResultAssertions<T>, Result<T>, ReasonAssertions> HaveReason<TReason>(string message, Func<string, string, bool> messageComparison = null, string because = "", params object[] becauseArgs) where TReason : IReason
         {
-            return new HaveReasonTAssertionOperator().Do<ResultAssertions<T>, Result<T>, TReason>(Subject, this, message, messageComparison, because, becauseArgs);
+            return new HaveReasonTAssertionOperator().Do<ResultAssertions<T>, Result<T>, TReason>(Subject, this, CurrentAssertionChain, message, messageComparison, because, becauseArgs);
         }
 
         public AndWhichThatConstraint<ResultAssertions<T>, Result<T>, ReasonAssertions> HaveError(string message, Func<string, string, bool> messageComparison = null, string because = "", params object[] becauseArgs)
         {
-            return new HaveErrorAssertionOperator().Do(Subject, this, message, messageComparison, because, becauseArgs);
+            return new HaveErrorAssertionOperator().Do(Subject, this, CurrentAssertionChain, message, messageComparison, because, becauseArgs);
         }
 
         public AndWhichConstraint<ResultAssertions<T>, Result<T>> HaveReason(IReason reason, string because = "", params object[] becauseArgs)
@@ -107,7 +108,7 @@ namespace FluentResults.Extensions.AwesomeAssertions
 
         public AndConstraint<ResultAssertions<T>> HaveValue(T expectedValue, string because = "", params object[] becauseArgs)
         {
-            return new HaveValueAssertionOperator().Do(Subject, this, expectedValue, because, becauseArgs);
+            return new HaveValueAssertionOperator().Do(Subject, this, CurrentAssertionChain, expectedValue, because, becauseArgs);
         }
 
         public AndConstraint<ResultAssertions<T>> Satisfy(Action<Result<T>> action)
