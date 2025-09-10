@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
+    <PackageId>FluentResults.Extensions.AwesomeAssertions</PackageId>
+    <Version>2.2.1.0</Version>
+    <Authors>Michael Altmann</Authors>
+    <Description>Asserting FluentResults objects with AwesomeAssertions</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
+    <Copyright>Copyright 2025 (c) Michael Altmann. All rights reserved.</Copyright>
+    <PackageTags>Result Results exception error handling FluentResults</PackageTags>
+    <PackageProjectUrl>https://github.com/altmann/FluentResults</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/altmann/FluentResults/master/resources/icons/FluentResults-Icon-128.png</PackageIconUrl>
+    <PackageIcon>FluentResults-Icon-128.png</PackageIcon>
+
+    <!--SourceLink-->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AwesomeAssertions" Version="9.*" />
+    <PackageReference Include="FluentResults" Version="4.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\resources\icons\FluentResults-Icon-128.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+</Project>
