@@ -675,7 +675,7 @@ I love this project but implementing features, answering issues or maintaining c
 
 ## Contributors
 
-Thanks to all the contributers and to all the people who gave feedback!
+Thanks to all the contributors and to all the people who gave feedback!
 
 <a href="https://github.com/altmann/fluentresults/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=altmann/fluentresults" />
