@@ -12,6 +12,11 @@ namespace FluentResults.Extensions.FluentAssertions
             ResultFormatters.Register();
         }
 
+        internal static void EnsureFormattersRegistered()
+        {
+            // Calling this method runs the non-generic static constructor once for all result types.
+        }
+
         public ResultAssertions(Result subject)
             : base(subject)
         {
@@ -63,7 +68,7 @@ namespace FluentResults.Extensions.FluentAssertions
     {
         static ResultAssertions()
         {
-            ResultFormatters.Register();
+            ResultAssertions.EnsureFormattersRegistered();
         }
 
         public ResultAssertions(Result<T> subject)
